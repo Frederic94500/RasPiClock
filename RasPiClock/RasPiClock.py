@@ -25,7 +25,7 @@ def Crypto():
 	TextEtImg.AddImg("BTC.bmp", 10, 22, (44,44))
 
 	TextEtImg.UpdateText("Ethereum", "$ " + "".join(PriceETH))
-	TextEtImg.AddImg("ETH.bmp", 10, 110, (44,72))
+	TextEtImg.AddImg("ETH.bmp", 10, 110, (44,68))
 
 	TextEtImg.WriteAll()
 	Ecran.partial_update()
