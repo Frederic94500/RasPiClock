@@ -15,7 +15,7 @@ def Crypto():
 	price = list(str(result["price"]))
 	del price[-7:-1]
 
-	TextEtImg.AddText("$ " + "".join(price), 64, 22, fontPath="Ubuntu.ttf" , size = 44)
+	TextEtImg.UpdateText("Bitcoin", "$ " + "".join(price))
 	TextEtImg.AddImg("BTC.bmp", 10, 22, (44,44))
 	TextEtImg.WriteAll()
 	Ecran.partial_update()
@@ -26,7 +26,9 @@ def Crypto():
 	Ordre(Order)
 
 Ecran = Papirus()
-TextEtImg = PapirusComposite()
+TextEtImg = PapirusComposite(False)
+
+TextEtImg.AddText("$ BTC", 64, 22, Id="Bitcoin", fontPath="Ubuntu.ttf" , size = 44)
 
 Crypto()
 
