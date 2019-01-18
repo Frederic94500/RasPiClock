@@ -5,30 +5,41 @@ import json
 from papirus import Papirus
 from papirus import PapirusComposite
 
-def Ordre(Order):
-	if Order == 0: Crypto()
+'''def Ordre(Order):
+	if Order == 0: Crypto()'''
 
 def Crypto():
-	RC = rq.get("https://chain.so/api/v2/get_info/ticker_BTC_USD")
-	data = json.loads(RC.text)
-	result = data["data"]
-	price = list(str(result["price"]))
-	del price[-7:-1]
+	ReponseBTC = rq.get("https://chain.so/api/v2/get_info/ticker_BTC_USD")
+	DataBTC = json.loads(ReponseBTC.text)
+	ResultBTC = DataBTC["data"]
+	PriceBTC = list(str(ResultBTC["price"]))
+	del PriceBTC[-7:-1]
 
-	TextEtImg.UpdateText("Bitcoin", "$ " + "".join(price))
+	ReponseETH = rq.get("https://chain.so/api/v2/get_info/ticker_ETH_USD")
+	DataETH = json.loads(ReponseETH.text)
+	ResultETH = DataETH["data"]
+	PriceETH = list(str(ResultETH["price"]))
+	del PriceETH[-7:-1]
+
+	TextEtImg.UpdateText("Bitcoin", "$ " + "".join(PriceBTC))
 	TextEtImg.AddImg("BTC.bmp", 10, 22, (44,44))
+
+	TextEtImg.UpdateText("Ethereum", "$ " + "".join(PriceETH))
+	TextEtImg.AddImg("ETH.bmp", 10, 110, (44,72))
+
 	TextEtImg.WriteAll()
 	Ecran.partial_update()
 
 	#print("$" + "".join(price) + " | TX Unconfirmed: " + str(result["unconfirmed_txs"]))
-	Order = 0
+	#Order = 0
 	time.sleep(30)
-	Ordre(Order)
+	Crypto()
 
 Ecran = Papirus()
 TextEtImg = PapirusComposite(False)
 
-TextEtImg.AddText("$ BTC", 64, 22, Id="Bitcoin", fontPath="Ubuntu.ttf" , size = 44)
+TextEtImg.AddText("$ BTC", 64, 24, Id="Bitcoin", fontPath="Ubuntu.ttf" , size = 40)
+TextEtImg.AddText("$ ETH", 64, 110, Id="Ethereum", fontPath="Ubuntu.ttf" , size = 40)
 
 Crypto()
 
