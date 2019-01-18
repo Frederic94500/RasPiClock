@@ -15,8 +15,8 @@ def Crypto():
 	price = list(str(result["price"]))
 	del price[-7:-1]
 
-	TextEtImg.AddText("$ " + "".join(price), 64, 88, fontPath="Ubuntu.ttf")
-	TextEtImg.AddImg("BTC.bmp", 10, 66, (44,44))
+	TextEtImg.AddText("$ " + "".join(price), 64, 22, fontPath="Ubuntu.ttf" , size = 44)
+	TextEtImg.AddImg("BTC.bmp", 10, 22, (44,44))
 	TextEtImg.WriteAll()
 	Ecran.partial_update()
 
