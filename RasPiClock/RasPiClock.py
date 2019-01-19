@@ -24,7 +24,7 @@ def Crypto():
 		TextEtImg.AddText("$ BTC", 64, 44, Id="BitcoinP", size = 30)
 		TextEtImg.AddText("$ ETH", 64, 114, Id="EthereumP", size = 30)
 		TextEtImg.AddText("% BTC", 64, 74, Id="BitcoinPCT", size = 15)
-		TextEtImg.AddText("% ETH", 64, 174, Id="EthereumPCT", size = 15)
+		TextEtImg.AddText("% ETH", 64, 144, Id="EthereumPCT", size = 15)
 		Creation = 1
 
 	ReponseCrypto = rq.get("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETH&tsyms=USD&api_key=261d6b25933c3a0ccd3b991898b6ed86ac7815ec7ebedda674dd7ff116f23e51")
