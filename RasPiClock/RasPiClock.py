@@ -28,16 +28,17 @@ def Crypto():
 	TextEtImg.UpdateText("Bitcoin", "$ " + PriceBTC)
 	TextEtImg.UpdateText("Ethereum", "$ " + PriceETH)
 
-	TextEtImg.WriteAll()
-	Ecran.fast_update()
-
-	#print("$" + "".join(price) + " | TX Unconfirmed: " + str(result["unconfirmed_txs"]))
-	#Order = 0
-	time.sleep(2)
+	TextEtImg.WriteAll(True)
+	time.sleep(3)
 	Crypto()
+
+def Meteo():
+	ReponseMeteo = rq.get("")
 
 Ecran = Papirus()
 TextEtImg = PapirusComposite(False)
+
+TextEtImg.Clear()
 
 TextEtImg.AddText("$ BTC", 64, 24, Id="Bitcoin", fontPath="Ubuntu.ttf" , size = 30)
 TextEtImg.AddText("$ ETH", 64, 110, Id="Ethereum", fontPath="Ubuntu.ttf" , size = 30)
