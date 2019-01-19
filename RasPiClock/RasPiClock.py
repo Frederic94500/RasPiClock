@@ -47,7 +47,7 @@ def Crypto():
 	TextEtImg.UpdateText("EthereumP", "$ " + PriceETH, fontPath="Ubuntu.ttf")
 
 	TextEtImg.UpdateText("BitcoinPCT", "".join(PCTBTC) + "%", fontPath="Ubuntu.ttf")
-	TextEtImg.UpdateText("EthereumPCT", "".join(PCTBTC) + "%", fontPath="Ubuntu.ttf")
+	TextEtImg.UpdateText("EthereumPCT", "".join(PCTETH) + "%", fontPath="Ubuntu.ttf")
 
 	TextEtImg.WriteAll(True)
 	time.sleep(3)
