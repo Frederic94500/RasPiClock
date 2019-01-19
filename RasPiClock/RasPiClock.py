@@ -5,31 +5,35 @@ import json
 from papirus import Papirus
 from papirus import PapirusComposite
 
+Image_created = 0
+
 '''def Ordre(Order):
 	if Order == 0: Crypto()'''
 
 def Crypto():
+	global Image_created
+	if Image_created == 0:
+		TextEtImg.AddImg("BTC.bmp", 10, 22, (44,44))
+		TextEtImg.AddImg("ETH.bmp", 10, 100, (44,68))
+		Image_created = 1
+
 	ReponseCrypto = rq.get("https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ETH&tsyms=USD&api_key=261d6b25933c3a0ccd3b991898b6ed86ac7815ec7ebedda674dd7ff116f23e51")
 	DataCrypto = json.loads(ReponseCrypto.text)
 
 	ResultBTC = DataCrypto["BTC"]
 	PriceBTC = str(ResultBTC["USD"])
-
 	ResultETH = DataCrypto["ETH"]
 	PriceETH = str(ResultETH["USD"])
 
 	TextEtImg.UpdateText("Bitcoin", "$ " + PriceBTC)
-	TextEtImg.AddImg("BTC.bmp", 10, 22, (44,44))
-
 	TextEtImg.UpdateText("Ethereum", "$ " + PriceETH)
-	TextEtImg.AddImg("ETH.bmp", 10, 110, (44,68))
 
 	TextEtImg.WriteAll()
 	Ecran.fast_update()
 
 	#print("$" + "".join(price) + " | TX Unconfirmed: " + str(result["unconfirmed_txs"]))
 	#Order = 0
-	time.sleep(30)
+	time.sleep(2)
 	Crypto()
 
 Ecran = Papirus()
