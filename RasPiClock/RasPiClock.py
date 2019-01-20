@@ -7,9 +7,7 @@ import os
 from papirus import Papirus
 from papirus import PapirusComposite
 
-global Creation
 Creation = 0
-global Repeat
 Repeat = 0
 global Order
 Order = 0
@@ -29,6 +27,8 @@ def Ordre(Order):
 		sys.exit()
 
 def Crypto():
+	global Creation
+	global Repeat
 	if Creation == 0:
 		TextEtImg.AddImg("BTC.bmp", 10, 42, (44,44))
 		TextEtImg.AddImg("ETH.bmp", 10, 100, (44,68))
