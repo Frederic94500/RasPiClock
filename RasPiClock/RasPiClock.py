@@ -40,19 +40,14 @@ def Crypto():
 		Creation = 1
 
 	ReponseCrypto = rq.get("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETH&tsyms=USD&api_key=261d6b25933c3a0ccd3b991898b6ed86ac7815ec7ebedda674dd7ff116f23e51")
-	DataCryptoRAW = json.loads(ReponseCrypto.text)
-	DataCrypto = DataCryptoRAW["RAW"]
+	DataCrypto = json.loads(ReponseCrypto.text)
 
-	ResultBTC = DataCrypto["BTC"]
-	BTC = ResultBTC["USD"]
-	PriceBTC = str(BTC["PRICE"])
-	PCTBTC = list(str(BTC["CHANGEPCT24HOUR"]))
+	PriceBTC = str(DataCrypto["RAW"]["BTC"]["USD"]["PRICE"])
+	PCTBTC = list(str(DataCrypto["RAW"]["BTC"]["USD"]["CHANGEPCT24HOUR"]))
 	del PCTBTC[-14:-1]
 
-	ResultETH = DataCrypto["ETH"]
-	ETH = ResultETH["USD"]
-	PriceETH = str(ETH["PRICE"])
-	PCTETH = list(str(ETH["CHANGEPCT24HOUR"]))
+	PriceETH = str(DataCrypto["RAW"]["ETH"]["USD"]["PRICE"])
+	PCTETH = list(str(DataCrypto["RAW"]["ETH"]["USD"]["CHANGEPCT24HOUR"]))
 	del PCTETH[-14:-1]
 
 	TextEtImg.UpdateText("BitcoinP", "$ " + PriceBTC, fontPath="Ubuntu.ttf")
@@ -65,7 +60,7 @@ def Crypto():
 	time.sleep(3)
 
 	Repeat = Repeat + 1
-	if Times == 6:
+	if Repeat == 6:
 		Order = 1
 		Ordre(Order)
 	else:
