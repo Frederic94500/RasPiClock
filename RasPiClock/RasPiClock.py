@@ -73,7 +73,7 @@ def Meteo():
 	TextEtImg.AddText("Météo:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
 
 	TextEtImg.AddText("Temperature: " + str(DataMeteo["main"]["temp"]) + "°C", 10, 40, size = 25, fontPath="Ubuntu.ttf")
-	TextEtImg.AddText("Temp Min:" + str(DataMeteo["main"]["temp_min"]) + "°C" + "Temp Max:" + DataMeteo["main"]["temp_max"] + "°C", 10, 65, size = 20, fontPath="Ubuntu.ttf")
+	TextEtImg.AddText("Temp Min:" + str(DataMeteo["main"]["temp_min"]) + "°C" + "Temp Max:" + str(DataMeteo["main"]["temp_max"]) + "°C", 10, 65, size = 20, fontPath="Ubuntu.ttf")
 
 	TextEtImg.AddText("Temps:" + DataMeteo["weather"]["description"], 10, 85, size = 25, fontPath="Ubuntu.ttf")
 
