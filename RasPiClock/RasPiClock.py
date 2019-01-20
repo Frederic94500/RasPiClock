@@ -75,6 +75,6 @@ TextEtImg = PapirusComposite(False)
 
 TextEtImg.Clear()
 
-Order(Order)
+Ordre(Order)
 
 
