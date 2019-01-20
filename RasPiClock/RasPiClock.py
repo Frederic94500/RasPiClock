@@ -7,15 +7,19 @@ import os
 from papirus import Papirus
 from papirus import PapirusComposite
 
+global Creation
 Creation = 0
-
+global Repeat
+Repeat = 0
 global Order
 Order = 0
 
 def Ordre(Order):
 	try:
 		TextEtImg.Clear()
-		if Order == 0: Crypto()
+		if Order == 0:
+			Creation = 0
+			Crypto()
 		if Order == 1: Meteo() #WIP
 		if Order == 2: Musique() #WIP
 		if Order == 3: RATP() #WIP
@@ -25,8 +29,6 @@ def Ordre(Order):
 		sys.exit()
 
 def Crypto():
-	global Creation
-
 	if Creation == 0:
 		TextEtImg.AddImg("BTC.bmp", 10, 42, (44,44))
 		TextEtImg.AddImg("ETH.bmp", 10, 100, (44,68))
@@ -55,13 +57,19 @@ def Crypto():
 
 	TextEtImg.UpdateText("BitcoinP", "$ " + PriceBTC, fontPath="Ubuntu.ttf")
 	TextEtImg.UpdateText("EthereumP", "$ " + PriceETH, fontPath="Ubuntu.ttf")
-
 	TextEtImg.UpdateText("BitcoinPCT", "".join(PCTBTC) + "%", fontPath="Ubuntu.ttf")
 	TextEtImg.UpdateText("EthereumPCT", "".join(PCTETH) + "%", fontPath="Ubuntu.ttf")
 
 	TextEtImg.WriteAll(True)
+
 	time.sleep(3)
-	Crypto()
+
+	Repeat = Repeat + 1
+	if Times == 6:
+		Order = 1
+		Ordre(Order)
+	else:
+		Crypto()
 
 def Meteo():
 	ReponseMeteo = rq.get("https://api.openweathermap.org/data/2.5/weather?q=Champigny-sur-Marne,fr&units=metric&lang=fr&appid=b3e6135efddd4b5f7ebc6add6fb003f3")
