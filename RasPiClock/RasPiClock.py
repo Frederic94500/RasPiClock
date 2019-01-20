@@ -21,8 +21,7 @@ def Ordre(Order):
 		if Order == 3: RATP() #WIP
 	except KeyboardInterrupt:
 		print("Vous avez arrêté le processus, nettoyage de l'écran")
-		TextEtImg.Clear()
-		Ecran.update()
+		os.system("papirus-clear")
 		sys.exit()
 
 def Crypto():
