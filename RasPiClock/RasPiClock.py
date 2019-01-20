@@ -18,7 +18,7 @@ def Ordre(Order):
 		if Order == 0:
 			Creation = 0
 			Crypto()
-		if Order == 1: Meteo() #WIP
+		if Order == 1: Meteo()
 		if Order == 2: Musique() #WIP
 		if Order == 3: RATP() #WIP
 	except KeyboardInterrupt:
@@ -75,7 +75,9 @@ def Meteo():
 	TextEtImg.AddText("Temperature: " + str(DataMeteo["main"]["temp"]) + "°C", 10, 40, size = 25, fontPath="Ubuntu.ttf")
 	TextEtImg.AddText("Temp Min: " + str(DataMeteo["main"]["temp_min"]) + "°C" + "   Temp Max: " + str(DataMeteo["main"]["temp_max"]) + "°C", 10, 65, size = 20, fontPath="Ubuntu.ttf")
 
-	TextEtImg.AddText("Temps: " + str(DataMeteo["weather"]["description"]), 10, 85, size = 25, fontPath="Ubuntu.ttf")
+	#TextEtImg.AddText("Temps: " + str(DataMeteo["weather"]["description"]), 10, 85, size = 25, fontPath="Ubuntu.ttf") #?
+
+	TextEtImg.WriteAll(True)
 
 
 Ecran = Papirus()
