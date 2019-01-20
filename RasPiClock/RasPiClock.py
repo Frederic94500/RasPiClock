@@ -1,18 +1,29 @@
 import requests as rq
 import time
 import json
+import sys
+import os
 
 from papirus import Papirus
 from papirus import PapirusComposite
 
 Creation = 0
 
+global Order
+Order = 0
+
 def Ordre(Order):
-	TextEtImg.Clear()
-	if Order == 0: Crypto()
-	if Order == 1: Meteo() #WIP
-	if Order == 2: Musique() #WIP
-	if Order == 3: RATP() #WIP
+	try:
+		TextEtImg.Clear()
+		if Order == 0: Crypto()
+		if Order == 1: Meteo() #WIP
+		if Order == 2: Musique() #WIP
+		if Order == 3: RATP() #WIP
+	except KeyboardInterrupt:
+		print("Vous avez arrêté le processus, nettoyage de l'écran")
+		TextEtImg.Clear()
+		Ecran.update()
+		sys.exit()
 
 def Crypto():
 	global Creation
@@ -64,7 +75,6 @@ TextEtImg = PapirusComposite(False)
 
 TextEtImg.Clear()
 
-
-Crypto()
+Order(Order)
 
 
