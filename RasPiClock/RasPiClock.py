@@ -68,8 +68,14 @@ def Crypto():
 
 def Meteo():
 	ReponseMeteo = rq.get("https://api.openweathermap.org/data/2.5/weather?q=Champigny-sur-Marne,fr&units=metric&lang=fr&appid=b3e6135efddd4b5f7ebc6add6fb003f3")
+	DataMeteo = json.loads(ReponseMeteo.text)
 
-	TextEtImg
+	TextEtImg.AddText("Météo:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
+
+	TextEtImg.AddText("Temperature: " + str(DataMeteo["main"]["temp"]) + "°C", 10, 40, size = 25, fontPath="Ubuntu.ttf")
+	TextEtImg.AddText("Temp Min:" + str(DataMeteo["main"]["temp_min"]) + "°C" + "Temp Max:" + DataMeteo["main"]["temp_max"] + "°C", 10, 65, size = 20, fontPath="Ubuntu.ttf")
+
+	TextEtImg.AddText("Temps:" + DataMeteo["weather"]["description"], 10, 85, size = 25, fontPath="Ubuntu.ttf")
 
 
 Ecran = Papirus()
