@@ -107,7 +107,7 @@ def Musique():
 	time.sleep(15)
 
 	Order = 0
-	Crypto()
+	Ordre(Order)
 
 Ecran = Papirus()
 TextEtImg = PapirusComposite(False)
