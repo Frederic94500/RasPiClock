@@ -14,12 +14,12 @@ Order = 0
 
 def Ordre(Order):
 	try:
+		TextEtImg.Clear() #WIP
 		if Order == 0:
-			TextEtImg.Clear()
 			Creation = 0
 			Crypto()
 		if Order == 1: Meteo()
-		if Order == 2: Musique() #WIP
+		if Order == 2: Musique()
 		if Order == 3: Twitter() #WIP
 		if Order == 4: RATP() #WIP
 	except KeyboardInterrupt:
