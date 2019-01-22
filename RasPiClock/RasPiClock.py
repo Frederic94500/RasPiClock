@@ -97,7 +97,7 @@ def Musique():
 			TextEtImg.AddText(DataLast["recenttracks"]["track"][1]["artist"]["#text"] + " - " + DataLast["recenttracks"]["track"][0]["name"], 10, 140, size = 15, fontPath="Ubuntu.ttf")
 			TextEtImg.AddText(DataLast["recenttracks"]["track"][1]["album"]["#text"], 10, 155, size = 10, fontPath="Ubuntu.ttf")
 	
-	except:
+	except KeyError:
 		TextEtImg.AddText("Précédent:", 10, 40, size = 25, fontPath="Ubuntu.ttf")
 		TextEtImg.AddText(DataLast["recenttracks"]["track"][0]["artist"]["#text"] + " - " + DataLast["recenttracks"]["track"][0]["name"], 10, 65, size = 15, fontPath="Ubuntu.ttf")
 		TextEtImg.AddText(DataLast["recenttracks"]["track"][0]["album"]["#text"], 10, 80, size = 10, fontPath="Ubuntu.ttf")
