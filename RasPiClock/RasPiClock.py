@@ -7,21 +7,22 @@ import os
 from papirus import Papirus
 from papirus import PapirusComposite
 
+A = 1
+
 Creation = 0
 Repeat = 0
-global Order
-Order = 0
 
-def Ordre(Order):
+def Main():
 	try:
-		TextEtImg.Clear() #WIP
-		if Order == 0:
+		while A == 1:
+			global Creation
+			TextEtImg.Clear() #WIP
 			Creation = 0
 			Crypto()
-		if Order == 1: Meteo()
-		if Order == 2: Musique()
-		if Order == 3: Twitter() #WIP
-		if Order == 4: RATP() #WIP
+			Meteo()
+			Musique()
+		#if Order == 3: Twitter() #WIP
+		#if Order == 4: RATP() #WIP
 	except KeyboardInterrupt:
 		print("Vous avez arrêté le processus, nettoyage de l'écran")
 		os.system("papirus-clear")
@@ -60,8 +61,8 @@ def Crypto():
 
 	Repeat += 1
 	if Repeat == 6:
-		Order = 1
-		Ordre(Order)
+		TextEtImg.Clear()
+		return
 	else:
 		Crypto()
 
@@ -78,8 +79,7 @@ def Meteo():
 
 	time.sleep(15)
 
-	Order = 2
-	Ordre(Order)
+	TextEtImg.Clear()
 
 def Musique():
 	ReponseLastFM = rq.get("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=Frederic94500&api_key=5bf1ea23824ae3745971ec27e036d3fa&limit=1&format=json")
@@ -94,7 +94,7 @@ def Musique():
 			TextEtImg.AddText(DataLast["recenttracks"]["track"][0]["album"]["#text"], 10, 80, size = 10, fontPath="Ubuntu.ttf")
 
 			TextEtImg.AddText("Précédent:", 10, 115, size = 25, fontPath="Ubuntu.ttf")
-			TextEtImg.AddText(DataLast["recenttracks"]["track"][1]["artist"]["#text"] + " - " + DataLast["recenttracks"]["track"][0]["name"], 10, 140, size = 15, fontPath="Ubuntu.ttf")
+			TextEtImg.AddText(DataLast["recenttracks"]["track"][1]["artist"]["#text"] + " - " + DataLast["recenttracks"]["track"][1]["name"], 10, 140, size = 15, fontPath="Ubuntu.ttf")
 			TextEtImg.AddText(DataLast["recenttracks"]["track"][1]["album"]["#text"], 10, 155, size = 10, fontPath="Ubuntu.ttf")
 	
 	except KeyError:
@@ -106,12 +106,11 @@ def Musique():
 
 	time.sleep(15)
 
-	Order = 0
-	Ordre(Order)
+	TextEtImg.Clear()
 
 Ecran = Papirus()
 TextEtImg = PapirusComposite(False)
 
-Ordre(Order)
+Main()
 
 
