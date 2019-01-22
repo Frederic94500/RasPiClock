@@ -87,18 +87,19 @@ def Musique():
 
 	TextEtImg.AddText("Last.fm:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
 
-	if DataLast["recenttracks"]["track"][0]["@attr"]["nowplaying"] == "true":
-		TextEtImg.AddText("Actuellement:", 10, 40, size = 25, fontPath="Ubuntu.ttf")
-		TextEtImg.AddText(DataLast["recenttracks"]["track"][0]["artist"]["#text"] + " - " + DataLast["recenttracks"]["track"][0]["name"], 10, 65, size = 20, fontPath="Ubuntu.ttf")
-		TextEtImg.AddText(DataLast["recenttracks"]["track"][0]["album"]["#text"], 10, 85, size = 10, fontPath="Ubuntu.ttf")
+	try:
+		if DataLast["recenttracks"]["track"][0]["@attr"]["nowplaying"] == "true":
+			TextEtImg.AddText("Actuellement:", 10, 40, size = 25, fontPath="Ubuntu.ttf")
+			TextEtImg.AddText(DataLast["recenttracks"]["track"][0]["artist"]["#text"] + " - " + DataLast["recenttracks"]["track"][0]["name"], 10, 65, size = 15, fontPath="Ubuntu.ttf")
+			TextEtImg.AddText(DataLast["recenttracks"]["track"][0]["album"]["#text"], 10, 85, size = 10, fontPath="Ubuntu.ttf")
 
-		TextEtImg.AddText("Précédent:", 10, 115, size = 25, fontPath="Ubuntu.ttf")
-		TextEtImg.AddText(DataLast["recenttracks"]["track"][1]["artist"]["#text"] + " - " + DataLast["recenttracks"]["track"][0]["name"], 10, 140, size = 20, fontPath="Ubuntu.ttf")
-		TextEtImg.AddText(DataLast["recenttracks"]["track"][1]["album"]["#text"], 10, 160, size = 10, fontPath="Ubuntu.ttf")
+			TextEtImg.AddText("Précédent:", 10, 115, size = 25, fontPath="Ubuntu.ttf")
+			TextEtImg.AddText(DataLast["recenttracks"]["track"][1]["artist"]["#text"] + " - " + DataLast["recenttracks"]["track"][0]["name"], 10, 140, size = 15, fontPath="Ubuntu.ttf")
+			TextEtImg.AddText(DataLast["recenttracks"]["track"][1]["album"]["#text"], 10, 160, size = 10, fontPath="Ubuntu.ttf")
 	
-	else:
+	except:
 		TextEtImg.AddText("Précédent:", 10, 40, size = 25, fontPath="Ubuntu.ttf")
-		TextEtImg.AddText(DataLast["recenttracks"]["track"][0]["artist"]["#text"] + " - " + DataLast["recenttracks"]["track"][0]["name"], 10, 65, size = 20, fontPath="Ubuntu.ttf")
+		TextEtImg.AddText(DataLast["recenttracks"]["track"][0]["artist"]["#text"] + " - " + DataLast["recenttracks"]["track"][0]["name"], 10, 65, size = 15, fontPath="Ubuntu.ttf")
 		TextEtImg.AddText(DataLast["recenttracks"]["track"][0]["album"]["#text"], 10, 85, size = 10, fontPath="Ubuntu.ttf")
 
 	TextEtImg.WriteAll(True)
