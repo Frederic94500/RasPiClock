@@ -14,13 +14,14 @@ Order = 0
 
 def Ordre(Order):
 	try:
-		TextEtImg.Clear()
 		if Order == 0:
+			TextEtImg.Clear()
 			Creation = 0
 			Crypto()
 		if Order == 1: Meteo()
 		if Order == 2: Musique() #WIP
-		if Order == 3: RATP() #WIP
+		if Order == 3: Twitter() #WIP
+		if Order == 4: RATP() #WIP
 	except KeyboardInterrupt:
 		print("Vous avez arrêté le processus, nettoyage de l'écran")
 		os.system("papirus-clear")
@@ -38,20 +39,18 @@ def Crypto():
 		TextEtImg.AddText("% BTC", 64, 74, Id="BitcoinPCT", size = 15)
 		TextEtImg.AddText("% ETH", 64, 144, Id="EthereumPCT", size = 15)
 		Creation = 1
+		Repeat = 0
 
 	ReponseCrypto = rq.get("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETH&tsyms=USD&api_key=261d6b25933c3a0ccd3b991898b6ed86ac7815ec7ebedda674dd7ff116f23e51")
 	DataCrypto = json.loads(ReponseCrypto.text)
 
-	PriceBTC = str(DataCrypto["RAW"]["BTC"]["USD"]["PRICE"])
 	PCTBTC = list(str(DataCrypto["RAW"]["BTC"]["USD"]["CHANGEPCT24HOUR"]))
 	del PCTBTC[-14:-1]
-
-	PriceETH = str(DataCrypto["RAW"]["ETH"]["USD"]["PRICE"])
 	PCTETH = list(str(DataCrypto["RAW"]["ETH"]["USD"]["CHANGEPCT24HOUR"]))
 	del PCTETH[-14:-1]
 
-	TextEtImg.UpdateText("BitcoinP", "$ " + PriceBTC, fontPath="Ubuntu.ttf")
-	TextEtImg.UpdateText("EthereumP", "$ " + PriceETH, fontPath="Ubuntu.ttf")
+	TextEtImg.UpdateText("BitcoinP", "$ " + str(DataCrypto["RAW"]["BTC"]["USD"]["PRICE"]), fontPath="Ubuntu.ttf")
+	TextEtImg.UpdateText("EthereumP", "$ " + str(DataCrypto["RAW"]["ETH"]["USD"]["PRICE"]), fontPath="Ubuntu.ttf")
 	TextEtImg.UpdateText("BitcoinPCT", "".join(PCTBTC) + "%", fontPath="Ubuntu.ttf")
 	TextEtImg.UpdateText("EthereumPCT", "".join(PCTETH) + "%", fontPath="Ubuntu.ttf")
 
@@ -59,7 +58,7 @@ def Crypto():
 
 	time.sleep(3)
 
-	Repeat = Repeat + 1
+	Repeat += 1
 	if Repeat == 6:
 		Order = 1
 		Ordre(Order)
@@ -71,14 +70,43 @@ def Meteo():
 	DataMeteo = json.loads(ReponseMeteo.text)
 
 	TextEtImg.AddText("Météo:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
-
 	TextEtImg.AddText("Temperature: " + str(DataMeteo["main"]["temp"]) + "°C", 10, 40, size = 25, fontPath="Ubuntu.ttf")
-	TextEtImg.AddText("Temp Min: " + str(DataMeteo["main"]["temp_min"]) + "°C" + "   Temp Max: " + str(DataMeteo["main"]["temp_max"]) + "°C", 10, 65, size = 20, fontPath="Ubuntu.ttf")
-
-	#TextEtImg.AddText("Temps: " + str(DataMeteo["weather"]["description"]), 10, 85, size = 25, fontPath="Ubuntu.ttf") #?
+	TextEtImg.AddText("Temp Min: " + str(DataMeteo["main"]["temp_min"]) + "°C" + " Temp Max: " + str(DataMeteo["main"]["temp_max"]) + "°C", 10, 65, size = 10, fontPath="Ubuntu.ttf")
+	TextEtImg.AddText("Temps: " + DataMeteo["weather"][0]["description"], 10, 85, size = 25, fontPath="Ubuntu.ttf") 
 
 	TextEtImg.WriteAll(True)
 
+	time.sleep(15)
+
+	Order = 2
+	Ordre(Order)
+
+def Musique():
+	ReponseLastFM = rq.get("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=Frederic94500&api_key=5bf1ea23824ae3745971ec27e036d3fa&limit=1&format=json")
+	DataLast = json.loads(ReponseLastFM.text)
+
+	TextEtImg.AddText("Last.fm:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
+
+	if DataLast["recenttracks"]["track"][0]["@attr"]["nowplaying"] == "true":
+		TextEtImg.AddText("Actuellement:", 10, 40, size = 25, fontPath="Ubuntu.ttf")
+		TextEtImg.AddText(DataLast["recenttracks"]["track"][0]["artist"]["#text"] + " - " + DataLast["recenttracks"]["track"][0]["name"], 10, 65, size = 20, fontPath="Ubuntu.ttf")
+		TextEtImg.AddText(DataLast["recenttracks"]["track"][0]["album"]["#text"], 10, 85, size = 10, fontPath="Ubuntu.ttf")
+
+		TextEtImg.AddText("Précédent:", 10, 115, size = 25, fontPath="Ubuntu.ttf")
+		TextEtImg.AddText(DataLast["recenttracks"]["track"][1]["artist"]["#text"] + " - " + DataLast["recenttracks"]["track"][0]["name"], 10, 140, size = 20, fontPath="Ubuntu.ttf")
+		TextEtImg.AddText(DataLast["recenttracks"]["track"][1]["album"]["#text"], 10, 160, size = 10, fontPath="Ubuntu.ttf")
+	
+	else:
+		TextEtImg.AddText("Précédent:", 10, 40, size = 25, fontPath="Ubuntu.ttf")
+		TextEtImg.AddText(DataLast["recenttracks"]["track"][0]["artist"]["#text"] + " - " + DataLast["recenttracks"]["track"][0]["name"], 10, 65, size = 20, fontPath="Ubuntu.ttf")
+		TextEtImg.AddText(DataLast["recenttracks"]["track"][0]["album"]["#text"], 10, 85, size = 10, fontPath="Ubuntu.ttf")
+
+	TextEtImg.WriteAll(True)
+
+	time.sleep(15)
+
+	Order = 0
+	Ordre(Order)
 
 Ecran = Papirus()
 TextEtImg = PapirusComposite(False)
