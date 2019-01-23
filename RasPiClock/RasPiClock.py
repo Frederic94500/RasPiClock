@@ -20,7 +20,7 @@ def Main():
 			Crypto()
 			Meteo()
 			Musique()
-		#if Order == 3: Twitter() #WIP
+			#Social() #WIP
 		#if Order == 4: RATP() #WIP
 	except KeyboardInterrupt:
 		print("Vous avez arrêté le processus, nettoyage de l'écran")
@@ -74,11 +74,11 @@ def Meteo():
 	TextEtImg.AddText("Temp Min: " + str(DataMeteo["main"]["temp_min"]) + "°C" + " Temp Max: " + str(DataMeteo["main"]["temp_max"]) + "°C", 10, 65, size = 12, fontPath="Ubuntu.ttf")
 	TextEtImg.AddText("Temps: " + DataMeteo["weather"][0]["description"], 10, 85, size = 25, fontPath="Ubuntu.ttf") 
 
-	TextEtImg.WriteAll()
+	TextEtImg.WriteAll(True)
 
 	time.sleep(15)
 
-	#TextEtImg.Clear()
+	TextEtImg.Clear()
 
 def Musique():
 	ReponseLastFM = rq.get("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=Frederic94500&api_key=5bf1ea23824ae3745971ec27e036d3fa&limit=1&format=json")
@@ -102,11 +102,26 @@ def Musique():
 
 	finally:
 
-		TextEtImg.WriteAll()
+		TextEtImg.WriteAll(True)
 
 		time.sleep(15)
 
 		TextEtImg.Clear()
+
+def Social():
+	ReponseTwitter = rq.get("https://api.twitter.com/1.1/users/show.json?screen_name=Frederic94500", headers={'Authorization': "Bearer AAAAAAAAAAAAAAAAAAAAAGRr9QAAAAAApU6cp18UYHWmOtfqvvPZ783n7kI%3DVcwCE2OxcjpJuaR6bFdUAkF6gQQDlBgYHqLpSVYciHgeQRQEfF"})
+	DataTwitter = json.loads(ReponseTwitter.text)
+
+	ReponseTwitchZ = rq.get("https://api.twitch.tv/helix/streams?user_login=zerator", headers={"Client-ID": "6k8zx7uira85jc67wzh5m03sxzn4xb"})
+	ReponseTwitchMV = rq.get("https://api.twitch.tv/helix/streams?user_login=mistermv", headers={"Client-ID": "6k8zx7uira85jc67wzh5m03sxzn4xb"})
+	DataZ = json.loads(ReponseTwitchZ.text)
+	DataMV = json.loads(ReponseTwitchMV.text)
+
+	TextEtImg.AddText("Réseaux Sociaux", 10, 10, size = 20, fontPath="Ubuntu.ttf")
+
+	#try:
+
+
 
 Ecran = Papirus()
 TextEtImg = PapirusComposite(False)
