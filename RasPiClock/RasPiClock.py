@@ -16,7 +16,6 @@ def Main():
 	try:
 		while A == 1:
 			global Creation
-			TextEtImg.Clear() #WIP
 			Creation = 0
 			Crypto()
 			Meteo()
