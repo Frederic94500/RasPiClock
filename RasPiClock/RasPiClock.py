@@ -135,7 +135,11 @@ TextEtImg = PapirusComposite(False)
 
 TextEtImg.Clear()
 
-th.(API.API()).start()
-th.Main().start()
+thread_2 = API.API()
+time.sleep(5)
+thread_1 = Main()
+
+thread_1.start()
+thread_2.start()
 
 
