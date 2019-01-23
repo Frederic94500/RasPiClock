@@ -1,10 +1,13 @@
 # coding: utf-8
 
 import requests as rq
+import threading as th
 import time
 import json
 import sys
 import os
+
+import API #Fichier
 
 from papirus import Papirus
 from papirus import PapirusComposite
@@ -43,8 +46,7 @@ def Crypto():
 		Creation = 1
 		Repeat = 0
 
-	ReponseCrypto = rq.get("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETH&tsyms=USD&api_key=261d6b25933c3a0ccd3b991898b6ed86ac7815ec7ebedda674dd7ff116f23e51")
-	DataCrypto = json.loads(ReponseCrypto.text)
+	DataCrypto = json.loads(API.ReponseCrypto.text)
 
 	PCTBTC = list(str(DataCrypto["RAW"]["BTC"]["USD"]["CHANGEPCT24HOUR"]))
 	del PCTBTC[-14:-1]
@@ -66,8 +68,7 @@ def Crypto():
 		Crypto()
 
 def Meteo():
-	ReponseMeteo = rq.get("https://api.openweathermap.org/data/2.5/weather?q=Champigny-sur-Marne,fr&units=metric&lang=fr&appid=b3e6135efddd4b5f7ebc6add6fb003f3")
-	DataMeteo = json.loads(ReponseMeteo.text)
+	DataMeteo = json.loads(API.ReponseMeteo.text)
 
 	TextEtImg.AddText("Météo:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
 	TextEtImg.AddText("Temperature: " + str(DataMeteo["main"]["temp"]) + "°C", 10, 40, size = 25, fontPath="Ubuntu.ttf")
@@ -79,8 +80,7 @@ def Meteo():
 	TextEtImg.Clear()
 
 def Musique():
-	ReponseLastFM = rq.get("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=Frederic94500&api_key=5bf1ea23824ae3745971ec27e036d3fa&limit=1&format=json")
-	DataLast = json.loads(ReponseLastFM.text)
+	DataLast = json.loads(API.ReponseLastFM.text)
 
 	TextEtImg.AddText("Last.fm:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
 
@@ -102,13 +102,10 @@ def Musique():
 		TextEtImg.Clear()
 
 def Social():
-	ReponseTwitter = rq.get("https://api.twitter.com/1.1/users/show.json?screen_name=Frederic94500", headers={'Authorization': "Bearer AAAAAAAAAAAAAAAAAAAAAGRr9QAAAAAApU6cp18UYHWmOtfqvvPZ783n7kI%3DVcwCE2OxcjpJuaR6bFdUAkF6gQQDlBgYHqLpSVYciHgeQRQEfF"})
-	DataTwitter = json.loads(ReponseTwitter.text)
+	DataTwitter = json.loads(API.ReponseTwitter.text)
 
-	ReponseTwitchZ = rq.get("https://api.twitch.tv/helix/streams?user_login=zerator", headers={"Client-ID": "6k8zx7uira85jc67wzh5m03sxzn4xb"})
-	ReponseTwitchMV = rq.get("https://api.twitch.tv/helix/streams?user_login=mistermv", headers={"Client-ID": "6k8zx7uira85jc67wzh5m03sxzn4xb"})
-	DataZ = json.loads(ReponseTwitchZ.text)
-	DataMV = json.loads(ReponseTwitchMV.text)
+	DataZ = json.loads(API.ReponseTwitchZ.text)
+	DataMV = json.loads(API.ReponseTwitchMV.text)
 
 	TextEtImg.AddText("Réseaux Sociaux:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
 
@@ -138,6 +135,10 @@ TextEtImg = PapirusComposite(False)
 
 TextEtImg.Clear()
 
-Main()
+thread_1 = Main()
+thread_2 = API.API()
+
+thread_1.start()
+thread_2.start()
 
 
