@@ -118,13 +118,13 @@ def Social():
 	try:
 		if DataZ["data"][0]["type"] == "live":
 			TextEtImg.AddText("Zerator: ON", 10, 100, size = 20, fontPath="Ubuntu.ttf")
-	except KeyError:
+	except IndexError:
 		TextEtImg.AddText("Zerator: OFF", 10, 100, size = 20, fontPath="Ubuntu.ttf")
 
 	try:
 		if DataMV["data"][0]["type"] == "live":
 			TextEtImg.AddText("MisterMV: ON", 10, 130, size = 20, fontPath="Ubuntu.ttf")
-	except KeyError:
+	except IndexError:
 		TextEtImg.AddText("MisterMV: OFF", 10, 130, size = 20, fontPath="Ubuntu.ttf")
 
 	finally:
