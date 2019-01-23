@@ -110,9 +110,9 @@ def Social():
 	DataZ = json.loads(ReponseTwitchZ.text)
 	DataMV = json.loads(ReponseTwitchMV.text)
 
-	TextEtImg.AddText("Réseaux Sociaux", 10, 10, size = 20, fontPath="Ubuntu.ttf")
+	TextEtImg.AddText("Réseaux Sociaux:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
 
-	TextEtImg.AddText("Twitter: " + str(DataTwitter["followers_count"]), 10, 40, size = 25, fontPath="Ubuntu.ttf")
+	TextEtImg.AddText("Twitter: " + str(DataTwitter["followers_count"]) + " Followers", 10, 40, size = 25, fontPath="Ubuntu.ttf")
 	TextEtImg.AddText("Twitch:", 10, 75, size = 25, fontPath="Ubuntu.ttf")
 
 	try:
