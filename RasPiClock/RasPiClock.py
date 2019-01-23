@@ -113,11 +113,11 @@ def Social():
 	TextEtImg.AddText("Réseaux Sociaux", 10, 10, size = 20, fontPath="Ubuntu.ttf")
 
 	TextEtImg.AddText("Twitter: " + str(DataTwitter["followers_count"]), 10, 40, size = 25, fontPath="Ubuntu.ttf")
-	TextEtImg.AddText("Twitch:", 10, 65, size = 25, fontPath="Ubuntu.ttf")
+	TextEtImg.AddText("Twitch:", 10, 75, size = 25, fontPath="Ubuntu.ttf")
 
 	try:
 		if DataZ["data"][0]["type"] == "live":
-			TextEtImg.AddText("Zerator: ON", 10, 100, size = 20, fontPath="Ubuntu.ttf")
+			TextEtImg.AddText("ZeratoR: ON", 10, 100, size = 20, fontPath="Ubuntu.ttf")
 	except IndexError:
 		TextEtImg.AddText("Zerator: OFF", 10, 100, size = 20, fontPath="Ubuntu.ttf")
 
