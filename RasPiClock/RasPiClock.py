@@ -1,3 +1,5 @@
+# coding: utf-8
+
 import requests as rq
 import time
 import json
@@ -20,7 +22,7 @@ def Main():
 			Crypto()
 			Meteo()
 			Musique()
-			#Social() #WIP
+			Social()
 		#if Order == 4: RATP() #WIP
 	except KeyboardInterrupt:
 		print("Vous avez arrêté le processus, nettoyage de l'écran")
@@ -55,9 +57,7 @@ def Crypto():
 	TextEtImg.UpdateText("EthereumPCT", "".join(PCTETH) + "%", fontPath="Ubuntu.ttf")
 
 	TextEtImg.WriteAll(True)
-
 	time.sleep(3)
-
 	Repeat += 1
 	if Repeat == 6:
 		TextEtImg.Clear()
@@ -75,9 +75,7 @@ def Meteo():
 	TextEtImg.AddText("Temps: " + DataMeteo["weather"][0]["description"], 10, 85, size = 25, fontPath="Ubuntu.ttf") 
 
 	TextEtImg.WriteAll(True)
-
 	time.sleep(15)
-
 	TextEtImg.Clear()
 
 def Musique():
@@ -94,18 +92,13 @@ def Musique():
 
 			TextEtImg.AddText("Précédent:", 10, 115, size = 25, fontPath="Ubuntu.ttf")
 			TextEtImg.AddText(DataLast["recenttracks"]["track"][1]["artist"]["#text"] + " - " + DataLast["recenttracks"]["track"][1]["name"], 10, 140, size = 15, fontPath="Ubuntu.ttf")
-
 	except KeyError:
 		TextEtImg.AddText("Précédent:", 10, 40, size = 25, fontPath="Ubuntu.ttf")
 		TextEtImg.AddText(DataLast["recenttracks"]["track"][0]["artist"]["#text"] + " - " + DataLast["recenttracks"]["track"][0]["name"], 10, 65, size = 15, fontPath="Ubuntu.ttf")
 		TextEtImg.AddText(DataLast["recenttracks"]["track"][0]["album"]["#text"], 10, 95, size = 10, fontPath="Ubuntu.ttf")
-
 	finally:
-
 		TextEtImg.WriteAll(True)
-
 		time.sleep(15)
-
 		TextEtImg.Clear()
 
 def Social():
@@ -119,8 +112,25 @@ def Social():
 
 	TextEtImg.AddText("Réseaux Sociaux", 10, 10, size = 20, fontPath="Ubuntu.ttf")
 
-	#try:
+	TextEtImg.AddText("Twitter: " + str(DataTwitter["followers_count"]), 10, 40, size = 25, fontPath="Ubuntu.ttf")
+	TextEtImg.AddText("Twitch:", 10, 65, size = 25, fontPath="Ubuntu.ttf")
 
+	try:
+		if DataZ["data"][0]["type"] == "live":
+			TextEtImg.AddText("Zerator: ON", 10, 100, size = 20, fontPath="Ubuntu.ttf")
+	except KeyError:
+		TextEtImg.AddText("Zerator: OFF", 10, 100, size = 20, fontPath="Ubuntu.ttf")
+
+	try:
+		if DataMV["data"][0]["type"] == "live":
+			TextEtImg.AddText("MisterMV: ON", 10, 130, size = 20, fontPath="Ubuntu.ttf")
+	except KeyError:
+		TextEtImg.AddText("MisterMV: OFF", 10, 130, size = 20, fontPath="Ubuntu.ttf")
+
+	finally:
+		TextEtImg.WriteAll(True)
+		time.sleep(15)
+		TextEtImg.Clear()
 
 
 Ecran = Papirus()
