@@ -22,4 +22,4 @@ def API():
 			ReponseTwitchMV = rq.get("https://api.twitch.tv/helix/streams?user_login=mistermv", headers={"Client-ID": "6k8zx7uira85jc67wzh5m03sxzn4xb"})
 			time.sleep(5)
 	except KeyboardInterrupt:
-		sys.exit()
+		return
