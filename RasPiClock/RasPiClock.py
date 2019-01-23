@@ -74,7 +74,7 @@ def Meteo():
 	TextEtImg.AddText("Temp Min: " + str(DataMeteo["main"]["temp_min"]) + "°C" + " Temp Max: " + str(DataMeteo["main"]["temp_max"]) + "°C", 10, 65, size = 12, fontPath="Ubuntu.ttf")
 	TextEtImg.AddText("Temps: " + DataMeteo["weather"][0]["description"], 10, 85, size = 25, fontPath="Ubuntu.ttf") 
 
-	TextEtImg.WriteAll()
+	TextEtImg.WriteAll(True)
 
 	time.sleep(15)
 
@@ -110,6 +110,8 @@ def Musique():
 
 Ecran = Papirus()
 TextEtImg = PapirusComposite(False)
+
+TextEtImg.Clear()
 
 Main()
 
