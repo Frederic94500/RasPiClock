@@ -74,11 +74,11 @@ def Meteo():
 	TextEtImg.AddText("Temp Min: " + str(DataMeteo["main"]["temp_min"]) + "°C" + " Temp Max: " + str(DataMeteo["main"]["temp_max"]) + "°C", 10, 65, size = 12, fontPath="Ubuntu.ttf")
 	TextEtImg.AddText("Temps: " + DataMeteo["weather"][0]["description"], 10, 85, size = 25, fontPath="Ubuntu.ttf") 
 
-	TextEtImg.WriteAll(True)
+	TextEtImg.WriteAll()
 
 	time.sleep(15)
 
-	TextEtImg.Clear()
+	#TextEtImg.Clear()
 
 def Musique():
 	ReponseLastFM = rq.get("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=Frederic94500&api_key=5bf1ea23824ae3745971ec27e036d3fa&limit=1&format=json")
@@ -102,7 +102,7 @@ def Musique():
 
 	finally:
 
-		TextEtImg.WriteAll(True)
+		TextEtImg.WriteAll()
 
 		time.sleep(15)
 
