@@ -17,24 +17,20 @@ A = 1
 Creation = 0
 Repeat = 0
 
-class Main(th):
-	def __init__(self):
-		th.__init__(self)
-
-	def run(self):
-		try:
-			while A == 1:
-				global Creation
-				Creation = 0
-				Crypto()
-				Meteo()
-				Musique()
-				Social()
-			#if Order == 4: RATP() #WIP
-		except KeyboardInterrupt:
-			print("Vous avez arrêté le processus, nettoyage de l'écran")
-			os.system("papirus-clear")
-			sys.exit()
+def Main():
+	try:
+		while A == 1:
+			global Creation
+			Creation = 0
+			Crypto()
+			Meteo()
+			Musique()
+			Social()
+		#if Order == 4: RATP() #WIP
+	except KeyboardInterrupt:
+		print("Vous avez arrêté le processus, nettoyage de l'écran")
+		os.system("papirus-clear")
+		sys.exit()
 
 def Crypto():
 	global Creation
@@ -139,11 +135,11 @@ TextEtImg = PapirusComposite(False)
 
 TextEtImg.Clear()
 
-thread2 = API.API()
-thread1 = Main()
-
-thread2.start()
+thread_2 = API.API()
 time.sleep(5)
-thread1.start()
+thread_1 = Main()
+
+thread_1.start()
+thread_2.start()
 
 
