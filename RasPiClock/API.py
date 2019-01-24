@@ -16,12 +16,6 @@ def Request():
 
 def API():
 	while B == 1:
-		global ReponseCrypto
-		global ReponseMeteo
-		global ReponseLastFM
-		global ReponseTwitchMV
-		global ReponseTwitchZ
-		global ReponseTwitter
 		Request()
 		time.sleep(3)
 

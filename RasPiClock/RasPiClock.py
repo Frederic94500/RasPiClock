@@ -12,12 +12,18 @@ import API #Fichier
 from papirus import Papirus
 from papirus import PapirusComposite
 from threading import Thread
-from API import *
 
 A = 1
 
 Creation = 0
 Repeat = 0
+
+global ReponseCrypto
+global ReponseMeteo
+global ReponseLastFM
+global ReponseTwitchMV
+global ReponseTwitchZ
+global ReponseTwitter
 
 def Main():
 	try:
@@ -48,7 +54,7 @@ def Crypto():
 		Creation = 1
 		Repeat = 0
 
-	DataCrypto = json.loads(ReponseCrypto.text)
+	DataCrypto = json.loads(API.ReponseCrypto.text)
 
 	PCTBTC = list(str(DataCrypto["RAW"]["BTC"]["USD"]["CHANGEPCT24HOUR"]))
 	del PCTBTC[-14:-1]
@@ -70,7 +76,7 @@ def Crypto():
 		Crypto()
 
 def Meteo():
-	DataMeteo = json.loads(ReponseMeteo.text)
+	DataMeteo = json.loads(API.ReponseMeteo.text)
 
 	TextEtImg.AddText("Météo:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
 	TextEtImg.AddText("Temperature: " + str(DataMeteo["main"]["temp"]) + "°C", 10, 40, size = 25, fontPath="Ubuntu.ttf")
@@ -82,7 +88,7 @@ def Meteo():
 	TextEtImg.Clear()
 
 def Musique():
-	DataLast = json.loads(ReponseLastFM.text)
+	DataLast = json.loads(API.ReponseLastFM.text)
 
 	TextEtImg.AddText("Last.fm:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
 
@@ -104,10 +110,10 @@ def Musique():
 		TextEtImg.Clear()
 
 def Social():
-	DataTwitter = json.loads(ReponseTwitter.text)
+	DataTwitter = json.loads(API.ReponseTwitter.text)
 
-	DataZ = json.loads(ReponseTwitchZ.text)
-	DataMV = json.loads(ReponseTwitchMV.text)
+	DataZ = json.loads(API.ReponseTwitchZ.text)
+	DataMV = json.loads(API.ReponseTwitchMV.text)
 
 	TextEtImg.AddText("Réseaux Sociaux:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
 
@@ -137,7 +143,7 @@ TextEtImg = PapirusComposite(False)
 
 TextEtImg.Clear()
 
-thread_2 = th.Thread(None, API)
+thread_2 = th.Thread(None, API.API)
 time.sleep(5)
 thread_1 = th.Thread(None, Main)
 
