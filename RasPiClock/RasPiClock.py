@@ -22,9 +22,9 @@ def Main():
 		#if Order == 4: RATP() #WIP
 	except (ValueError, socket.error, socket.gaierror, socket.herror, socket.timeout):
 		TextEtImg.Clear()
-		TextEtImg.AddText("ERREUR de connexion, nouvelle tentative de connexion dans: T", 10, 68, size = 20, fontPath="Ubuntu.ttf", Id="TimerErr")
+		TextEtImg.AddText("ERREUR de connexion, nouvelle tentative de connexion dans: T", 10, 48, size = 20, fontPath="Ubuntu.ttf", Id="TimerErr")
 		for I in range(30):
-			TextEtImg.UpdateText("TimerErr", "ERREUR de connexion, \nnouvelle tentative de connexion \ndans: " + str(30 - I), fontPath="Ubuntu.ttf")
+			TextEtImg.UpdateText("TimerErr", "ERREUR de connexion, \nnouvelle tentative de connexion dans: " + str(30 - I), fontPath="Ubuntu.ttf")
 			TextEtImg.WriteAll(True)
 			time.sleep(1)
 		TextEtImg.Clear()
