@@ -25,7 +25,7 @@ def Main():
 		TextEtImg.AddText("ERREUR de connexion, réessaie dans", 10, 68, size = 20, fontPath="Ubuntu.ttf")
 		TextEtImg.AddText("T", 132, 88, size=20, Id="TimerErr")
 		for I in range(30):
-			TextEtImg.AddText("TimerErr", str(30 - I), fontPath="Ubuntu.ttf")
+			TextEtImg.UpdateText("TimerErr", str(30 - I), fontPath="Ubuntu.ttf")
 			TextEtImg.WriteAll(True)
 			time.sleep(1)
 		Main()
