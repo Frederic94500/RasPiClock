@@ -5,7 +5,7 @@ import time, json, sys, os, socket
 
 from papirus import Papirus, PapirusComposite
 
-A, Repeat = 0
+A, Repeat = 0, 0
 
 def Main():
 	try:
