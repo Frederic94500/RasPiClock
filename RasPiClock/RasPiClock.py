@@ -1,13 +1,9 @@
 # coding: utf-8
 
 import requests as rq
-import time
-import json
-import sys
-import os
+import time, json, sys, os, socket
 
-from papirus import Papirus
-from papirus import PapirusComposite
+from papirus import Papirus, PapirusComposite
 
 A = 1
 
@@ -24,6 +20,15 @@ def Main():
 			Musique()
 			Social()
 		#if Order == 4: RATP() #WIP
+	except (ValueError, socket.error, socket.gaierror, socket.herror, socket.timeout):
+		TextEtImg.Clear()
+		TextEtImg.AddText("ERREUR de connexion, réessaie dans", 10, 68, size = 20, fontPath="Ubuntu.ttf")
+		TextEtImg.AddText("T", 132, 88, size=20, Id="TimerErr")
+		for I in range(30):
+			TextEtImg("TimerErr", str(30 - I), fontPath="Ubuntu.ttf")
+			TextEtImg.WriteAll(True)
+			time.sleep(1)
+		Main()
 	except KeyboardInterrupt:
 		print("Vous avez arrêté le processus, nettoyage de l'écran")
 		os.system("papirus-clear")
