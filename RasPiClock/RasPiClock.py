@@ -5,14 +5,11 @@ import time, json, sys, os, socket
 
 from papirus import Papirus, PapirusComposite
 
-A = 1
-
-Creation = 0
-Repeat = 0
+A, Repeat = 0
 
 def Main():
 	try:
-		while A == 1:
+		while A == 0:
 			global Creation
 			Creation = 0
 			Crypto()
@@ -23,8 +20,8 @@ def Main():
 	except (ValueError, socket.error, socket.gaierror, socket.herror, socket.timeout):
 		TextEtImg.Clear()
 		TextEtImg.AddText("ERREUR de connexion, nouvelle tentative de connexion dans: T", 10, 48, size = 20, fontPath="Ubuntu.ttf", Id="TimerErr")
-		for I in range(30):
-			TextEtImg.UpdateText("TimerErr", "ERREUR de connexion, \nnouvelle tentative de connexion dans: " + str(30 - I), fontPath="Ubuntu.ttf")
+		for I in range(15):
+			TextEtImg.UpdateText("TimerErr", "ERREUR de connexion, \nnouvelle tentative de connexion dans: " + str(15 - I), fontPath="Ubuntu.ttf")
 			TextEtImg.WriteAll(True)
 			time.sleep(1)
 		TextEtImg.Clear()
@@ -41,10 +38,10 @@ def Crypto():
 		TextEtImg.AddImg("BTC.bmp", 10, 42, (44,44))
 		TextEtImg.AddImg("ETH.bmp", 10, 100, (44,68))
 		TextEtImg.AddText("Crypto:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
-		TextEtImg.AddText("$ BTC", 64, 44, Id="BitcoinP", size = 30)
-		TextEtImg.AddText("$ ETH", 64, 114, Id="EthereumP", size = 30)
-		TextEtImg.AddText("% BTC", 64, 74, Id="BitcoinPCT", size = 15)
-		TextEtImg.AddText("% ETH", 64, 144, Id="EthereumPCT", size = 15)
+		TextEtImg.AddText("", 64, 44, Id="BitcoinP", size = 30)
+		TextEtImg.AddText("", 64, 114, Id="EthereumP", size = 30)
+		TextEtImg.AddText("", 64, 74, Id="BitcoinPCT", size = 15)
+		TextEtImg.AddText("", 64, 144, Id="EthereumPCT", size = 15)
 		Creation = 1
 		Repeat = 0
 
@@ -88,7 +85,6 @@ def Musique():
 	DataLast = json.loads(ReponseLastFM.text)
 
 	TextEtImg.AddText("Last.fm:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
-
 	try:
 		if DataLast["recenttracks"]["track"][0]["@attr"]["nowplaying"] == "true":
 			TextEtImg.AddText("Actuellement:", 10, 40, size = 25, fontPath="Ubuntu.ttf")
@@ -116,7 +112,6 @@ def Social():
 	DataMV = json.loads(ReponseTwitchMV.text)
 
 	TextEtImg.AddText("Réseaux Sociaux:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
-
 	TextEtImg.AddText("Twitter: " + str(DataTwitter["followers_count"]) + " Followers", 10, 40, size = 25, fontPath="Ubuntu.ttf")
 	TextEtImg.AddText("Twitch:", 10, 75, size = 25, fontPath="Ubuntu.ttf")
 
@@ -125,13 +120,11 @@ def Social():
 			TextEtImg.AddText("ZeratoR: ON", 10, 100, size = 20, fontPath="Ubuntu.ttf")
 	except IndexError:
 		TextEtImg.AddText("Zerator: OFF", 10, 100, size = 20, fontPath="Ubuntu.ttf")
-
 	try:
 		if DataMV["data"][0]["type"] == "live":
 			TextEtImg.AddText("MisterMV: ON", 10, 130, size = 20, fontPath="Ubuntu.ttf")
 	except IndexError:
 		TextEtImg.AddText("MisterMV: OFF", 10, 130, size = 20, fontPath="Ubuntu.ttf")
-
 	finally:
 		TextEtImg.WriteAll(True)
 		time.sleep(15)
