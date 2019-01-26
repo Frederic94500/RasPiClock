@@ -22,12 +22,13 @@ def Main():
 		#if Order == 4: RATP() #WIP
 	except (ValueError, socket.error, socket.gaierror, socket.herror, socket.timeout):
 		TextEtImg.Clear()
-		TextEtImg.AddText("ERREUR de connexion, réessaie dans", 10, 68, size = 20, fontPath="Ubuntu.ttf")
-		TextEtImg.AddText("T", 132, 88, size=20, Id="TimerErr")
+		TextEtImg.AddText("ERREUR de connexion, réessaie dans: ", 10, 68, size = 20, fontPath="Ubuntu.ttf")
+		TextEtImg.AddText("T", 140, 88, size=20, Id="TimerErr")
 		for I in range(30):
 			TextEtImg.UpdateText("TimerErr", str(30 - I), fontPath="Ubuntu.ttf")
 			TextEtImg.WriteAll(True)
 			time.sleep(1)
+		TextEtImg.Clear()
 		Main()
 	except KeyboardInterrupt:
 		print("Vous avez arrêté le processus, nettoyage de l'écran")
