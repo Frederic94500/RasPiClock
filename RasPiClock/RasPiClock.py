@@ -59,9 +59,9 @@ def Crypto():
 	TextEtImg.UpdateText("EthereumPCT", "".join(PCTETH) + "%", fontPath="Ubuntu.ttf")
 
 	TextEtImg.WriteAll(True)
-	time.sleep(3)
+	time.sleep(15)
 	Repeat += 1
-	if Repeat == 6:
+	if Repeat == 2:
 		TextEtImg.Clear()
 		return
 	else:
