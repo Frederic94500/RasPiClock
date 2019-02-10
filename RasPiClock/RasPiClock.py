@@ -1,17 +1,17 @@
-# coding: utf-8
+# -*- encoding: utf-8 -*-
 
 import requests as rq
 import time, json, sys, os, socket
 
 from papirus import Papirus, PapirusComposite
 
-A, Repeat = 0, 0
+A = 0
+CryptoPrix = ["BitcoinP", "BitcoinPCT", "EthereumP", "EthereumPCT"]
+IMG = ["BTC", "ETH"]
 
 def Main():
 	try:
 		while A == 0:
-			global Creation
-			Creation = 0
 			Crypto()
 			Meteo()
 			Musique()
@@ -32,19 +32,6 @@ def Main():
 		sys.exit()
 
 def Crypto():
-	global Creation
-	global Repeat
-	if Creation == 0:
-		TextEtImg.AddImg("BTC.bmp", 10, 42, (44,44))
-		TextEtImg.AddImg("ETH.bmp", 10, 100, (44,68))
-		TextEtImg.AddText("Crypto:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
-		TextEtImg.AddText("", 64, 44, Id="BitcoinP", size = 30)
-		TextEtImg.AddText("", 64, 114, Id="EthereumP", size = 30)
-		TextEtImg.AddText("", 64, 74, Id="BitcoinPCT", size = 15)
-		TextEtImg.AddText("", 64, 144, Id="EthereumPCT", size = 15)
-		Creation = 1
-		Repeat = 0
-
 	ReponseCrypto = rq.get("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETH&tsyms=USD&api_key=261d6b25933c3a0ccd3b991898b6ed86ac7815ec7ebedda674dd7ff116f23e51")
 	DataCrypto = json.loads(ReponseCrypto.text)
 
@@ -53,25 +40,30 @@ def Crypto():
 	PCTETH = list(str(DataCrypto["RAW"]["ETH"]["USD"]["CHANGEPCT24HOUR"]))
 	del PCTETH[-14:-1]
 
+	TextEtImg.UpdateText("Titre", "Crypto:", fontPath="Ubuntu.ttf")
+
+	TextEtImg.AddImg("BTC.bmp", 10, 42, (44,44), Id=IMG[0])
+	TextEtImg.AddImg("ETH.bmp", 10, 100, (44,68), Id=IMG[1])
+
 	TextEtImg.UpdateText("BitcoinP", "$ " + str(DataCrypto["RAW"]["BTC"]["USD"]["PRICE"]), fontPath="Ubuntu.ttf")
-	TextEtImg.UpdateText("EthereumP", "$ " + str(DataCrypto["RAW"]["ETH"]["USD"]["PRICE"]), fontPath="Ubuntu.ttf")
 	TextEtImg.UpdateText("BitcoinPCT", "".join(PCTBTC) + "%", fontPath="Ubuntu.ttf")
+	TextEtImg.UpdateText("EthereumP", "$ " + str(DataCrypto["RAW"]["ETH"]["USD"]["PRICE"]), fontPath="Ubuntu.ttf")
 	TextEtImg.UpdateText("EthereumPCT", "".join(PCTETH) + "%", fontPath="Ubuntu.ttf")
 
 	TextEtImg.WriteAll(True)
 	time.sleep(15)
-	Repeat += 1
-	if Repeat == 2:
-		TextEtImg.Clear()
-		return
-	else:
-		Crypto()
+
+	for I in range(4):
+		TextEtImg.UpdateText(CryptoPrix[I], "", fontPath="Ubuntu.ttf")
+	for I in range(2):
+		TextEtImg.RemoveImg(IMG[I])
+	return
 
 def Meteo():
 	ReponseMeteo = rq.get("https://api.openweathermap.org/data/2.5/weather?q=Champigny-sur-Marne,fr&units=metric&lang=fr&appid=b3e6135efddd4b5f7ebc6add6fb003f3")
 	DataMeteo = json.loads(ReponseMeteo.text)
 
-	TextEtImg.AddText("Météo:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
+	TextEtImg.UpdateText("Titre", "Météo:", fontPath="Ubuntu.ttf")
 	TextEtImg.AddText("Température: " + str(DataMeteo["main"]["temp"]) + "°C", 10, 40, size = 25, fontPath="Ubuntu.ttf")
 	TextEtImg.AddText("Temp. Min: " + str(DataMeteo["main"]["temp_min"]) + "°C" + " Temp. Max: " + str(DataMeteo["main"]["temp_max"]) + "°C", 10, 65, size = 12, fontPath="Ubuntu.ttf")
 	TextEtImg.AddText("Temps: " + DataMeteo["weather"][0]["description"], 10, 85, size = 25, fontPath="Ubuntu.ttf") 
@@ -84,7 +76,7 @@ def Musique():
 	ReponseLastFM = rq.get("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=Frederic94500&api_key=5bf1ea23824ae3745971ec27e036d3fa&limit=1&format=json")
 	DataLast = json.loads(ReponseLastFM.text)
 
-	TextEtImg.AddText("Last.fm:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
+	TextEtImg.UpdateText("Titre", "Last.fm:", fontPath="Ubuntu.ttf")
 	try:
 		if DataLast["recenttracks"]["track"][0]["@attr"]["nowplaying"] == "true":
 			TextEtImg.AddText("Actuellement:", 10, 40, size = 25, fontPath="Ubuntu.ttf")
@@ -111,7 +103,7 @@ def Social():
 	DataZ = json.loads(ReponseTwitchZ.text)
 	DataMV = json.loads(ReponseTwitchMV.text)
 
-	TextEtImg.AddText("Réseaux Sociaux:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
+	TextEtImg.UpdateText("Titre", "Réseaux Sociaux:", fontPath="Ubuntu.ttf")
 	TextEtImg.AddText("Twitter: " + str(DataTwitter["followers_count"]) + " Followers", 10, 40, size = 25, fontPath="Ubuntu.ttf")
 	TextEtImg.AddText("Twitch:", 10, 75, size = 25, fontPath="Ubuntu.ttf")
 
@@ -135,6 +127,14 @@ Ecran = Papirus()
 TextEtImg = PapirusComposite(False)
 
 TextEtImg.Clear()
+
+TextEtImg.AddText("", 10, 10, Id="Titre", size = 30)
+
+TextEtImg.AddText("", 64, 44, Id="BitcoinP", size = 30)
+TextEtImg.AddText("", 64, 74, Id="BitcoinPCT", size = 15)
+TextEtImg.AddText("", 64, 114, Id="EthereumP", size = 30)
+TextEtImg.AddText("", 64, 144, Id="EthereumPCT", size = 15)
+
 
 Main()
 
