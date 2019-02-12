@@ -1,4 +1,4 @@
-# coding: utf-8
+# -*- encoding: utf-8 -*-
 
 import requests as rq
 import time, json, sys, os, socket
