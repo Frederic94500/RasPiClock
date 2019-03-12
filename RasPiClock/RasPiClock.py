@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 
 import requests as rq
+import configparser as cfg
 import time, json, sys, os, socket
 
 from papirus import Papirus, PapirusComposite
