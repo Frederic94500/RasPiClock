@@ -1,0 +1,13 @@
+TODO:
+N - Intégrer le fichier de config
+N - Faire la modulation
+N - Faire le GUI (Interface)
+	N - Menu Bar
+	N - Zones de Textes
+	N - Boutons (Afficher)
+N - Faire le module de test de chaque paramètre
+N - Intégrer dans l'affichage
+
+Bouton Afficher -> Test: Oui -> Afficher le texte
+						 Non -> Montrer l'erreur dans le paramètre qui pose problème
+					
