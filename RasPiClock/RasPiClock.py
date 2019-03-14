@@ -43,10 +43,10 @@ def Crypto():
 	PCTETH = list(str(DataCrypto["RAW"]["ETH"]["USD"]["CHANGEPCT24HOUR"]))
 	del PCTETH[-14:-1]
 
-	TextEtImg.AddText("BitcoinP", "$ " + str(DataCrypto["RAW"]["BTC"]["USD"]["PRICE"]), 64, 44, size = 30, fontPath="Ubuntu.ttf")
-	TextEtImg.AddText("EthereumP", "$ " + str(DataCrypto["RAW"]["ETH"]["USD"]["PRICE"]), 64, 114, size = 30, fontPath="Ubuntu.ttf")
-	TextEtImg.AddText("BitcoinPCT", "".join(PCTBTC) + "%", 64, 74, size = 15, fontPath="Ubuntu.ttf")
-	TextEtImg.AddText("EthereumPCT", "".join(PCTETH) + "%", 64, 144, size = 15, fontPath="Ubuntu.ttf")
+	TextEtImg.AddText("$ " + str(DataCrypto["RAW"]["BTC"]["USD"]["PRICE"]), 64, 44, size = 30, fontPath="Ubuntu.ttf")
+	TextEtImg.AddText("$ " + str(DataCrypto["RAW"]["ETH"]["USD"]["PRICE"]), 64, 114, size = 30, fontPath="Ubuntu.ttf")
+	TextEtImg.AddText("".join(PCTBTC) + "%", 64, 74, size = 15, fontPath="Ubuntu.ttf")
+	TextEtImg.AddText("".join(PCTETH) + "%", 64, 144, size = 15, fontPath="Ubuntu.ttf")
 
 	TextEtImg.WriteAll(True)
 	time.sleep(15)
