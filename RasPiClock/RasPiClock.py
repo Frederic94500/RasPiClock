@@ -120,7 +120,8 @@ Ecran = Papirus()
 TextEtImg = PapirusComposite(False)
 TextEtImg.Clear()
 
-cfg = config.read("config.cfg")
+cfg = configparser.ConfigParser()
+cfg.read("config.cfg")
 
 Main()
 
