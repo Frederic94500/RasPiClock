@@ -1,6 +1,6 @@
 TODO:
-N - Intégrer le fichier de config
-N - Faire la modulation
+N - Intégrer le fichier de config avec le library configparser
+N - Le faire modulaire
 N - Faire le GUI (Interface)
 	N - Menu Bar
 	N - Zones de Textes

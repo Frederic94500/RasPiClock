@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+#RasPiClock - Frédéric94500, EliottCheypeplus, ParsaEtz
 
 import requests as rq
 import configparser as cfg
@@ -6,13 +7,11 @@ import time, json, sys, os, socket
 
 from papirus import Papirus, PapirusComposite
 
-A, Repeat = 0, 0
+A = 0
 
 def Main():
 	try:
 		while A == 0:
-			global Creation
-			Creation = 0
 			Crypto()
 			Meteo()
 			Musique()
@@ -33,18 +32,9 @@ def Main():
 		sys.exit()
 
 def Crypto():
-	global Creation
-	global Repeat
-	if Creation == 0:
-		TextEtImg.AddImg("BTC.bmp", 10, 42, (44,44))
-		TextEtImg.AddImg("ETH.bmp", 10, 100, (44,68))
-		TextEtImg.AddText("Crypto:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
-		TextEtImg.AddText("", 64, 44, Id="BitcoinP", size = 30)
-		TextEtImg.AddText("", 64, 114, Id="EthereumP", size = 30)
-		TextEtImg.AddText("", 64, 74, Id="BitcoinPCT", size = 15)
-		TextEtImg.AddText("", 64, 144, Id="EthereumPCT", size = 15)
-		Creation = 1
-		Repeat = 0
+	TextEtImg.AddImg("BTC.bmp", 10, 42, (44,44))
+	TextEtImg.AddImg("ETH.bmp", 10, 100, (44,68))
+	TextEtImg.AddText("Crypto:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
 
 	ReponseCrypto = rq.get("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETH&tsyms=USD&api_key=261d6b25933c3a0ccd3b991898b6ed86ac7815ec7ebedda674dd7ff116f23e51")
 	DataCrypto = json.loads(ReponseCrypto.text)
@@ -54,19 +44,14 @@ def Crypto():
 	PCTETH = list(str(DataCrypto["RAW"]["ETH"]["USD"]["CHANGEPCT24HOUR"]))
 	del PCTETH[-14:-1]
 
-	TextEtImg.UpdateText("BitcoinP", "$ " + str(DataCrypto["RAW"]["BTC"]["USD"]["PRICE"]), fontPath="Ubuntu.ttf")
-	TextEtImg.UpdateText("EthereumP", "$ " + str(DataCrypto["RAW"]["ETH"]["USD"]["PRICE"]), fontPath="Ubuntu.ttf")
-	TextEtImg.UpdateText("BitcoinPCT", "".join(PCTBTC) + "%", fontPath="Ubuntu.ttf")
-	TextEtImg.UpdateText("EthereumPCT", "".join(PCTETH) + "%", fontPath="Ubuntu.ttf")
+	TextEtImg.AddText("BitcoinP", "$ " + str(DataCrypto["RAW"]["BTC"]["USD"]["PRICE"]), 64, 44, size = 30, fontPath="Ubuntu.ttf")
+	TextEtImg.AddText("EthereumP", "$ " + str(DataCrypto["RAW"]["ETH"]["USD"]["PRICE"]), 64, 114, size = 30, fontPath="Ubuntu.ttf")
+	TextEtImg.AddText("BitcoinPCT", "".join(PCTBTC) + "%", 64, 74, size = 15, fontPath="Ubuntu.ttf")
+	TextEtImg.AddText("EthereumPCT", "".join(PCTETH) + "%", 64, 144, size = 15, fontPath="Ubuntu.ttf")
 
 	TextEtImg.WriteAll(True)
 	time.sleep(15)
-	Repeat += 1
-	if Repeat == 2:
-		TextEtImg.Clear()
-		return
-	else:
-		Crypto()
+	TextEtImg.Clear()
 
 def Meteo():
 	ReponseMeteo = rq.get("https://api.openweathermap.org/data/2.5/weather?q=Champigny-sur-Marne,fr&units=metric&lang=fr&appid=b3e6135efddd4b5f7ebc6add6fb003f3")
