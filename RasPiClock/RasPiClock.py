@@ -12,7 +12,7 @@ def Main():
 	try:
 		while A == 0:
 			Crypto()
-			#Meteo() Problème ici! Et d'autres part, beaucoup de PROB!
+			Meteo()
 			Musique()
 			Social()
 		#if Order == 4: RATP() #WIP
@@ -57,8 +57,8 @@ def Meteo():
 	DataMeteo = json.loads(ReponseMeteo.text)
 
 	TextEtImg.AddText("Météo:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
-	#TextEtImg.AddText("Température: " + str(DataMeteo["main"]["temp"]) + "°C", 10, 40, size = 25, fontPath="Ubuntu.ttf")
-	#TextEtImg.AddText("Temp. Min: " + str(DataMeteo["main"]["temp_min"]) + "°C" + " Temp. Max: " + str(DataMeteo["main"]["temp_max"]) + "°C", 10, 65, size = 12, fontPath="Ubuntu.ttf")
+	TextEtImg.AddText("Température: " + str(DataMeteo["main"]["temp"]) + "°C", 10, 40, size = 25, fontPath="Ubuntu.ttf")
+	TextEtImg.AddText("Temp. Min: " + str(DataMeteo["main"]["temp_min"]) + "°C" + " Temp. Max: " + str(DataMeteo["main"]["temp_max"]) + "°C", 10, 65, size = 12, fontPath="Ubuntu.ttf")
 	TextEtImg.AddText("Temps: " + DataMeteo["weather"][0]["description"], 10, 85, size = 25, fontPath="Ubuntu.ttf") 
 
 	TextEtImg.WriteAll(True)
