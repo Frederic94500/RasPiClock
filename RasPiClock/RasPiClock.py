@@ -2,8 +2,7 @@
 #RasPiClock - Frédéric94500, EliottCheypeplus, ParsaEtz
 
 import requests as rq
-import configparser as cfg
-import time, json, sys, os, socket
+import time, json, sys, os, socket, configparser
 
 from papirus import Papirus, PapirusComposite
 
@@ -121,7 +120,7 @@ Ecran = Papirus()
 TextEtImg = PapirusComposite(False)
 TextEtImg.Clear()
 
-config = cfg.read("config.cfg")
+config = read("config.cfg")
 
 Main()
 
