@@ -11,4 +11,8 @@ N - Intégrer dans l'affichage
 
 Bouton Afficher -> Test: Oui -> Afficher le texte
 						 Non -> Montrer l'erreur dans le paramètre qui pose problème
-					
+		
+N - Twitter auth facile avec curl
+N - Gérer TOUT les exceptions
+	N - Vérifier si les bibliothèques sont installées
+	Y - Les problèmes de connexions
