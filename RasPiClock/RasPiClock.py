@@ -35,7 +35,7 @@ def Crypto():
 	TextEtImg.AddImg("ETH.bmp", 10, 100, (44,68))
 	TextEtImg.AddText("Crypto:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
 
-	ReponseCrypto = rq.get("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETH&tsyms=USD&api_key=" + config["API_KEY"]["CryptoAPI"])
+	ReponseCrypto = rq.get("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETH&tsyms=USD&api_key=" + cfg["API_KEY"]["CryptoAPI"])
 	DataCrypto = json.loads(ReponseCrypto.text)
 
 	PCTBTC = list(str(DataCrypto["RAW"]["BTC"]["USD"]["CHANGEPCT24HOUR"]))
@@ -53,7 +53,7 @@ def Crypto():
 	TextEtImg.Clear()
 
 def Meteo():
-	ReponseMeteo = rq.get("https://api.openweathermap.org/data/2.5/weather?q=Champigny-sur-Marne,fr&units=metric&lang=fr&appid=" + config["API_KEY"]["MeteoAPI"])
+	ReponseMeteo = rq.get("https://api.openweathermap.org/data/2.5/weather?q=Champigny-sur-Marne,fr&units=metric&lang=fr&appid=" + cfg["API_KEY"]["MeteoAPI"])
 	DataMeteo = json.loads(ReponseMeteo.text)
 
 	TextEtImg.AddText("Météo:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
@@ -66,7 +66,7 @@ def Meteo():
 	TextEtImg.Clear()
 
 def Musique():
-	ReponseLastFM = rq.get("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=Frederic94500&limit=1&format=json&api_key=" + config["API_KEY"]["LastFmAPI"])
+	ReponseLastFM = rq.get("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=Frederic94500&limit=1&format=json&api_key=" + cfg["API_KEY"]["LastFmAPI"])
 	DataLast = json.loads(ReponseLastFM.text)
 
 	TextEtImg.AddText("Last.fm:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
@@ -88,11 +88,11 @@ def Musique():
 		TextEtImg.Clear()
 
 def Social():
-	ReponseTwitter = rq.get("https://api.twitter.com/1.1/users/show.json?screen_name=Frederic94500", headers={'Authorization': "Bearer " + config["API_KEY"]["TwitterAPI"]})
+	ReponseTwitter = rq.get("https://api.twitter.com/1.1/users/show.json?screen_name=Frederic94500", headers={'Authorization': "Bearer " + cfg["API_KEY"]["TwitterAPI"]})
 	DataTwitter = json.loads(ReponseTwitter.text)
 
-	ReponseTwitchZ = rq.get("https://api.twitch.tv/helix/streams?user_login=zerator", headers={"Client-ID": config["API_KEY"]["TwitchAPI"]})
-	ReponseTwitchMV = rq.get("https://api.twitch.tv/helix/streams?user_login=mistermv", headers={"Client-ID": config["API_KEY"]["TwitchAPI"]})
+	ReponseTwitchZ = rq.get("https://api.twitch.tv/helix/streams?user_login=zerator", headers={"Client-ID": cfg["API_KEY"]["TwitchAPI"]})
+	ReponseTwitchMV = rq.get("https://api.twitch.tv/helix/streams?user_login=mistermv", headers={"Client-ID": cfg["API_KEY"]["TwitchAPI"]})
 	DataZ = json.loads(ReponseTwitchZ.text)
 	DataMV = json.loads(ReponseTwitchMV.text)
 
@@ -120,7 +120,7 @@ Ecran = Papirus()
 TextEtImg = PapirusComposite(False)
 TextEtImg.Clear()
 
-config = read("config.cfg")
+cfg = config.read("config.cfg")
 
 Main()
 
