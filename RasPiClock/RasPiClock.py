@@ -1,12 +1,24 @@
 # -*- encoding: utf-8 -*-
 #RasPiClock - Frédéric94500, EliottCheypeplus, ParsaEtz
 
-import requests as rq
 import time, json, sys, os, socket, configparser
-
-from papirus import Papirus, PapirusComposite
+import requests as rq
+from tkinter import *
+from tkinter.messagebox import *
 
 A = 0
+
+def LibCheck():
+	try:
+		from papirus import Papirus, PapirusComposite
+		Ecran = Papirus()
+		TextEtImg = PapirusComposite(False)
+		TextEtImg.Clear()
+
+		Main()
+	except ModuleNotFoundError:
+		print("ATTENTION, vous n'avez pas installé la biblothèque Papirus, veuillez l'installer") #Phrase temp
+		sys.exit()
 
 def Main():
 	try:
@@ -114,12 +126,6 @@ def Social():
 		TextEtImg.WriteAll(True)
 		time.sleep(15)
 		TextEtImg.Clear()
-
-
-Ecran = Papirus()
-TextEtImg = PapirusComposite(False)
-TextEtImg.Clear()
-
 
 conf = configparser.ConfigParser()
 conf.read("config.cfg")

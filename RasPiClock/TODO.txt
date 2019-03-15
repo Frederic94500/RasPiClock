@@ -1,11 +1,15 @@
 TODO:
 -> - Intégrer le fichier de config avec le library configparser
--> - éviter l'interpolation (%)
+-> - éviter l'interpolation (% - Twitter)
 -> - Le faire modulaire
+
 N - Faire le GUI (Interface)
 	N - Menu Bar
 	N - Zones de Textes
 	N - Boutons (Afficher)
+	N - Enregistrer la config
+	N - Fenêtre de dialogue
+
 N - Faire le module de test de chaque paramètre
 N - Intégrer dans l'affichage
 
@@ -14,5 +18,6 @@ Bouton Afficher -> Test: Oui -> Afficher le texte
 		
 N - Twitter auth facile avec curl
 N - Gérer TOUT les exceptions
-	N - Vérifier si les bibliothèques sont installées
+	Y - Vérifier si les bibliothèques sont installées
 	Y - Les problèmes de connexions
+	N - Erreur dans la config
