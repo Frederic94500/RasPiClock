@@ -63,7 +63,7 @@ def Crypto():
 	TextEtImg.AddText("".join(PCTBTC) + "%", 64, 74, size = 15, fontPath="Ubuntu.ttf")
 	TextEtImg.AddText("".join(PCTETH) + "%", 64, 144, size = 15, fontPath="Ubuntu.ttf")
 
-	Time()
+	TextEtImg.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, size = 20, fontPath="Ubuntu.ttf")
 
 	TextEtImg.WriteAll(True)
 	time.sleep(15)
@@ -78,7 +78,7 @@ def Meteo():
 	TextEtImg.AddText("Temp. Min: " + str(DataMeteo["main"]["temp_min"]) + "°C" + " Temp. Max: " + str(DataMeteo["main"]["temp_max"]) + "°C", 10, 65, size = 12, fontPath="Ubuntu.ttf")
 	TextEtImg.AddText("Temps: " + DataMeteo["weather"][0]["description"], 10, 85, size = 25, fontPath="Ubuntu.ttf") 
 
-	Time()
+	TextEtImg.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, size = 20, fontPath="Ubuntu.ttf")
 
 	TextEtImg.WriteAll(True)
 	time.sleep(15)
@@ -102,7 +102,7 @@ def Musique():
 		TextEtImg.AddText(DataLast["recenttracks"]["track"][0]["artist"]["#text"] + " - " + DataLast["recenttracks"]["track"][0]["name"], 10, 65, size = 15, fontPath="Ubuntu.ttf")
 		TextEtImg.AddText(DataLast["recenttracks"]["track"][0]["album"]["#text"], 10, 95, size = 10, fontPath="Ubuntu.ttf")
 	finally:
-		Time()
+		TextEtImg.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, size = 20, fontPath="Ubuntu.ttf")
 		TextEtImg.WriteAll(True)
 		time.sleep(15)
 		TextEtImg.Clear()
@@ -131,16 +131,12 @@ def Social():
 	except IndexError:
 		TextEtImg.AddText("MisterMV: OFF", 10, 130, size = 20, fontPath="Ubuntu.ttf")
 	finally:
-		Time()
+		TextEtImg.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, size = 20, fontPath="Ubuntu.ttf")
 		TextEtImg.WriteAll(True)
 		time.sleep(15)
 		TextEtImg.Clear()
 
-def Time():
-	Heure = time.strftime("%H:%M", time.localtime())
-	TextEtImg.AddText(Heure, 200, 10, size = 20, fontPath="Ubuntu.ttf")
-
 conf = configparser.ConfigParser()
 conf.read("config.cfg")
 
-Main()
+LibCheck()
