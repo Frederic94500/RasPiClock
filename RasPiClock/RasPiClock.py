@@ -17,7 +17,7 @@ def LibCheck():
 
 		Main()
 	except ModuleNotFoundError:
-		print("ATTENTION, vous n'avez pas installé la biblothèque Papirus, veuillez l'installer") #Phrase temp
+		print("ATTENTION, vous n'avez pas installé la biblothèque Papirus, veuillez l'installer via https://github.com/PiSupply/PaPiRus") #Phrase temp
 		sys.exit()
 
 #def APICheck():
