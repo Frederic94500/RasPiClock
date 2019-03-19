@@ -6,7 +6,7 @@ import requests as rq
 from tkinter import *
 from tkinter.messagebox import *
 
-A, Check = 0
+A, Check = 0, 0
 Metric = "°C"
 Imperial = "°F"
 global TextEtImg
