@@ -7,6 +7,8 @@ from tkinter import *
 from tkinter.messagebox import *
 
 A = 0
+Metric = "°C"
+Imperial = "°F"
 
 def LibCheck():
 	try:
@@ -50,18 +52,18 @@ def Crypto():
 	TextEtImg.AddImg("ETH.bmp", 10, 100, (44,68))
 	TextEtImg.AddText("Crypto:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
 
-	ReponseCrypto = rq.get("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETH&tsyms=" + conf["CRYPTO"]["Currency"] + "&api_key=" + conf["API_KEY"]["CryptoAPI"])
+	ReponseCrypto = rq.get("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + conf["CRYPTO"]["Coin1"] + conf["CRYPTO"]["Coin2"] + "&tsyms=" + conf["CRYPTO"]["Currency"] + "&api_key=" + conf["API_KEY"]["CryptoAPI"])
 	DataCrypto = json.loads(ReponseCrypto.text)
 
-	PCTBTC = list(str(DataCrypto["RAW"]["BTC"][conf["CRYPTO"]["Currency"]]["CHANGEPCT24HOUR"]))
+	PCTC1 = list(str(DataCrypto["RAW"][conf["CRYPTO"]["Coin1"]][conf["CRYPTO"]["Currency"]]["CHANGEPCT24HOUR"]))
 	del PCTBTC[-14:-1]
-	PCTETH = list(str(DataCrypto["RAW"]["ETH"][conf["CRYPTO"]["Currency"]]["CHANGEPCT24HOUR"]))
+	PCTC2 = list(str(DataCrypto["RAW"][conf["CRYPTO"]["Coin2"]][conf["CRYPTO"]["Currency"]]["CHANGEPCT24HOUR"]))
 	del PCTETH[-14:-1]
 
-	TextEtImg.AddText("$ " + str(DataCrypto["RAW"]["BTC"][conf["CRYPTO"]["Currency"]]["PRICE"]), 64, 44, size = 30, fontPath="Ubuntu.ttf")
-	TextEtImg.AddText("$ " + str(DataCrypto["RAW"]["ETH"][conf["CRYPTO"]["Currency"]]["PRICE"]), 64, 114, size = 30, fontPath="Ubuntu.ttf")
-	TextEtImg.AddText("".join(PCTBTC) + "%", 64, 74, size = 15, fontPath="Ubuntu.ttf")
-	TextEtImg.AddText("".join(PCTETH) + "%", 64, 144, size = 15, fontPath="Ubuntu.ttf")
+	TextEtImg.AddText("$ " + str(DataCrypto["RAW"][conf["CRYPTO"]["Coin1"]][conf["CRYPTO"]["Currency"]]["PRICE"]), 64, 44, size = 30, fontPath="Ubuntu.ttf")
+	TextEtImg.AddText("$ " + str(DataCrypto["RAW"][conf["CRYPTO"]["Coin1"]][conf["CRYPTO"]["Currency"]]["PRICE"]), 64, 114, size = 30, fontPath="Ubuntu.ttf")
+	TextEtImg.AddText("".join(PCTC1) + "%", 64, 74, size = 15, fontPath="Ubuntu.ttf")
+	TextEtImg.AddText("".join(PCTC2) + "%", 64, 144, size = 15, fontPath="Ubuntu.ttf")
 
 	TextEtImg.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, size = 20, fontPath="Ubuntu.ttf")
 
@@ -70,7 +72,7 @@ def Crypto():
 	TextEtImg.Clear()
 
 def Meteo():
-	ReponseMeteo = rq.get("https://api.openweathermap.org/data/2.5/weather?q=Champigny-sur-Marne,fr&units=metric&lang=fr&appid=" + conf["API_KEY"]["MeteoAPI"])
+	ReponseMeteo = rq.get("https://api.openweathermap.org/data/2.5/weather?q=" + conf["WEATHER"]["City"] + "&units=" + conf["WEATHER"]["Units"] + "&lang=" + conf["WEATHER"]["Lang"] + "&appid=" + conf["API_KEY"]["MeteoAPI"])
 	DataMeteo = json.loads(ReponseMeteo.text)
 
 	TextEtImg.AddText("Météo:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
@@ -85,7 +87,7 @@ def Meteo():
 	TextEtImg.Clear()
 
 def Musique():
-	ReponseLastFM = rq.get("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=Frederic94500&limit=1&format=json&api_key=" + conf["API_KEY"]["LastFmAPI"])
+	ReponseLastFM = rq.get("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=" + conf["LASTFM"]["UserFM"] + "&limit=1&format=json&api_key=" + conf["API_KEY"]["LastFmAPI"])
 	DataLast = json.loads(ReponseLastFM.text)
 
 	TextEtImg.AddText("Last.fm:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
@@ -108,28 +110,28 @@ def Musique():
 		TextEtImg.Clear()
 
 def Social():
-	ReponseTwitter = rq.get("https://api.twitter.com/1.1/users/show.json?screen_name=Frederic94500", headers={'Authorization': "Bearer " + conf["API_KEY"]["TwitterAPI"]})
+	ReponseTwitter = rq.get("https://api.twitter.com/1.1/users/show.json?screen_name=" + conf["SOCIAL"]["UserTW"], headers={'Authorization': "Bearer " + conf["API_KEY"]["TwitterAPI"]})
 	DataTwitter = json.loads(ReponseTwitter.text)
 
-	ReponseTwitchZ = rq.get("https://api.twitch.tv/helix/streams?user_login=zerator", headers={"Client-ID": conf["API_KEY"]["TwitchAPI"]})
-	ReponseTwitchMV = rq.get("https://api.twitch.tv/helix/streams?user_login=mistermv", headers={"Client-ID": conf["API_KEY"]["TwitchAPI"]})
-	DataZ = json.loads(ReponseTwitchZ.text)
-	DataMV = json.loads(ReponseTwitchMV.text)
+	ReponseTwitchSt1 = rq.get("https://api.twitch.tv/helix/streams?user_login=" + conf["SOCIAL"]["TwitchSt1"], headers={"Client-ID": conf["API_KEY"]["TwitchAPI"]})
+	ReponseTwitchSt2 = rq.get("https://api.twitch.tv/helix/streams?user_login=" + conf["SOCIAL"]["TwitchSt2"], headers={"Client-ID": conf["API_KEY"]["TwitchAPI"]})
+	DataSt1 = json.loads(ReponseTwitchSt1.text)
+	DataSt2 = json.loads(ReponseTwitchSt2.text)
 
 	TextEtImg.AddText("Réseaux Sociaux:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
 	TextEtImg.AddText("Twitter: " + str(DataTwitter["followers_count"]) + " Followers", 10, 40, size = 25, fontPath="Ubuntu.ttf")
 	TextEtImg.AddText("Twitch:", 10, 75, size = 25, fontPath="Ubuntu.ttf")
 
 	try:
-		if DataZ["data"][0]["type"] == "live":
-			TextEtImg.AddText("ZeratoR: ON", 10, 100, size = 20, fontPath="Ubuntu.ttf")
+		if DataSt1["data"][0]["type"] == "live":
+			TextEtImg.AddText(conf["SOCIAL"]["TwitchSt1"] + ": ON", 10, 100, size = 20, fontPath="Ubuntu.ttf")
 	except IndexError:
-		TextEtImg.AddText("ZeratoR: OFF", 10, 100, size = 20, fontPath="Ubuntu.ttf")
+		TextEtImg.AddText(conf["SOCIAL"]["TwitchSt1"] + ": OFF", 10, 100, size = 20, fontPath="Ubuntu.ttf")
 	try:
-		if DataMV["data"][0]["type"] == "live":
-			TextEtImg.AddText("MisterMV: ON", 10, 130, size = 20, fontPath="Ubuntu.ttf")
+		if DataSt2["data"][0]["type"] == "live":
+			TextEtImg.AddText(conf["SOCIAL"]["TwitchSt2"] + ": ON", 10, 130, size = 20, fontPath="Ubuntu.ttf")
 	except IndexError:
-		TextEtImg.AddText("MisterMV: OFF", 10, 130, size = 20, fontPath="Ubuntu.ttf")
+		TextEtImg.AddText(conf["SOCIAL"]["TwitchSt2"] + ": OFF", 10, 130, size = 20, fontPath="Ubuntu.ttf")
 	finally:
 		TextEtImg.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, size = 20, fontPath="Ubuntu.ttf")
 		TextEtImg.WriteAll(True)
