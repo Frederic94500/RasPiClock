@@ -13,14 +13,14 @@ global TextEtImg
 global Ecran
 
 def LibCheck():
-	try:
+	if os.path.exists('/etc/default/epd-fuse'):
 		from papirus import Papirus, PapirusComposite
 		Ecran = Papirus()
 		TextEtImg = PapirusComposite(False)
 		TextEtImg.Clear()
 
 		Main()
-	except ModuleNotFoundError:
+	else:
 		print("ATTENTION, vous n'avez pas installé la biblothèque Papirus, veuillez l'installer via https://github.com/PiSupply/PaPiRus") #Phrase temp
 		sys.exit()
 
