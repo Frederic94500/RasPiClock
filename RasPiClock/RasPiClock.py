@@ -66,16 +66,16 @@ def Crypto():
 	TextEtImg.AddImg("ETH.bmp", 10, 100, (44,68))
 	TextEtImg.AddText("Crypto:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
 
-	ReponseCrypto = rq.get("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + conf["CRYPTO"]["Coin1"] + conf["CRYPTO"]["Coin2"] + "&tsyms=" + conf["CRYPTO"]["Currency"] + "&api_key=" + conf["API_KEY"]["CryptoAPI"])
+	ReponseCrypto = rq.get("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + conf["CRYPTO"]["Coin1"] + "," + conf["CRYPTO"]["Coin2"] + "&tsyms=" + conf["CRYPTO"]["Currency"] + "&api_key=" + conf["API_KEY"]["CryptoAPI"])
 	DataCrypto = json.loads(ReponseCrypto.text)
 
 	PCTC1 = list(str(DataCrypto["RAW"][conf["CRYPTO"]["Coin1"]][conf["CRYPTO"]["Currency"]]["CHANGEPCT24HOUR"]))
-	del PCTBTC[-14:-1]
+	del PCTC1[-14:-1]
 	PCTC2 = list(str(DataCrypto["RAW"][conf["CRYPTO"]["Coin2"]][conf["CRYPTO"]["Currency"]]["CHANGEPCT24HOUR"]))
-	del PCTETH[-14:-1]
+	del PCTC2[-14:-1]
 
 	TextEtImg.AddText("$ " + str(DataCrypto["RAW"][conf["CRYPTO"]["Coin1"]][conf["CRYPTO"]["Currency"]]["PRICE"]), 64, 44, size = 30, fontPath="Ubuntu.ttf")
-	TextEtImg.AddText("$ " + str(DataCrypto["RAW"][conf["CRYPTO"]["Coin1"]][conf["CRYPTO"]["Currency"]]["PRICE"]), 64, 114, size = 30, fontPath="Ubuntu.ttf")
+	TextEtImg.AddText("$ " + str(DataCrypto["RAW"][conf["CRYPTO"]["Coin2"]][conf["CRYPTO"]["Currency"]]["PRICE"]), 64, 114, size = 30, fontPath="Ubuntu.ttf")
 	TextEtImg.AddText("".join(PCTC1) + "%", 64, 74, size = 15, fontPath="Ubuntu.ttf")
 	TextEtImg.AddText("".join(PCTC2) + "%", 64, 144, size = 15, fontPath="Ubuntu.ttf")
 
