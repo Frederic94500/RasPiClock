@@ -6,9 +6,11 @@ import requests as rq
 from tkinter import *
 from tkinter.messagebox import *
 
-A = 0
+A, Check = 0
 Metric = "°C"
 Imperial = "°F"
+global TextEtImg
+global Ecran
 
 def LibCheck():
 	try:
@@ -22,7 +24,33 @@ def LibCheck():
 		print("ATTENTION, vous n'avez pas installé la biblothèque Papirus, veuillez l'installer via https://github.com/PiSupply/PaPiRus") #Phrase temp
 		sys.exit()
 
-#def APICheck():
+def APICheck():
+	ReponseCrypto = rq.get("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + conf["CRYPTO"]["Coin1"] + conf["CRYPTO"]["Coin2"] + "&tsyms=" + conf["CRYPTO"]["Currency"] + "&api_key=" + conf["API_KEY"]["CryptoAPI"])
+	DataCrypto = json.loads(ReponseCrypto.text)
+	ReponseMeteo = rq.get("https://api.openweathermap.org/data/2.5/weather?q=" + conf["WEATHER"]["City"] + "&units=" + conf["WEATHER"]["Units"] + "&lang=" + conf["WEATHER"]["Lang"] + "&appid=" + conf["API_KEY"]["MeteoAPI"])
+	DataMeteo = json.loads(ReponseMeteo.text)
+	ReponseLastFM = rq.get("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=" + conf["LASTFM"]["UserFM"] + "&limit=1&format=json&api_key=" + conf["API_KEY"]["LastFmAPI"])
+	DataLast = json.loads(ReponseLastFM.text)
+
+	try:
+		if DataCrypto["Response"] == "Error":
+			print("Erreur dans la config Crypto, veuiller vérifier votre saisie!")
+			sys.exit()
+	except:
+		Check += 1
+	try:
+		if DataMeteo["cod"] == 404:
+			print("Erreur dans la config Météo, veuiller vérifier votre saisie!")
+			sys.exit()
+	except:
+		Check += 1
+	try:
+		if DataLast["error"] == 6:
+			print("Erreur dans la config LastFM, veuiller vérifier votre saisie!")
+			sys.exit()
+	except:
+		Check += 1
+
 
 
 def Main():
