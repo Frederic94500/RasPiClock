@@ -9,20 +9,6 @@ from tkinter.messagebox import *
 A, Check = 0, 0
 Metric = "°C"
 Imperial = "°F"
-global TextEtImg
-global Ecran
-
-def LibCheck():
-	if os.path.exists('/etc/default/epd-fuse'):
-		from papirus import Papirus, PapirusComposite
-		Ecran = Papirus()
-		TextEtImg = PapirusComposite(False)
-		TextEtImg.Clear()
-
-		Main()
-	else:
-		print("ATTENTION, vous n'avez pas installé la biblothèque Papirus, veuillez l'installer via https://github.com/PiSupply/PaPiRus") #Phrase temp
-		sys.exit()
 
 def APICheck():
 	ReponseCrypto = rq.get("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + conf["CRYPTO"]["Coin1"] + conf["CRYPTO"]["Coin2"] + "&tsyms=" + conf["CRYPTO"]["Currency"] + "&api_key=" + conf["API_KEY"]["CryptoAPI"])
@@ -169,4 +155,13 @@ def Social():
 conf = configparser.ConfigParser()
 conf.read("config.cfg")
 
-LibCheck()
+if os.path.exists('/etc/default/epd-fuse'):
+	from papirus import Papirus, PapirusComposite
+	Ecran = Papirus()
+	TextEtImg = PapirusComposite(False)
+	TextEtImg.Clear()
+
+	Main()
+else:
+	print("ATTENTION, vous n'avez pas installé la biblothèque Papirus, veuillez l'installer via https://github.com/PiSupply/PaPiRus") #Phrase temp
+	sys.exit()
