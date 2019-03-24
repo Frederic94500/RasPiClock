@@ -1,52 +1,26 @@
 # -*- encoding: utf-8 -*-
 #RasPiClock - Frédéric94500, EliottCheypeplus, ParsaEtz
 
-import time, json, sys, os, socket, configparser
+import time, json, sys, os, socket, configparser, hashlib
 import requests as rq
 from tkinter import *
 from tkinter.messagebox import *
 
-A, Check = 0, 0
+A = 0
 Metric = "°C"
 Imperial = "°F"
 
-def APICheck():
-	ReponseCrypto = rq.get("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + conf["CRYPTO"]["Coin1"] + conf["CRYPTO"]["Coin2"] + "&tsyms=" + conf["CRYPTO"]["Currency"] + "&api_key=" + conf["API_KEY"]["CryptoAPI"])
-	DataCrypto = json.loads(ReponseCrypto.text)
-	ReponseMeteo = rq.get("https://api.openweathermap.org/data/2.5/weather?q=" + conf["WEATHER"]["City"] + "&units=" + conf["WEATHER"]["Units"] + "&lang=" + conf["WEATHER"]["Lang"] + "&appid=" + conf["API_KEY"]["MeteoAPI"])
-	DataMeteo = json.loads(ReponseMeteo.text)
-	ReponseLastFM = rq.get("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=" + conf["LASTFM"]["UserFM"] + "&limit=1&format=json&api_key=" + conf["API_KEY"]["LastFmAPI"])
-	DataLast = json.loads(ReponseLastFM.text)
-
-	try:
-		if DataCrypto["Response"] == "Error":
-			print("Erreur dans la config Crypto, veuiller vérifier votre saisie!")
-			sys.exit()
-	except:
-		Check += 1
-	try:
-		if DataMeteo["cod"] == 404:
-			print("Erreur dans la config Météo, veuiller vérifier votre saisie!")
-			sys.exit()
-	except:
-		Check += 1
-	try:
-		if DataLast["error"] == 6:
-			print("Erreur dans la config LastFM, veuiller vérifier votre saisie!")
-			sys.exit()
-	except:
-		Check += 1
-
-
-
+#Fonction Main
 def Main():
 	try:
-		while A == 0:
+		if A == 0:
+			APICheck()
+		while A == 1:
 			Crypto()
 			Meteo()
 			Musique()
 			Social()
-		#if Order == 4: RATP() #WIP
+			#RATP() #WIP?
 	except (ValueError, socket.error, socket.gaierror, socket.herror, socket.timeout):
 		TextEtImg.Clear()
 		TextEtImg.AddText("ERREUR de connexion, nouvelle tentative de connexion dans: T", 10, 48, size = 20, fontPath="Ubuntu.ttf", Id="TimerErr")
@@ -61,7 +35,52 @@ def Main():
 		os.system("papirus-clear")
 		sys.exit()
 
-def Crypto():
+#Fonction de test de chaque paramètre (sauf Twitch)
+def APICheck():
+	Check = 0
+	ReponseCrypto = rq.get("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + conf["CRYPTO"]["Coin1"] + conf["CRYPTO"]["Coin2"] + "&tsyms=" + conf["CRYPTO"]["Currency"] + "&api_key=" + conf["API_KEY"]["CryptoAPI"])
+	DataCrypto = json.loads(ReponseCrypto.text)
+	ReponseMeteo = rq.get("https://api.openweathermap.org/data/2.5/weather?q=" + conf["WEATHER"]["City"] + "&units=" + conf["WEATHER"]["Units"] + "&lang=" + conf["WEATHER"]["Lang"] + "&appid=" + conf["API_KEY"]["MeteoAPI"])
+	DataMeteo = json.loads(ReponseMeteo.text)
+	ReponseLastFM = rq.get("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=" + conf["LASTFM"]["UserFM"] + "&limit=1&format=json&api_key=" + conf["API_KEY"]["LastFmAPI"])
+	DataLast = json.loads(ReponseLastFM.text)
+	ReponseTwitter = rq.get("https://api.twitter.com/1.1/users/show.json?screen_name=" + conf["SOCIAL"]["UserTW"], headers={'Authorization': "Bearer " + conf["API_KEY"]["TwitterAPI"]})
+	DataTwitter = json.loads(ReponseTwitter.text)
+
+	if DataCrypto["Response"] == "Error":
+		print("Erreur dans la config Crypto, veuiller vérifier votre saisie!")
+		sys.exit()
+	else:
+		Check += 1
+
+	if DataMeteo["cod"] == range(400, 599):
+		print("Erreur dans la config Météo, veuiller vérifier votre saisie!")
+		sys.exit()
+	else:
+		Check += 1
+
+	if DataLast["error"] == range(2, 29):
+		print("Erreur dans la config LastFM, veuiller vérifier votre saisie!")
+		sys.exit()
+	else:
+		Check += 1
+
+	if DataTwitter["errors"][0]["code"] == range(49, 599):
+		print("Erreur dans la config Twitter, veuiller vérifier votre saisie!")
+		sys.exit()
+	else:
+		Check += 1
+
+	if Check == 4:
+		A = 1
+		return A
+
+"""def Save():
+	if HashOld =! HashNew:
+		A = 0
+"""
+
+def Crypto(): #Fonction Crypto (CryproCompare)
 	TextEtImg.AddImg("BTC.bmp", 10, 42, (44,44))
 	TextEtImg.AddImg("ETH.bmp", 10, 100, (44,68))
 	TextEtImg.AddText("Crypto:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
@@ -74,8 +93,8 @@ def Crypto():
 	PCTC2 = list(str(DataCrypto["RAW"][conf["CRYPTO"]["Coin2"]][conf["CRYPTO"]["Currency"]]["CHANGEPCT24HOUR"]))
 	del PCTC2[-14:-1]
 
-	TextEtImg.AddText("$ " + str(DataCrypto["RAW"][conf["CRYPTO"]["Coin1"]][conf["CRYPTO"]["Currency"]]["PRICE"]), 64, 44, size = 30, fontPath="Ubuntu.ttf")
-	TextEtImg.AddText("$ " + str(DataCrypto["RAW"][conf["CRYPTO"]["Coin2"]][conf["CRYPTO"]["Currency"]]["PRICE"]), 64, 114, size = 30, fontPath="Ubuntu.ttf")
+	TextEtImg.AddText(conf["CRYPTO"]["Currency"] + " " + str(DataCrypto["RAW"][conf["CRYPTO"]["Coin1"]][conf["CRYPTO"]["Currency"]]["PRICE"]), 64, 44, size = 30, fontPath="Ubuntu.ttf")
+	TextEtImg.AddText(conf["CRYPTO"]["Currency"] + " " + str(DataCrypto["RAW"][conf["CRYPTO"]["Coin2"]][conf["CRYPTO"]["Currency"]]["PRICE"]), 64, 114, size = 30, fontPath="Ubuntu.ttf")
 	TextEtImg.AddText("".join(PCTC1) + "%", 64, 74, size = 15, fontPath="Ubuntu.ttf")
 	TextEtImg.AddText("".join(PCTC2) + "%", 64, 144, size = 15, fontPath="Ubuntu.ttf")
 
@@ -85,7 +104,7 @@ def Crypto():
 	time.sleep(15)
 	TextEtImg.Clear()
 
-def Meteo():
+def Meteo(): #Fonction Météo (OpenWeatherMap)
 	ReponseMeteo = rq.get("https://api.openweathermap.org/data/2.5/weather?q=" + conf["WEATHER"]["City"] + "&units=" + conf["WEATHER"]["Units"] + "&lang=" + conf["WEATHER"]["Lang"] + "&appid=" + conf["API_KEY"]["MeteoAPI"])
 	DataMeteo = json.loads(ReponseMeteo.text)
 
@@ -100,7 +119,7 @@ def Meteo():
 	time.sleep(15)
 	TextEtImg.Clear()
 
-def Musique():
+def Musique(): #Fonction Musique (Last.fm)
 	ReponseLastFM = rq.get("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=" + conf["LASTFM"]["UserFM"] + "&limit=1&format=json&api_key=" + conf["API_KEY"]["LastFmAPI"])
 	DataLast = json.loads(ReponseLastFM.text)
 
@@ -123,7 +142,7 @@ def Musique():
 		time.sleep(15)
 		TextEtImg.Clear()
 
-def Social():
+def Social(): #Fonction Réseaux Sociaux (Twitch & Twitter)
 	ReponseTwitter = rq.get("https://api.twitter.com/1.1/users/show.json?screen_name=" + conf["SOCIAL"]["UserTW"], headers={'Authorization': "Bearer " + conf["API_KEY"]["TwitterAPI"]})
 	DataTwitter = json.loads(ReponseTwitter.text)
 

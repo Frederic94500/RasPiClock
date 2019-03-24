@@ -19,7 +19,8 @@ N - Faire le GUI (Interface)
 	N - Enregistrer la config
 	N - Fenêtre de dialogue
 
-N - Faire le module de test de chaque paramètre
+Y - Faire le module de test de chaque paramètre
+	N - Afficher une fenêtre d'erreur
 N - Intégrer dans l'affichage
 
 Bouton Afficher -> Test: Oui -> Afficher le texte
@@ -30,5 +31,5 @@ N - Twitter auth facile avec curl
 N - Gérer TOUT les exceptions
 	Y - Vérifier si les bibliothèques sont installées
 	Y - Les problèmes de connexions
-	N - Erreur dans la config
+	Y - Erreur dans la config
 N - (RATP?)
