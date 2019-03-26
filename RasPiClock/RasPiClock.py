@@ -38,7 +38,7 @@ def Main():
 #Fonction de test de chaque paramètre (sauf Twitch)
 def APICheck():
 	Check = 0
-	ReponseCrypto = rq.get("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + conf["CRYPTO"]["Coin1"] + conf["CRYPTO"]["Coin2"] + "&tsyms=" + conf["CRYPTO"]["Currency"] + "&api_key=" + conf["API_KEY"]["CryptoAPI"])
+	ReponseCrypto = rq.get("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + conf["CRYPTO"]["Coin1"] + "," + conf["CRYPTO"]["Coin2"] + "&tsyms=" + conf["CRYPTO"]["Currency"] + "&api_key=" + conf["API_KEY"]["CryptoAPI"])
 	DataCrypto = json.loads(ReponseCrypto.text)
 	ReponseMeteo = rq.get("https://api.openweathermap.org/data/2.5/weather?q=" + conf["WEATHER"]["City"] + "&units=" + conf["WEATHER"]["Units"] + "&lang=" + conf["WEATHER"]["Lang"] + "&appid=" + conf["API_KEY"]["MeteoAPI"])
 	DataMeteo = json.loads(ReponseMeteo.text)
@@ -47,33 +47,37 @@ def APICheck():
 	ReponseTwitter = rq.get("https://api.twitter.com/1.1/users/show.json?screen_name=" + conf["SOCIAL"]["UserTW"], headers={'Authorization': "Bearer " + conf["API_KEY"]["TwitterAPI"]})
 	DataTwitter = json.loads(ReponseTwitter.text)
 
-	if DataCrypto["Response"] == "Error":
-		print("Erreur dans la config Crypto, veuiller vérifier votre saisie!")
-		sys.exit()
-	else:
+	try:
+		if DataCrypto["Response"] == "Error":
+			print("Erreur dans la config Crypto, veuiller vérifier votre saisie!")
+			sys.exit()
+	except:
 		Check += 1
 
-	if DataMeteo["cod"] == range(400, 599):
-		print("Erreur dans la config Météo, veuiller vérifier votre saisie!")
-		sys.exit()
-	else:
+	try:
+		if DataMeteo["cod"] == range(400, 599):
+			print("Erreur dans la config Météo, veuiller vérifier votre saisie!")
+			sys.exit()
+	except:
 		Check += 1
 
-	if DataLast["error"] == range(2, 29):
-		print("Erreur dans la config LastFM, veuiller vérifier votre saisie!")
-		sys.exit()
-	else:
+	try:
+		if DataLast["error"] == range(2, 29):
+			print("Erreur dans la config LastFM, veuiller vérifier votre saisie!")
+			sys.exit()
+	except:
+		Check += 1
+	try:
+		if DataTwitter["errors"][0]["code"] == range(49, 599):
+			print("Erreur dans la config Twitter, veuiller vérifier votre saisie!")
+			sys.exit()
+	except:
 		Check += 1
 
-	if DataTwitter["errors"][0]["code"] == range(49, 599):
-		print("Erreur dans la config Twitter, veuiller vérifier votre saisie!")
-		sys.exit()
-	else:
-		Check += 1
-
-	if Check == 4:
-		A = 1
-		return A
+	finally:
+		if Check == 4:
+			A = 1
+			return A
 
 """def Save():
 	if HashOld =! HashNew:
