@@ -6,15 +6,16 @@ import requests as rq
 from tkinter import *
 from tkinter.messagebox import *
 
-A = 0
 Metric = "°C"
 Imperial = "°F"
 
 #Fonction Main
 def Main():
+	A = 0
 	try:
 		if A == 0:
 			APICheck()
+			A = 1
 		while A == 1:
 			Crypto()
 			Meteo()
@@ -73,11 +74,6 @@ def APICheck():
 			sys.exit()
 	except:
 		Check += 1
-
-	finally:
-		if Check == 4:
-			A = 1
-			return A
 
 """def Save():
 	if HashOld =! HashNew:
