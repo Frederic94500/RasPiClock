@@ -13,6 +13,7 @@ Imperial = "°F"
 def Main():
 	A = 0
 	try:
+		Save()
 		if A == 0:
 			APICheck()
 			A = 1
@@ -75,16 +76,17 @@ def APICheck():
 	except:
 		Check += 1
 
-'''	if Check == 4:
-		sha256 = hashlib.sha256()
+	if Check == 4:
+		with open("config.conf","rb") as f:
+			bytes = f.read()
+			hashconf = hashlib.sha256(bytes).hexdigest()
 
 		hash = open("hash.txt", "w")
-		hash.write()
+		hash.write(hashconf)
 		hash.close
-'''
 
 
-"""def Save():
+def Save():
 	conf["API-KEY"]["CryptoAPI"] = ZTCryptoAPI.get()
 	conf["API-KEY"]["MeteoAPI"] = ZTMeteoAPI.get()
 	conf["API-KEY"]["LastFmAPI"] = ZTLastFmAPI.get()
@@ -108,11 +110,21 @@ def APICheck():
 
 	with open('config.cfg', 'w') as configfile:
 		config.write(configfile)
+	
+	with open('config.conf', "rb") as FC:
+		bytes = FC.read()
+		HashNew = hashlib.sha256(bytes).hexdigest()
+	
+	FH = open('hash.txt', "r")
+	HashOld = FH.read()
 
-	if HashOld =! HashNew:
-		
+	if HashOld != HashNew:
 		A = 0
-"""
+		return A
+	if HashOld == HashNew:
+		A = 1
+		return A
+
 
 def Crypto(): #Fonction Crypto (CryproCompare)
 	TextEtImg.AddImg("BTC.bmp", 10, 42, (44,44))
