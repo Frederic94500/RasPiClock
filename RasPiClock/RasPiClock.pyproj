@@ -25,6 +25,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="config.cfg" />
+    <Content Include="hash.txt" />
     <Content Include="TODO.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />

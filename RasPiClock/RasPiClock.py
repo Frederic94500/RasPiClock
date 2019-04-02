@@ -75,8 +75,42 @@ def APICheck():
 	except:
 		Check += 1
 
+'''	if Check == 4:
+		sha256 = hashlib.sha256()
+
+		hash = open("hash.txt", "w")
+		hash.write()
+		hash.close
+'''
+
+
 """def Save():
+	conf["API-KEY"]["CryptoAPI"] = ZTCryptoAPI.get()
+	conf["API-KEY"]["MeteoAPI"] = ZTMeteoAPI.get()
+	conf["API-KEY"]["LastFmAPI"] = ZTLastFmAPI.get()
+	conf["API-KEY"]["TwitterAPI"] = ZTLastFmAPI.get()
+	conf["API-KEY"]["TwitchAPI"] = ZTLastFmAPI.get()
+
+	conf["CRYPTO"]["Currency"] = ZTCCurrency.get()
+	conf["CRYPTO"]["Coin1"] = ZTCCoin1.get()
+	conf["CRYPTO"]["Coin2"] = ZTCCoin2.get()
+
+	conf["WEATHER"]["City"] = ZTWCity.get()
+	conf["WEATHER"]["Units"] = ZTWUnits.get()
+	conf["WEATHER"]["Lang"] = ZTWLang.get()
+
+	conf["LASTFM"]["UserFM"] = ZTFUserFM.get()
+
+	conf["SOCIAL"]["UserTW"] = ZTSUserTW.get()
+
+	conf["SOCIAL"]["TwitchSt1"] = ZTSTwitchSt1.get()
+	conf["SOCIAL"]["TwitchSt2"] = ZTSTwitchSt2.get()
+
+	with open('config.cfg', 'w') as configfile:
+		config.write(configfile)
+
 	if HashOld =! HashNew:
+		
 		A = 0
 """
 
