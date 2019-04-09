@@ -48,8 +48,8 @@ def APropos():
 
 #Création Fenètre
 Fenetre = Tk()
-Fenetre.title('GUI')
-Fenetre.iconbitmap('icon.ico')
+Fenetre.title('Interface de configuration RasPiClock')
+#Fenetre.iconbitmap('icon.ico')
 
 #Création du Canvas
 Graphique = Canvas(Fenetre, width = 1500, height = 700, bg = "#FFFFFF")
