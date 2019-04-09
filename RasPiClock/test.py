@@ -4,7 +4,7 @@
 from tkinter import *
 import webbrowser
 from tkinter.messagebox import *
-from PIL import Image, ImageTk
+from PIL import Image
 
 
 #def Afficher():
@@ -39,12 +39,12 @@ def APropos():
 
 	[AbText[I].pack(side = "left", pady = 10) for I in range(4)]
 
-	photo = ImageTk.PhotoImage(Image.open("gpl.png"))
-	img = Label(About, image=photo)
-	img.image = photo
-	img.pack()
+	#photo = ImageTk.PhotoImage(Image.open("gpl.png"))
+	#img = Label(About, image=photo)
+	#img.image = photo
+	#img.pack()
 
-	About.iconbitmap('icon.ico')
+	#About.iconbitmap('icon.ico')
 
 #Création Fenètre
 Fenetre = Tk()
@@ -90,6 +90,7 @@ Fenetre.bind('<Return>', Enter)
 Texte = StringVar()
 TextAnnonce = Label(Fenetre, textvariable = Texte).pack(side = LEFT)
 Texte.set("Je sais pas")
+
 #Création Grid
 Label(Graphique, text="First").grid(row=0)
 Label(Graphique, text="Second").grid(row=1)
@@ -99,6 +100,7 @@ e2 = Entry(Graphique)
 
 e1.grid(row=0, column=1)
 e2.grid(row=1, column=1)
-configure()
+#configure()
+
 #Initialisation du GUI
 Fenetre.mainloop()
