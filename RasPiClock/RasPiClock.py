@@ -13,7 +13,7 @@ Imperial = "°F"
 def Main():
 	A = 0
 	try:
-		Save()
+		#Save() #Implanté mais en attente du GUI
 		if A == 0:
 			APICheck()
 			A = 1
@@ -138,7 +138,7 @@ def Crypto(): #Fonction Crypto (CryproCompare)
 	del PCTC2[-14:-1]
 
 	TextEtImg.AddText(conf["CRYPTO"]["Coin1"] + " " + conf["CRYPTO"]["Currency"] + " " + str(DataCrypto["RAW"][conf["CRYPTO"]["Coin1"]][conf["CRYPTO"]["Currency"]]["PRICE"]), 10, 44, size = 25, fontPath="Ubuntu.ttf")
-	TextEtImg.AddText(conf["CRYPTO"]["Coin1"] + " " + conf["CRYPTO"]["Currency"] + " " + str(DataCrypto["RAW"][conf["CRYPTO"]["Coin2"]][conf["CRYPTO"]["Currency"]]["PRICE"]), 10, 114, size = 25, fontPath="Ubuntu.ttf")
+	TextEtImg.AddText(conf["CRYPTO"]["Coin2"] + " " + conf["CRYPTO"]["Currency"] + " " + str(DataCrypto["RAW"][conf["CRYPTO"]["Coin2"]][conf["CRYPTO"]["Currency"]]["PRICE"]), 10, 114, size = 25, fontPath="Ubuntu.ttf")
 	TextEtImg.AddText("".join(PCTC1) + "%", 10, 74, size = 15, fontPath="Ubuntu.ttf")
 	TextEtImg.AddText("".join(PCTC2) + "%", 10, 144, size = 15, fontPath="Ubuntu.ttf")
 
