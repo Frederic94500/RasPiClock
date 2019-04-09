@@ -13,12 +13,8 @@ global A
 
 #Fonction Main
 def Main():
-	A = 0
 	try:
-		#Save() #Implanté mais en attente du GUI
-		if A == 0:
-			APICheck()
-			A = 1
+		A = 1
 		while A == 1:
 			Crypto()
 			Meteo()
@@ -239,7 +235,12 @@ if os.path.exists('/etc/default/epd-fuse'):
 		
 
 		#GUI (en attente)
-	Main() #Sera remplacé par le bouton "Afficher"
+		#Main() #Sera remplacé par le bouton "Afficher"
+
+	else:
+		print("Erreur dans la config, veuillez mettre 1 (Oui) ou 0 (Non) dans GUI")
+		sys.exit()
+
 else:
 	print("ATTENTION, vous n'avez pas installé la biblothèque Papirus, veuillez l'installer via https://github.com/PiSupply/PaPiRus") #Phrase temp
 	sys.exit()
