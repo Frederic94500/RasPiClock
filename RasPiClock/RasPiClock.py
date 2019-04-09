@@ -86,7 +86,7 @@ def APICheck():
 		hash.close
 
 
-def Save():
+def Save(): #Fonction d'enregistrement du fichier de conf
 	conf["API-KEY"]["CryptoAPI"] = ZTCryptoAPI.get()
 	conf["API-KEY"]["MeteoAPI"] = ZTMeteoAPI.get()
 	conf["API-KEY"]["LastFmAPI"] = ZTLastFmAPI.get()
@@ -127,8 +127,6 @@ def Save():
 
 
 def Crypto(): #Fonction Crypto (CryproCompare)
-	TextEtImg.AddImg("BTC.bmp", 10, 42, (44,44))
-	TextEtImg.AddImg("ETH.bmp", 10, 100, (44,68))
 	TextEtImg.AddText("Crypto:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
 
 	ReponseCrypto = rq.get("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + conf["CRYPTO"]["Coin1"] + "," + conf["CRYPTO"]["Coin2"] + "&tsyms=" + conf["CRYPTO"]["Currency"] + "&api_key=" + conf["API_KEY"]["CryptoAPI"])
@@ -139,10 +137,10 @@ def Crypto(): #Fonction Crypto (CryproCompare)
 	PCTC2 = list(str(DataCrypto["RAW"][conf["CRYPTO"]["Coin2"]][conf["CRYPTO"]["Currency"]]["CHANGEPCT24HOUR"]))
 	del PCTC2[-14:-1]
 
-	TextEtImg.AddText(conf["CRYPTO"]["Currency"] + " " + str(DataCrypto["RAW"][conf["CRYPTO"]["Coin1"]][conf["CRYPTO"]["Currency"]]["PRICE"]), 64, 44, size = 30, fontPath="Ubuntu.ttf")
-	TextEtImg.AddText(conf["CRYPTO"]["Currency"] + " " + str(DataCrypto["RAW"][conf["CRYPTO"]["Coin2"]][conf["CRYPTO"]["Currency"]]["PRICE"]), 64, 114, size = 30, fontPath="Ubuntu.ttf")
-	TextEtImg.AddText("".join(PCTC1) + "%", 64, 74, size = 15, fontPath="Ubuntu.ttf")
-	TextEtImg.AddText("".join(PCTC2) + "%", 64, 144, size = 15, fontPath="Ubuntu.ttf")
+	TextEtImg.AddText(conf["CRYPTO"]["Coin1"] + " " + conf["CRYPTO"]["Currency"] + " " + str(DataCrypto["RAW"][conf["CRYPTO"]["Coin1"]][conf["CRYPTO"]["Currency"]]["PRICE"]), 10, 44, size = 25, fontPath="Ubuntu.ttf")
+	TextEtImg.AddText(conf["CRYPTO"]["Coin1"] + " " + conf["CRYPTO"]["Currency"] + " " + str(DataCrypto["RAW"][conf["CRYPTO"]["Coin2"]][conf["CRYPTO"]["Currency"]]["PRICE"]), 10, 114, size = 25, fontPath="Ubuntu.ttf")
+	TextEtImg.AddText("".join(PCTC1) + "%", 10, 74, size = 15, fontPath="Ubuntu.ttf")
+	TextEtImg.AddText("".join(PCTC2) + "%", 10, 144, size = 15, fontPath="Ubuntu.ttf")
 
 	TextEtImg.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, size = 20, fontPath="Ubuntu.ttf")
 
@@ -217,6 +215,8 @@ def Social(): #Fonction Réseaux Sociaux (Twitch & Twitter)
 		time.sleep(15)
 		TextEtImg.Clear()
 
+#def GUI(): #Fonction pour l'interface (en attente du merge)
+
 conf = configparser.ConfigParser()
 conf.read("config.cfg")
 
@@ -226,7 +226,8 @@ if os.path.exists('/etc/default/epd-fuse'):
 	TextEtImg = PapirusComposite(False)
 	TextEtImg.Clear()
 
-	Main()
+	#GUI() (en attente)
+	Main() #Sera remplacé par le bouton "Afficher"
 else:
 	print("ATTENTION, vous n'avez pas installé la biblothèque Papirus, veuillez l'installer via https://github.com/PiSupply/PaPiRus") #Phrase temp
 	sys.exit()
