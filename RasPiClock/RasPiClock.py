@@ -77,14 +77,15 @@ def APICheck():
 		Check += 1
 
 	if Check == 4:
-		with open("config.conf","rb") as f:
+		HashSave()
+
+def HashSave():
+	with open("config.conf","rb") as f:
 			bytes = f.read()
 			hashconf = hashlib.sha256(bytes).hexdigest()
-
-		hash = open("hash.txt", "w")
-		hash.write(hashconf)
-		hash.close
-
+	hash = open("hash.txt", "w")
+	hash.write(hashconf)
+	hash.close
 
 def Save(): #Fonction d'enregistrement du fichier de conf
 	conf["API-KEY"]["CryptoAPI"] = ZTCryptoAPI.get()
@@ -111,6 +112,7 @@ def Save(): #Fonction d'enregistrement du fichier de conf
 	with open('config.cfg', 'w') as configfile:
 		config.write(configfile)
 	
+def HashVerify():
 	with open('config.conf', "rb") as FC:
 		bytes = FC.read()
 		HashNew = hashlib.sha256(bytes).hexdigest()
