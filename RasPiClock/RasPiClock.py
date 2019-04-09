@@ -9,6 +9,8 @@ from tkinter.messagebox import *
 Metric = "°C"
 Imperial = "°F"
 
+global A
+
 #Fonction Main
 def Main():
 	A = 0
@@ -36,6 +38,33 @@ def Main():
 		print("Vous avez arrêté le processus, nettoyage de l'écran")
 		os.system("papirus-clear")
 		sys.exit()
+
+def GUI():
+	Save()
+	HashVerify()
+	Main()
+
+def HashSave():
+	with open("config.conf","rb") as f:
+			bytes = f.read()
+			hashconf = hashlib.sha256(bytes).hexdigest()
+
+	hash = open("hash.txt", "w")
+	hash.write(hashconf)
+	hash.close
+
+def HashVerify():
+	with open('config.conf', "rb") as FC:
+		bytes = FC.read()
+		HashNew = hashlib.sha256(bytes).hexdigest()
+	
+	FH = open('hash.txt', "r")
+	HashOld = FH.read()
+
+	if HashOld != HashNew:
+		APICheck()
+	if HashOld == HashNew:
+		return
 
 #Fonction de test de chaque paramètre (sauf Twitch)
 def APICheck():
@@ -79,14 +108,6 @@ def APICheck():
 	if Check == 4:
 		HashSave()
 
-def HashSave():
-	with open("config.conf","rb") as f:
-			bytes = f.read()
-			hashconf = hashlib.sha256(bytes).hexdigest()
-	hash = open("hash.txt", "w")
-	hash.write(hashconf)
-	hash.close
-
 def Save(): #Fonction d'enregistrement du fichier de conf
 	conf["API-KEY"]["CryptoAPI"] = ZTCryptoAPI.get()
 	conf["API-KEY"]["MeteoAPI"] = ZTMeteoAPI.get()
@@ -111,22 +132,6 @@ def Save(): #Fonction d'enregistrement du fichier de conf
 
 	with open('config.cfg', 'w') as configfile:
 		config.write(configfile)
-	
-def HashVerify():
-	with open('config.conf', "rb") as FC:
-		bytes = FC.read()
-		HashNew = hashlib.sha256(bytes).hexdigest()
-	
-	FH = open('hash.txt', "r")
-	HashOld = FH.read()
-
-	if HashOld != HashNew:
-		A = 0
-		return A
-	if HashOld == HashNew:
-		A = 1
-		return A
-
 
 def Crypto(): #Fonction Crypto (CryproCompare)
 	TextEtImg.AddText("Crypto:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
@@ -217,8 +222,6 @@ def Social(): #Fonction Réseaux Sociaux (Twitch & Twitter)
 		time.sleep(15)
 		TextEtImg.Clear()
 
-#def GUI(): #Fonction pour l'interface (en attente du merge)
-
 conf = configparser.ConfigParser()
 conf.read("config.cfg")
 
@@ -228,7 +231,14 @@ if os.path.exists('/etc/default/epd-fuse'):
 	TextEtImg = PapirusComposite(False)
 	TextEtImg.Clear()
 
-	#GUI() (en attente)
+	if conf["GUI"] == "0":
+		HashVerify()
+		Main()
+	
+	#if conf["GUI"] == "1":
+		
+
+		#GUI (en attente)
 	Main() #Sera remplacé par le bouton "Afficher"
 else:
 	print("ATTENTION, vous n'avez pas installé la biblothèque Papirus, veuillez l'installer via https://github.com/PiSupply/PaPiRus") #Phrase temp
