@@ -52,7 +52,7 @@ Fenetre.title('Interface de configuration RasPiClock')
 #Fenetre.iconbitmap('icon.ico')
 
 #Création du Canvas
-Graphique = Canvas(Fenetre, width = 1500, height = 700, bg = "#FFFFFF")
+Graphique = Canvas(Fenetre, width = 1500, height = 700)
 Graphique.pack()
 
 
