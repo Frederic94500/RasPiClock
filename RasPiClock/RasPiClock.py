@@ -76,33 +76,36 @@ def APICheck():
 
 	try:
 		if DataCrypto["Response"] == "Error":
-			print("Erreur dans la config Crypto, veuiller vérifier votre saisie!")
-			sys.exit()
+			ERR = "Erreur dans la config Crypto, veuiller vérifier votre saisie!"
 	except:
 		Check += 1
 
 	try:
 		if DataMeteo["cod"] == range(400, 599):
-			print("Erreur dans la config Météo, veuiller vérifier votre saisie!")
-			sys.exit()
+			ERR = "Erreur dans la config Météo, veuiller vérifier votre saisie!"
 	except:
 		Check += 1
 
 	try:
 		if DataLast["error"] == range(2, 29):
-			print("Erreur dans la config LastFM, veuiller vérifier votre saisie!")
-			sys.exit()
+			ERR = "Erreur dans la config LastFM, veuiller vérifier votre saisie!"
 	except:
 		Check += 1
 	try:
 		if DataTwitter["errors"][0]["code"] == range(49, 599):
-			print("Erreur dans la config Twitter, veuiller vérifier votre saisie!")
-			sys.exit()
+			ERR = "Erreur dans la config Twitter, veuiller vérifier votre saisie!"
 	except:
 		Check += 1
 
 	if Check == 4:
 		HashSave()
+	else:
+		if conf["GUI"] == "1":
+			WARN = showerror("Attention!", ERR)
+			sys.exit()
+		else:
+			print(ERR)
+			sys.exit()
 
 def Save(): #Fonction d'enregistrement du fichier de conf
 	conf["API-KEY"]["CryptoAPI"] = ZTCryptoAPI.get()
@@ -242,5 +245,9 @@ if os.path.exists('/etc/default/epd-fuse'):
 		sys.exit()
 
 else:
-	print("ATTENTION, vous n'avez pas installé la biblothèque Papirus, veuillez l'installer via https://github.com/PiSupply/PaPiRus") #Phrase temp
-	sys.exit()
+	if conf["GUI"] == "1":
+		WARN = showerror("Attention!", "Vous n'avez pas installé la biblothèque Papirus, veuillez l'installer via https://github.com/PiSupply/PaPiRus.")
+		sys.exit()
+	else:
+		print("Attention!, vous n'avez pas installé la biblothèque Papirus, veuillez l'installer via https://github.com/PiSupply/PaPiRus")
+		sys.exit()
