@@ -1,20 +1,17 @@
 # -*- encoding: utf-8 -*-
-#Frédéric94500 - Résistance-ISN
+#Frédéric94500
 
 from tkinter import *
 import webbrowser
 from tkinter.messagebox import *
 from PIL import Image
 
-
-#def Afficher():
-
 #Fonction "Quand on appuie sur "enter""
 def Enter(event):
-    Afficher()
+    Save()
 
 def WebProj():
-	webbrowser.open_new_tab('https://github.com/Frederic94500/Resistance-ISN')
+	webbrowser.open_new_tab('https://github.com/Frederic94500/RasPiClock-ISN')
 
 def WebAuteur(event):
 	webbrowser.open_new_tab('https://twitter.com/Frederic94500')
@@ -39,12 +36,11 @@ def APropos():
 
 	[AbText[I].pack(side = "left", pady = 10) for I in range(4)]
 
-	#photo = ImageTk.PhotoImage(Image.open("gpl.png"))
-	#img = Label(About, image=photo)
-	#img.image = photo
-	#img.pack()
-
-	#About.iconbitmap('icon.ico')
+	'''photo = ImageTk.PhotoImage(Image.open("gpl.png"))
+	img = Label(About, image=photo)
+	img.image = photo
+	img.pack()
+	About.iconbitmap('icon.ico')'''
 
 #Création Fenètre
 Fenetre = Tk()
@@ -61,11 +57,12 @@ menubar = Menu(Fenetre)
 
 filemenu = Menu(menubar, tearoff=0)
 menubar.add_cascade(label = "Fichier", menu = filemenu)
+#filemenu.add_command(label = "Enregistrer", command = Save)
+filemenu.add_separator()
 filemenu.add_command(label = "Quitter", command = Fenetre.destroy)
 
-Actif = IntVar()
-editmenu = Menu(menubar, tearoff=0)
-menubar.add_cascade(label = "Edition", menu = editmenu)
+#editmenu = Menu(menubar, tearoff=0)
+#menubar.add_cascade(label = "Edition", menu = editmenu)
 
 helpmenu = Menu(menubar, tearoff=0)
 menubar.add_cascade(label = "Aide", menu = helpmenu)
@@ -76,12 +73,7 @@ helpmenu.add_command(label = "A propos et licence", command = APropos)
 Fenetre.config(menu=menubar)
 
 #Création Bouton Afficher
-#BoutonAfficher = Button(Fenetre, text = 'Afficher', command = Verification).pack(side = LEFT, padx = 5, pady = 5)
-
-'''#Création Zone de Texte
-ZoneTexte = Entry(justify = CENTER)
-ZoneTexte.focus_set()
-ZoneTexte.pack(side = LEFT, fill = BOTH, padx = 5, pady = 5)'''
+#BoutonAfficher = Button(Fenetre, text = 'Afficher', command = Save).pack(side = RIGHT, padx = 5, pady = 5)
 
 #Quand on appuie sur "enter"
 Fenetre.bind('<Return>', Enter)
