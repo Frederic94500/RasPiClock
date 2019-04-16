@@ -91,21 +91,23 @@ def APICheck():
 			ERR = "Erreur dans la config LastFM, veuiller vérifier votre saisie!"
 	except:
 		Check += 1
+
 	try:
 		if DataTwitter["errors"][0]["code"] == range(49, 599):
 			ERR = "Erreur dans la config Twitter, veuiller vérifier votre saisie!"
 	except:
 		Check += 1
 
-	if Check == 4:
-		HashSave()
-	else:
-		if conf["GENERAL"]["GUI"] == "1":
-			WARN = showerror("Attention!", ERR)
-			sys.exit()
+	finally:
+		if Check == 4:
+			HashSave()
 		else:
-			print(ERR)
-			sys.exit()
+			if conf["GENERAL"]["GUI"] == "1":
+				WARN = showerror("Attention!", ERR)
+				sys.exit()
+			else:
+				print(ERR)
+				sys.exit()
 
 def Save(): #Fonction d'enregistrement du fichier de conf
 	conf["API-KEY"]["CryptoAPI"] = ZTCryptoAPI.get()
