@@ -41,20 +41,20 @@ def GUI():
 	Main()
 
 def HashSave():
-	with os.open("config.conf","rb") as f:
-			bytes = f.read()
-			hashconf = hashlib.sha256(bytes).hexdigest()
+	with open("config.cfg","rb") as f:
+		bytes = f.read()
+		hashconf = hashlib.sha256(bytes).hexdigest()
 
-	hash = os.open("hash.txt", "w")
+	hash = open("hash.txt", "w")
 	hash.write(hashconf)
 	hash.close
 
 def HashVerify():
-	with os.open('config.conf', "rb") as FC:
+	with open('config.cfg', "rb") as FC:
 		bytes = FC.read()
 		HashNew = hashlib.sha256(bytes).hexdigest()
 	
-	FH = os.open('hash.txt', "r")
+	FH = open('hash.txt', "r")
 	HashOld = FH.read()
 
 	if HashOld != HashNew:
@@ -100,7 +100,7 @@ def APICheck():
 	if Check == 4:
 		HashSave()
 	else:
-		if conf["GUI"] == "1":
+		if conf["GENERAL"]["GUI"] == "1":
 			WARN = showerror("Attention!", ERR)
 			sys.exit()
 		else:
@@ -229,20 +229,16 @@ if os.path.exists('/etc/default/epd-fuse'):
 	Ecran = Papirus()
 	TextEtImg = PapirusComposite(False)
 	TextEtImg.Clear()
-
-	if conf["GENERAL"]["GUI"] == "0":
-		HashVerify()
-		Main()
 	
-	#if conf["GENERAL"]["GUI"] == "1":
-		
+	if conf["GENERAL"]["GUI"] == "1":
+		print("LOL")
+		sys.exit()
 
 		#GUI (en attente)
 		#Main() #Sera remplacé par le bouton "Afficher"
-
-	else:
-		print("Erreur dans la config, veuillez mettre 1 (Oui) ou 0 (Non) dans GUI")
-		sys.exit()
+	else: #Par défaut
+		HashVerify()
+		Main()
 
 else:
 	if conf["GUI"] == "1":
