@@ -99,9 +99,9 @@ def APICheck():
 		Check += 1
 
 	finally:
-		if Check == 4:
+		if Check >= 4:
 			HashSave()
-		else:
+		elif Check <= 3:
 			if conf["GENERAL"]["GUI"] == "1":
 				WARN = showerror("Attention!", ERR)
 				sys.exit()
