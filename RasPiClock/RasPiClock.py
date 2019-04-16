@@ -41,20 +41,20 @@ def GUI():
 	Main()
 
 def HashSave():
-	with open("config.conf","rb") as f:
+	with os.open("config.conf","rb") as f:
 			bytes = f.read()
 			hashconf = hashlib.sha256(bytes).hexdigest()
 
-	hash = open("hash.txt", "w")
+	hash = os.open("hash.txt", "w")
 	hash.write(hashconf)
 	hash.close
 
 def HashVerify():
-	with open('config.conf', "rb") as FC:
+	with os.open('config.conf', "rb") as FC:
 		bytes = FC.read()
 		HashNew = hashlib.sha256(bytes).hexdigest()
 	
-	FH = open('hash.txt', "r")
+	FH = os.open('hash.txt', "r")
 	HashOld = FH.read()
 
 	if HashOld != HashNew:
@@ -230,11 +230,11 @@ if os.path.exists('/etc/default/epd-fuse'):
 	TextEtImg = PapirusComposite(False)
 	TextEtImg.Clear()
 
-	if conf["GUI"] == "0":
+	if conf["GENERAL"]["GUI"] == "0":
 		HashVerify()
 		Main()
 	
-	#if conf["GUI"] == "1":
+	#if conf["GENERAL"]["GUI"] == "1":
 		
 
 		#GUI (en attente)
