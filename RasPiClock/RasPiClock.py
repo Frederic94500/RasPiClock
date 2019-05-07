@@ -23,9 +23,9 @@ def Main():
 			#RATP() #WIP?
 	except (ValueError, socket.error, socket.gaierror, socket.herror, socket.timeout):
 		TextEtImg.Clear()
-		TextEtImg.AddText("ERREUR de connexion, nouvelle tentative de connexion dans: T", 10, 48, size = 20, fontPath="Ubuntu.ttf", Id="TimerErr")
+		TextEtImg.AddText("ERROREUR de connexion, nouvelle tentative de connexion dans: T", 10, 48, size = 20, fontPath="Ubuntu.ttf", Id="TimerErr")
 		for I in range(15):
-			TextEtImg.UpdateText("TimerErr", "ERREUR de connexion, \nnouvelle tentative de connexion dans: " + str(15 - I), fontPath="Ubuntu.ttf")
+			TextEtImg.UpdateText("TimerErr", "ERROREUR de connexion, \nnouvelle tentative de connexion dans: " + str(15 - I), fontPath="Ubuntu.ttf")
 			TextEtImg.WriteAll(True)
 			time.sleep(1)
 		TextEtImg.Clear()
@@ -76,38 +76,43 @@ def APICheck():
 
 	try:
 		if DataCrypto["Response"] == "Error":
-			ERR = "Erreur dans la config Crypto, veuiller vérifier votre saisie!"
+			ERROR = "Erreur dans la config Crypto, veuiller vérifier votre saisie!"
+			ErrorConfig(ERROR)
 	except:
 		Check += 1
 
 	try:
 		if DataMeteo["cod"] == range(400, 599):
-			ERR = "Erreur dans la config Météo, veuiller vérifier votre saisie!"
+			ERROR = "Erreur dans la config Météo, veuiller vérifier votre saisie!"
+			ErrorConfig(ERROR)
 	except:
 		Check += 1
 
 	try:
 		if DataLast["error"] == range(2, 29):
-			ERR = "Erreur dans la config LastFM, veuiller vérifier votre saisie!"
+			ERROR = "Erreur dans la config LastFM, veuiller vérifier votre saisie!"
+			ErrorConfig(ERROR)
 	except:
 		Check += 1
 
 	try:
 		if DataTwitter["errors"][0]["code"] == range(49, 599):
-			ERR = "Erreur dans la config Twitter, veuiller vérifier votre saisie!"
+			ERROR = "Erreur dans la config Twitter, veuiller vérifier votre saisie!"
+			ErrorConfig(ERROR)
 	except:
 		Check += 1
 
 	finally:
 		if Check >= 4:
 			HashSave()
-		elif Check <= 3:
-			if conf["GENERAL"]["GUI"] == "1":
-				WARN = showerror("Attention!", ERR)
-				sys.exit()
-			else:
-				print(ERR)
-				sys.exit()
+
+def ErrorConfig(ERROR):
+	if conf["GENERAL"]["GUI"] == "1":
+		WARN = showerror("Attention!", ERROR)
+		sys.exit()
+	else:
+		print(ERROR)
+		sys.exit()
 
 def Save(): #Fonction d'enregistrement du fichier de conf
 	conf["API-KEY"]["CryptoAPI"] = ZTCryptoAPI.get()
