@@ -87,7 +87,7 @@ Texte.set("")
 TABList = ["tabCrypto", "tabMeteo", "tabMusic", "tabTwitch", "tabTwitter"]
 TABText = ["Crypto", "Météo", "Musique", "Twitch", "Twitter"]
 NBArg = [4, 4, 2, 3, 2]
-TEXTEntry = []
+TEXTEntry = [["Clé API", "Monnaie fiduciaire", "Cryptomonnaie 1", "Cryptomonnaie 2"],["Clé API", "Ville", "Unité", "Langue"],["Clé API", "Utilisateur"],["Clé API", "Streamer 1", "Streamer 2"],["Clé API", "Utilisateur"]]
 
 TAB = ttk.Notebook(Fenetre)
 
@@ -98,12 +98,11 @@ for I in range(5):
 TAB.pack(expand=1, fill='both')
 
 #Création Grid
-
 for I0 in range(5): #Nombre de tab
 	for I1 in range(2): #Nombre de ligne en fonction du tab
-		for I2 in range(2): #Nombre d'argument 
-			Label(TABList[I0], text="First").grid(row=I2, padx=5, pady=5)
-			e1 = Entry(TABList[I0]).grid(row=I2, column=1, padx=5, pady=5)
+		for I2 in range(NBArg[I0]): #Nombre d'argument 
+			Label(TABList[I0], text=TEXTEntry[I0][I2]).grid(row=I2, padx=5, pady=5)
+			e1 = Entry(TABList[I0]).grid(row=I2, column=1, padx=5, pady=5) #Faire le lien
 
 #Initialisation du GUI
 Fenetre.mainloop()
