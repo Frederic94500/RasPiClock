@@ -7,9 +7,6 @@ import webbrowser
 from tkinter.messagebox import *
 from PIL import Image, ImageTk
 
-
-#def Afficher():
-
 #Fonction "Quand on appuie sur "enter""
 def Enter(event):
     Afficher()
@@ -40,19 +37,17 @@ def APropos():
 
 	[AbText[I].pack(side = "left", pady = 10) for I in range(4)]
 
-	photo = ImageTk.PhotoImage(Image.open("gpl.png"))
+	'''photo = ImageTk.PhotoImage(Image.open("gpl.png"))
 	img = Label(About, image=photo)
 	img.image = photo
 	img.pack()
 
-	About.iconbitmap('icon.ico')
+	About.iconbitmap('icon.ico')'''
 
 #Création Fenètre
 Fenetre = Tk()
 Fenetre.title('GUI')
 '''Fenetre.iconbitmap('icon.ico')'''
-
-
 
 #Création barre de menu
 menubar = Menu(Fenetre)
@@ -60,7 +55,7 @@ menubar = Menu(Fenetre)
 filemenu = Menu(menubar, tearoff=0)
 menubar.add_cascade(label = "Fichier", menu = filemenu)
 filemenu.add_command(label = "Quitter", command = Fenetre.destroy)
-Actif = IntVar()
+
 editmenu = Menu(menubar, tearoff=0)
 menubar.add_cascade(label = "Edition", menu = editmenu)
 
@@ -87,58 +82,53 @@ Fenetre.bind('<Return>', Enter)
 Texte = StringVar()
 TextAnnonce = Label(Fenetre, textvariable = Texte).pack(side = LEFT)
 Texte.set("")
+
 #Création onglets
-tab_parent = ttk.Notebook(Fenetre)
-tabCrypto = ttk.Frame(tab_parent)
-tabMeteo = ttk.Frame(tab_parent)
-tabMusic = ttk.Frame(tab_parent)
-tabTwitch = ttk.Frame(tab_parent)
-tabTwitter = ttk.Frame(tab_parent)
-tab_parent.add(tabCrypto, text="Crypto")
-tab_parent.add(tabMeteo, text="Météo")
-tab_parent.add(tabMusic, text="Music")
-tab_parent.add(tabTwitch, text="Twitch")
-tab_parent.add(tabTwitter, text="Twitter")
-tab_parent.pack(expand=1, fill='both')
+TAB = ttk.Notebook(Fenetre)
+tabCrypto = ttk.Frame(TAB)
+tabMeteo = ttk.Frame(TAB)
+tabMusic = ttk.Frame(TAB)
+tabTwitch = ttk.Frame(TAB)
+tabTwitter = ttk.Frame(TAB)
+
+TAB.add(tabCrypto, text="Crypto")
+TAB.add(tabMeteo, text="Météo")
+TAB.add(tabMusic, text="Music")
+TAB.add(tabTwitch, text="Twitch")
+TAB.add(tabTwitter, text="Twitter")
+
+TAB.pack(expand=1, fill='both')
 
 #Création Grid
-Label(tabCrypto, text="First").grid(row=0)
-Label(tabCrypto, text="Second").grid(row=1)
-Label(tabMeteo, text="First").grid(row=0)
-Label(tabMeteo, text="Second").grid(row=1)
-Label(tabMusic, text="First").grid(row=0)
-Label(tabMusic, text="Second").grid(row=1)
-Label(tabTwitch, text="First").grid(row=0)
-Label(tabTwitch, text="Second").grid(row=1)
-Label(tabTwitter, text="First").grid(row=0)
-Label(tabTwitter, text="Second").grid(row=1)
+Label(tabCrypto, text="First").grid(row=0, padx=5, pady=5)
+Label(tabCrypto, text="Second").grid(row=1, padx=5, pady=5)
 
-e1 = Entry(tabCrypto)
-e2 = Entry(tabCrypto)
+Label(tabMeteo, text="First").grid(row=0, padx=5, pady=5)
+Label(tabMeteo, text="Second").grid(row=1, padx=5, pady=5)
 
-e3 = Entry(tabMeteo)
-e4 = Entry(tabMeteo)
+Label(tabMusic, text="First").grid(row=0, padx=5, pady=5)
+Label(tabMusic, text="Second").grid(row=1, padx=5, pady=5)
 
-e5 = Entry(tabMusic)
-e6 = Entry(tabMusic)
+Label(tabTwitch, text="First").grid(row=0, padx=5, pady=5)
+Label(tabTwitch, text="Second").grid(row=1, padx=5, pady=5)
 
-e7 = Entry(tabTwitch)
-e8 = Entry(tabTwitch)
+Label(tabTwitter, text="First").grid(row=0, padx=5, pady=5)
+Label(tabTwitter, text="Second").grid(row=1, padx=5, pady=5)
 
-e9 = Entry(tabTwitter)
-e10 = Entry(tabTwitter)
+e1 = Entry(tabCrypto).grid(row=0, column=1, padx=5, pady=5)
+e2 = Entry(tabCrypto).grid(row=1, column=1, padx=5, pady=5)
 
+e3 = Entry(tabMeteo).grid(row=0, column=1, padx=5, pady=5)
+e4 = Entry(tabMeteo).grid(row=1, column=1, padx=5, pady=5)
 
-e1.grid(row=0, column=1)
-e2.grid(row=1, column=1)
-e3.grid(row=0, column=1)
-e4.grid(row=1, column=1)
-e5.grid(row=0, column=1)
-e6.grid(row=1, column=1)
-e7.grid(row=0, column=1)
-e8.grid(row=1, column=1)
-e9.grid(row=0, column=1)
-e10.grid(row=1, column=1)
+e5 = Entry(tabMusic).grid(row=0, column=1, padx=5, pady=5)
+e6 = Entry(tabMusic).grid(row=1, column=1, padx=5, pady=5)
+
+e7 = Entry(tabTwitch).grid(row=0, column=1, padx=5, pady=5)
+e8 = Entry(tabTwitch).grid(row=1, column=1, padx=5, pady=5)
+
+e9 = Entry(tabTwitter).grid(row=0, column=1, padx=5, pady=5)
+e10 = Entry(tabTwitter).grid(row=1, column=1, padx=5, pady=5)
 
 #Initialisation du GUI
 Fenetre.mainloop()
