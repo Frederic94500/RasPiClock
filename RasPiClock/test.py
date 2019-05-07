@@ -84,49 +84,26 @@ TextAnnonce = Label(Fenetre, textvariable = Texte).pack(side = LEFT)
 Texte.set("")
 
 #Création onglets
+TABList = ["tabCrypto", "tabMeteo", "tabMusic", "tabTwitch", "tabTwitter"]
+TABText = ["Crypto", "Météo", "Musique", "Twitch", "Twitter"]
+NBArg = [4, 4, 2, 3, 2]
+TEXTEntry = []
+
 TAB = ttk.Notebook(Fenetre)
 
 for I in range(5):
 	TABList[I] = ttk.Frame(TAB)
-
-[TAB.add(TABList[I], text=TABText[I]) for I in range(5)]
+	TAB.add(TABList[I], text=TABText[I])
 
 TAB.pack(expand=1, fill='both')
 
 #Création Grid
 
-TABList = ["tabCrypto", "tabMeteo", "tabMusic", "tabTwitch", "tabTwitter"]
-TABText = ["Crypto", "Météo", "Musique", "Twitch", "Twitter"]
-
-Label(tabCrypto, text="First").grid(row=0, padx=5, pady=5)
-Label(tabCrypto, text="Second").grid(row=1, padx=5, pady=5)
-
-Label(tabMeteo, text="First").grid(row=0, padx=5, pady=5)
-Label(tabMeteo, text="Second").grid(row=1, padx=5, pady=5)
-
-Label(tabMusic, text="First").grid(row=0, padx=5, pady=5)
-Label(tabMusic, text="Second").grid(row=1, padx=5, pady=5)
-
-Label(tabTwitch, text="First").grid(row=0, padx=5, pady=5)
-Label(tabTwitch, text="Second").grid(row=1, padx=5, pady=5)
-
-Label(tabTwitter, text="First").grid(row=0, padx=5, pady=5)
-Label(tabTwitter, text="Second").grid(row=1, padx=5, pady=5)
-
-e1 = Entry(tabCrypto).grid(row=0, column=1, padx=5, pady=5)
-e2 = Entry(tabCrypto).grid(row=1, column=1, padx=5, pady=5)
-
-e3 = Entry(tabMeteo).grid(row=0, column=1, padx=5, pady=5)
-e4 = Entry(tabMeteo).grid(row=1, column=1, padx=5, pady=5)
-
-e5 = Entry(tabMusic).grid(row=0, column=1, padx=5, pady=5)
-e6 = Entry(tabMusic).grid(row=1, column=1, padx=5, pady=5)
-
-e7 = Entry(tabTwitch).grid(row=0, column=1, padx=5, pady=5)
-e8 = Entry(tabTwitch).grid(row=1, column=1, padx=5, pady=5)
-
-e9 = Entry(tabTwitter).grid(row=0, column=1, padx=5, pady=5)
-e10 = Entry(tabTwitter).grid(row=1, column=1, padx=5, pady=5)
+for I0 in range(5): #Nombre de tab
+	for I1 in range(2): #Nombre de ligne en fonction du tab
+		for I2 in range(2): #Nombre d'argument 
+			Label(TABList[I0], text="First").grid(row=I2, padx=5, pady=5)
+			e1 = Entry(TABList[I0]).grid(row=I2, column=1, padx=5, pady=5)
 
 #Initialisation du GUI
 Fenetre.mainloop()
