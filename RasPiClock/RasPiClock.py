@@ -19,7 +19,8 @@ def Main():
 			Crypto()
 			Meteo()
 			Musique()
-			Social()
+			Twitch()
+			Twitter()
 			#RATP() #WIP?
 	except (ValueError, socket.error, socket.gaierror, socket.herror, socket.timeout):
 		TextEtImg.Clear()
@@ -199,18 +200,13 @@ def Musique(): #Fonction Musique (Last.fm)
 		time.sleep(15)
 		TextEtImg.Clear()
 
-def Social(): #Fonction Réseaux Sociaux (Twitch & Twitter)
-	ReponseTwitter = rq.get("https://api.twitter.com/1.1/users/show.json?screen_name=" + conf["SOCIAL"]["UserTW"], headers={'Authorization': "Bearer " + conf["API_KEY"]["TwitterAPI"]})
-	DataTwitter = json.loads(ReponseTwitter.text)
-
+def Twitch(): #Fonction Twitch
 	ReponseTwitchSt1 = rq.get("https://api.twitch.tv/helix/streams?user_login=" + conf["SOCIAL"]["TwitchSt1"], headers={"Client-ID": conf["API_KEY"]["TwitchAPI"]})
 	ReponseTwitchSt2 = rq.get("https://api.twitch.tv/helix/streams?user_login=" + conf["SOCIAL"]["TwitchSt2"], headers={"Client-ID": conf["API_KEY"]["TwitchAPI"]})
 	DataSt1 = json.loads(ReponseTwitchSt1.text)
 	DataSt2 = json.loads(ReponseTwitchSt2.text)
 
-	TextEtImg.AddText("Réseaux Sociaux:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
-	TextEtImg.AddText("Twitter: " + str(DataTwitter["followers_count"]) + " Followers", 10, 40, size = 25, fontPath="Ubuntu.ttf")
-	TextEtImg.AddText("Twitch:", 10, 75, size = 25, fontPath="Ubuntu.ttf")
+	TextEtImg.AddText("Twitch:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
 
 	try:
 		if DataSt1["data"][0]["type"] == "live":
@@ -225,8 +221,25 @@ def Social(): #Fonction Réseaux Sociaux (Twitch & Twitter)
 	finally:
 		TextEtImg.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, size = 20, fontPath="Ubuntu.ttf")
 		TextEtImg.WriteAll(True)
-		time.sleep(15)
+		time.sleep(10)
 		TextEtImg.Clear()
+
+def Twitter():
+	ReponseTwitter = rq.get("https://api.twitter.com/1.1/users/show.json?screen_name=" + conf["SOCIAL"]["UserTW"], headers={'Authorization': "Bearer " + conf["API_KEY"]["TwitterAPI"]})
+	DataTwitter = json.loads(ReponseTwitter.text)
+
+	TextEtImg.AddText("Twitter:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
+
+	TextEtImg.AddText("Compte de: " + DataTwitter["name"] + " | " + str(DataTwitter["followers_count"]) + " abonnés", 10, 40, size = 15, fontPath="Ubuntu.ttf")
+
+	TextEtImg.AddText("Dernier tweet\n" + DataTwitter["status"]["text"], 10, 65, size = 15, fontPath="Ubuntu.ttf")
+
+	TextEtImg.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, size = 20, fontPath="Ubuntu.ttf")
+	TextEtImg.WriteAll(True)
+	time.sleep(10)
+	TextEtImg.Clear()
+
+	
 
 conf = configparser.ConfigParser()
 conf.read("config.cfg")
