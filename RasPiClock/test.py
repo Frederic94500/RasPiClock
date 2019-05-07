@@ -85,21 +85,19 @@ Texte.set("")
 
 #Création onglets
 TAB = ttk.Notebook(Fenetre)
-tabCrypto = ttk.Frame(TAB)
-tabMeteo = ttk.Frame(TAB)
-tabMusic = ttk.Frame(TAB)
-tabTwitch = ttk.Frame(TAB)
-tabTwitter = ttk.Frame(TAB)
 
-TAB.add(tabCrypto, text="Crypto")
-TAB.add(tabMeteo, text="Météo")
-TAB.add(tabMusic, text="Music")
-TAB.add(tabTwitch, text="Twitch")
-TAB.add(tabTwitter, text="Twitter")
+for I in range(5):
+	TABList[I] = ttk.Frame(TAB)
+
+[TAB.add(TABList[I], text=TABText[I]) for I in range(5)]
 
 TAB.pack(expand=1, fill='both')
 
 #Création Grid
+
+TABList = ["tabCrypto", "tabMeteo", "tabMusic", "tabTwitch", "tabTwitter"]
+TABText = ["Crypto", "Météo", "Musique", "Twitch", "Twitter"]
+
 Label(tabCrypto, text="First").grid(row=0, padx=5, pady=5)
 Label(tabCrypto, text="Second").grid(row=1, padx=5, pady=5)
 
