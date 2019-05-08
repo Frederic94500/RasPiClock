@@ -49,6 +49,7 @@ def HashSave():
 	hash = open("hash.txt", "w")
 	hash.write(hashconf)
 	hash.close
+	Main()
 
 def HashVerify():
 	with open('config.cfg', "rb") as FC:
@@ -61,7 +62,7 @@ def HashVerify():
 	if HashOld != HashNew:
 		APICheck()
 	if HashOld == HashNew:
-		return
+		Main()
 
 #Fonction de test de chaque paramètre (sauf Twitch)
 def APICheck():
@@ -116,29 +117,32 @@ def ErrorConfig(ERROR):
 		sys.exit()
 
 def Save(): #Fonction d'enregistrement du fichier de conf
-	conf["API-KEY"]["CryptoAPI"] = ZTCryptoAPI.get()
-	conf["API-KEY"]["MeteoAPI"] = ZTMeteoAPI.get()
-	conf["API-KEY"]["LastFmAPI"] = ZTLastFmAPI.get()
-	conf["API-KEY"]["TwitterAPI"] = ZTLastFmAPI.get()
-	conf["API-KEY"]["TwitchAPI"] = ZTLastFmAPI.get()
+	ZoneTexte = ["CryptoAPI", "MeteoAPI", "LastFmAPI", "TwitchAPI", "TwitterAPI", "Currency", "Coin1", "Coin2", "City", "Units", "Lang", "UserFM", "TwitchSt1", "TwitchSt2", "UserTW"]
 
+	conf["API-KEY"]["CryptoAPI"] = ZTCryptoAPI.get()
 	conf["CRYPTO"]["Currency"] = ZTCCurrency.get()
 	conf["CRYPTO"]["Coin1"] = ZTCCoin1.get()
 	conf["CRYPTO"]["Coin2"] = ZTCCoin2.get()
 
+	conf["API-KEY"]["MeteoAPI"] = ZTMeteoAPI.get()
 	conf["WEATHER"]["City"] = ZTWCity.get()
 	conf["WEATHER"]["Units"] = ZTWUnits.get()
 	conf["WEATHER"]["Lang"] = ZTWLang.get()
 
+	conf["API-KEY"]["LastFmAPI"] = ZTLastFmAPI.get()
 	conf["LASTFM"]["UserFM"] = ZTFUserFM.get()
 
-	conf["SOCIAL"]["UserTW"] = ZTSUserTW.get()
-
+	conf["API-KEY"]["TwitchAPI"] = ZTLastFmAPI.get()
 	conf["SOCIAL"]["TwitchSt1"] = ZTSTwitchSt1.get()
 	conf["SOCIAL"]["TwitchSt2"] = ZTSTwitchSt2.get()
 
+	conf["API-KEY"]["TwitterAPI"] = ZTLastFmAPI.get()
+	conf["SOCIAL"]["UserTW"] = ZTSUserTW.get()
+
 	with open('config.cfg', 'w') as configfile:
 		config.write(configfile)
+
+	HashVerify()
 
 def Crypto(): #Fonction Crypto (CryproCompare)
 	TextEtImg.AddText("Crypto:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
@@ -258,7 +262,6 @@ if os.path.exists('/etc/default/epd-fuse'):
 		#Main() #Sera remplacé par le bouton "Afficher"
 	else: #Par défaut
 		HashVerify()
-		Main()
 
 else:
 	if conf["GUI"] == "1":
