@@ -119,6 +119,9 @@ def ErrorConfig(ERROR):
 def Save(): #Fonction d'enregistrement du fichier de conf
 	ZoneTexte = ["CryptoAPI", "MeteoAPI", "LastFmAPI", "TwitchAPI", "TwitterAPI", "Currency", "Coin1", "Coin2", "City", "Units", "Lang", "UserFM", "TwitchSt1", "TwitchSt2", "UserTW"]
 
+	for I0 in range(5):
+		conf[I0]
+
 	conf["API-KEY"]["CryptoAPI"] = ZTCryptoAPI.get()
 	conf["CRYPTO"]["Currency"] = ZTCCurrency.get()
 	conf["CRYPTO"]["Coin1"] = ZTCCoin1.get()
