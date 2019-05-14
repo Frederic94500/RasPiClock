@@ -46,12 +46,12 @@ def APropos():
 	img.image = photo
 	img.pack()
 
-	About.iconbitmap('icon.ico')
+	#About.iconbitmap('icon.ico')
 
 #Création Fenètre
 Fenetre = Tk()
 Fenetre.title('GUI')
-Fenetre.iconbitmap('icon.ico')
+#Fenetre.iconbitmap('icon.ico')
 
 #Création barre de menu
 menubar = Menu(Fenetre)
