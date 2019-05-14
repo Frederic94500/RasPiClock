@@ -1,10 +1,12 @@
 # -*- encoding: utf-8 -*-
 #RasPiClock - Frédéric94500, EliottCheypeplus, ParsaEtz
 
-import time, json, sys, os, socket, configparser, hashlib
+import time, json, sys, os, socket, configparser, hashlib, webbrowser
 import requests as rq
 from tkinter import *
 from tkinter.messagebox import *
+from tkinter import ttk
+#from PIL import Image, ImageTk
 
 Metric = "°C"
 Imperial = "°F"
@@ -67,13 +69,13 @@ def HashVerify():
 #Fonction de test de chaque paramètre (sauf Twitch)
 def APICheck():
 	Check = 0
-	ReponseCrypto = rq.get("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + conf["CRYPTO"]["Coin1"] + "," + conf["CRYPTO"]["Coin2"] + "&tsyms=" + conf["CRYPTO"]["Currency"] + "&api_key=" + conf["API_KEY"]["CryptoAPI"])
+	ReponseCrypto = rq.get("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + conf["CRYPTO"]["Coin1"] + "," + conf["CRYPTO"]["Coin2"] + "&tsyms=" + conf["CRYPTO"]["Currency"] + "&api_key=" + conf["CRYPTO"]["CryptoAPI"])
 	DataCrypto = json.loads(ReponseCrypto.text)
-	ReponseMeteo = rq.get("https://api.openweathermap.org/data/2.5/weather?q=" + conf["WEATHER"]["City"] + "&units=" + conf["WEATHER"]["Units"] + "&lang=" + conf["WEATHER"]["Lang"] + "&appid=" + conf["API_KEY"]["MeteoAPI"])
+	ReponseMeteo = rq.get("https://api.openweathermap.org/data/2.5/weather?q=" + conf["WEATHER"]["City"] + "&units=" + conf["WEATHER"]["Units"] + "&lang=" + conf["WEATHER"]["Lang"] + "&appid=" + conf["WEATHER"]["MeteoAPI"])
 	DataMeteo = json.loads(ReponseMeteo.text)
-	ReponseLastFM = rq.get("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=" + conf["LASTFM"]["UserFM"] + "&limit=1&format=json&api_key=" + conf["API_KEY"]["LastFmAPI"])
+	ReponseLastFM = rq.get("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=" + conf["LASTFM"]["UserFM"] + "&limit=1&format=json&api_key=" + conf["LASTFM"]["LastFmAPI"])
 	DataLast = json.loads(ReponseLastFM.text)
-	ReponseTwitter = rq.get("https://api.twitter.com/1.1/users/show.json?screen_name=" + conf["SOCIAL"]["UserTW"], headers={'Authorization': "Bearer " + conf["API_KEY"]["TwitterAPI"]})
+	ReponseTwitter = rq.get("https://api.twitter.com/1.1/users/show.json?screen_name=" + conf["SOCIAL"]["UserTW"], headers={'Authorization': "Bearer " + conf["TWITTER"]["TwitterAPI"]})
 	DataTwitter = json.loads(ReponseTwitter.text)
 
 	try:
@@ -150,7 +152,7 @@ def Save(): #Fonction d'enregistrement du fichier de conf
 def Crypto(): #Fonction Crypto (CryproCompare)
 	TextEtImg.AddText("Crypto:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
 
-	ReponseCrypto = rq.get("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + conf["CRYPTO"]["Coin1"] + "," + conf["CRYPTO"]["Coin2"] + "&tsyms=" + conf["CRYPTO"]["Currency"] + "&api_key=" + conf["API_KEY"]["CryptoAPI"])
+	ReponseCrypto = rq.get("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + conf["CRYPTO"]["Coin1"] + "," + conf["CRYPTO"]["Coin2"] + "&tsyms=" + conf["CRYPTO"]["Currency"] + "&api_key=" + conf["CRYPTO"]["CryptoAPI"])
 	DataCrypto = json.loads(ReponseCrypto.text)
 
 	PCTC1 = list(str(DataCrypto["RAW"][conf["CRYPTO"]["Coin1"]][conf["CRYPTO"]["Currency"]]["CHANGEPCT24HOUR"]))
@@ -170,7 +172,7 @@ def Crypto(): #Fonction Crypto (CryproCompare)
 	TextEtImg.Clear()
 
 def Meteo(): #Fonction Météo (OpenWeatherMap)
-	ReponseMeteo = rq.get("https://api.openweathermap.org/data/2.5/weather?q=" + conf["WEATHER"]["City"] + "&units=" + conf["WEATHER"]["Units"] + "&lang=" + conf["WEATHER"]["Lang"] + "&appid=" + conf["API_KEY"]["MeteoAPI"])
+	ReponseMeteo = rq.get("https://api.openweathermap.org/data/2.5/weather?q=" + conf["WEATHER"]["City"] + "&units=" + conf["WEATHER"]["Units"] + "&lang=" + conf["WEATHER"]["Lang"] + "&appid=" + conf["WEATHER"]["MeteoAPI"])
 	DataMeteo = json.loads(ReponseMeteo.text)
 
 	TextEtImg.AddText("Météo:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
@@ -185,7 +187,7 @@ def Meteo(): #Fonction Météo (OpenWeatherMap)
 	TextEtImg.Clear()
 
 def Musique(): #Fonction Musique (Last.fm)
-	ReponseLastFM = rq.get("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=" + conf["LASTFM"]["UserFM"] + "&limit=1&format=json&api_key=" + conf["API_KEY"]["LastFmAPI"])
+	ReponseLastFM = rq.get("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=" + conf["LASTFM"]["UserFM"] + "&limit=1&format=json&api_key=" + conf["LASTFM"]["LastFmAPI"])
 	DataLast = json.loads(ReponseLastFM.text)
 
 	TextEtImg.AddText("Last.fm:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
@@ -208,8 +210,8 @@ def Musique(): #Fonction Musique (Last.fm)
 		TextEtImg.Clear()
 
 def Twitch(): #Fonction Twitch
-	ReponseTwitchSt1 = rq.get("https://api.twitch.tv/helix/streams?user_login=" + conf["SOCIAL"]["TwitchSt1"], headers={"Client-ID": conf["API_KEY"]["TwitchAPI"]})
-	ReponseTwitchSt2 = rq.get("https://api.twitch.tv/helix/streams?user_login=" + conf["SOCIAL"]["TwitchSt2"], headers={"Client-ID": conf["API_KEY"]["TwitchAPI"]})
+	ReponseTwitchSt1 = rq.get("https://api.twitch.tv/helix/streams?user_login=" + conf["SOCIAL"]["TwitchSt1"], headers={"Client-ID": conf["TWITCH"]["TwitchAPI"]})
+	ReponseTwitchSt2 = rq.get("https://api.twitch.tv/helix/streams?user_login=" + conf["SOCIAL"]["TwitchSt2"], headers={"Client-ID": conf["TWITCH"]["TwitchAPI"]})
 	DataSt1 = json.loads(ReponseTwitchSt1.text)
 	DataSt2 = json.loads(ReponseTwitchSt2.text)
 
@@ -232,7 +234,7 @@ def Twitch(): #Fonction Twitch
 		TextEtImg.Clear()
 
 def Twitter():
-	ReponseTwitter = rq.get("https://api.twitter.com/1.1/users/show.json?screen_name=" + conf["SOCIAL"]["UserTW"], headers={'Authorization': "Bearer " + conf["API_KEY"]["TwitterAPI"]})
+	ReponseTwitter = rq.get("https://api.twitter.com/1.1/users/show.json?screen_name=" + conf["SOCIAL"]["UserTW"], headers={'Authorization': "Bearer " + conf["TWITTER"]["TwitterAPI"]})
 	DataTwitter = json.loads(ReponseTwitter.text)
 
 	TextEtImg.AddText("Twitter:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
@@ -258,16 +260,14 @@ if os.path.exists('/etc/default/epd-fuse'):
 	TextEtImg.Clear()
 	
 	if conf["GENERAL"]["GUI"] == "1":
-		print("LOL")
+		print("MDR")
 		sys.exit()
 
-		#GUI (en attente)
-		#Main() #Sera remplacé par le bouton "Afficher"
 	else: #Par défaut
 		HashVerify()
 
 else:
-	if conf["GUI"] == "1":
+	if conf["GENERAL"]["GUI"] == "1":
 		WARN = showerror("Attention!", "Vous n'avez pas installé la biblothèque Papirus, veuillez l'installer via https://github.com/PiSupply/PaPiRus.")
 		sys.exit()
 	else:

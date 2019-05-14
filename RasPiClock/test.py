@@ -1,15 +1,19 @@
 # -*- encoding: utf-8 -*-
 #Frédéric94500 - Résistance-ISN
 
+import time, json, sys, os, socket, configparser, hashlib, webbrowser
+import requests as rq
 from tkinter import *
-from tkinter import ttk
-import webbrowser
 from tkinter.messagebox import *
-from PIL import Image, ImageTk
+from tkinter import ttk
+#from PIL import Image, ImageTk
+
+conf = configparser.ConfigParser()
+conf.read("config.cfg")
 
 #Fonction "Quand on appuie sur "enter""
 def Enter(event):
-    Afficher()
+	Afficher()
 
 def WebProj():
 	webbrowser.open_new_tab('https://github.com/Frederic94500/Resistance-ISN')
@@ -56,9 +60,6 @@ filemenu = Menu(menubar, tearoff=0)
 menubar.add_cascade(label = "Fichier", menu = filemenu)
 filemenu.add_command(label = "Quitter", command = Fenetre.destroy)
 
-editmenu = Menu(menubar, tearoff=0)
-menubar.add_cascade(label = "Edition", menu = editmenu)
-
 helpmenu = Menu(menubar, tearoff=0)
 menubar.add_cascade(label = "Aide", menu = helpmenu)
 helpmenu.add_command(label = "Vistez le GitHub", command = WebProj)
@@ -67,23 +68,17 @@ helpmenu.add_command(label = "A propos et licence", command = APropos)
 
 Fenetre.config(menu=menubar)
 
-#Création Bouton Afficher
-#BoutonAfficher = Button(Fenetre, text = 'Afficher', command = Verification).pack(side = LEFT, padx = 5, pady = 5)
-
-'''#Création Zone de Texte
-ZoneTexte = Entry(justify = CENTER)
-ZoneTexte.focus_set()
-ZoneTexte.pack(side = LEFT, fill = BOTH, padx = 5, pady = 5)'''
-
 #Quand on appuie sur "enter"
 Fenetre.bind('<Return>', Enter)
-
 
 #Création onglets
 TABList = ["tabCrypto", "tabMeteo", "tabMusic", "tabTwitch", "tabTwitter"]
 TABText = ["Crypto", "Météo", "Musique", "Twitch", "Twitter"]
 NBArg = [4, 4, 2, 3, 2]
 TEXTEntry = [["Clé API", "Monnaie fiduciaire", "Cryptomonnaie 1", "Cryptomonnaie 2"],["Clé API", "Ville", "Unité", "Langue"],["Clé API", "Utilisateur"],["Clé API", "Streamer 1", "Streamer 2"],["Clé API", "Utilisateur"]]
+TEXTConfig = [["CryptoAPI", "Currency", "Coin1", "Coin2"],["MeteoAPI", "City", "Units", "Lang"],["LastFmAPI", "UserFM"],["TwitchAPI", "TwitchSt1", "TwitchSt2"],["TwitterAPI", "UserTW"]]
+CONFCat = ["CRYPTO", "WEATHER", "LASTFM", "TWITCH", "TWITTER"]
+ZoneTexte = ["CryptoAPI", "Currency", "Coin1", "Coin2", "MeteoAPI", "City", "Units", "Lang", "LastFmAPI", "UserFM", "TwitchAPI", "TwitchSt1", "TwitchSt2", "TwitterAPI", "UserTW"]
 
 TAB = ttk.Notebook(Fenetre)
 
@@ -94,17 +89,23 @@ for I in range(5):
 TAB.pack(expand=1, fill='both')
 
 #Création Grid
+I2 = 0
 for I0 in range(5): #Nombre de tab
-	for I1 in range(2): #Nombre de ligne en fonction du tab
-		for I2 in range(NBArg[I0]): #Nombre d'argument
-			Label(TABList[I0], text=TEXTEntry[I0][I2]).grid(row=I2, padx=5, pady=5)
-			e1 = Entry(TABList[I0]).grid(row=I2, column=1, padx=5, pady=5) #Faire le lien
+	for I1 in range(NBArg[I0]): #Nombre d'argument
+		Label(TABList[I0], text=TEXTEntry[I0][I1]).grid(row=I1, padx=5, pady=5)
+
+		montex = StringVar()
+		montex.set(conf[CONFCat[I0]][TEXTConfig[I0][I1]])
+		ZoneTexte[I2] = Entry(TABList[I0], textvariable=montex).grid(row=I1, column=1, padx=5, pady=5, sticky=E) #Faire le lien
+		I2 += 1
+
 #Création bouton fenetre
-Bouton=Button(Fenetre, text='Afficher')
-Bouton.pack(side = RIGHT, padx=5, pady=5 )
+BoutonAfficher = Button(Fenetre, text='Afficher').pack(side = RIGHT, padx=5, pady=5)
+
 #Création Texte et Texte Annonce
 Texte = StringVar()
 TextAnnonce = Label(Fenetre, textvariable = Texte).pack(side = LEFT)
 Texte.set("Veuillez saisir vos informations.")
+
 #Initialisation du GUI
 Fenetre.mainloop()
