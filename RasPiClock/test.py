@@ -78,10 +78,6 @@ ZoneTexte.pack(side = LEFT, fill = BOTH, padx = 5, pady = 5)'''
 #Quand on appuie sur "enter"
 Fenetre.bind('<Return>', Enter)
 
-#Création Texte et Texte Annonce
-Texte = StringVar()
-TextAnnonce = Label(Fenetre, textvariable = Texte).pack(side = LEFT)
-Texte.set("")
 
 #Création onglets
 TABList = ["tabCrypto", "tabMeteo", "tabMusic", "tabTwitch", "tabTwitter"]
@@ -100,9 +96,15 @@ TAB.pack(expand=1, fill='both')
 #Création Grid
 for I0 in range(5): #Nombre de tab
 	for I1 in range(2): #Nombre de ligne en fonction du tab
-		for I2 in range(NBArg[I0]): #Nombre d'argument 
+		for I2 in range(NBArg[I0]): #Nombre d'argument
 			Label(TABList[I0], text=TEXTEntry[I0][I2]).grid(row=I2, padx=5, pady=5)
 			e1 = Entry(TABList[I0]).grid(row=I2, column=1, padx=5, pady=5) #Faire le lien
-
+#Création bouton fenetre
+Bouton=Button(Fenetre, text='Afficher')
+Bouton.pack(side = RIGHT, padx=5, pady=5 )
+#Création Texte et Texte Annonce
+Texte = StringVar()
+TextAnnonce = Label(Fenetre, textvariable = Texte).pack(side = LEFT)
+Texte.set("Veuillez saisir vos informations.")
 #Initialisation du GUI
 Fenetre.mainloop()
