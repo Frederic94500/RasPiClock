@@ -6,7 +6,7 @@ import requests as rq
 from tkinter import *
 from tkinter.messagebox import *
 from tkinter import ttk
-#from PIL import Image, ImageTk
+from PIL import Image, ImageTk
 
 conf = configparser.ConfigParser()
 conf.read("config.cfg")
@@ -41,17 +41,17 @@ def APropos():
 
 	[AbText[I].pack(side = "left", pady = 10) for I in range(4)]
 
-	'''photo = ImageTk.PhotoImage(Image.open("gpl.png"))
+	photo = ImageTk.PhotoImage(Image.open("gpl.png"))
 	img = Label(About, image=photo)
 	img.image = photo
 	img.pack()
 
-	About.iconbitmap('icon.ico')'''
+	About.iconbitmap('icon.ico')
 
 #Création Fenètre
 Fenetre = Tk()
 Fenetre.title('GUI')
-'''Fenetre.iconbitmap('icon.ico')'''
+Fenetre.iconbitmap('icon.ico')
 
 #Création barre de menu
 menubar = Menu(Fenetre)
