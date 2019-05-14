@@ -1,4 +1,4 @@
-TODO:
+﻿TODO:
 
 [CONFIG ET MODULAIRE]
 Y - Intégrer le fichier de config avec le library configparser
@@ -12,10 +12,10 @@ Y - Intégrer le fichier de config avec le library configparser
 	N - Détecter que la personne a mis imperial pour mettre °F ou en métrique (pas défaut: kelvin)
 
 [INTERFACE]
-N - Faire le GUI (Interface)
-	N - Menu Bar
-	N - Zones de Textes
-	N - Boutons (Afficher)
+Y - Faire le GUI (Interface)
+	Y - Menu Bar
+	Y - Zones de Textes
+	Y - Boutons (Afficher) Pour la transparence(http://tkinter.fdex.eu/doc/sa.html)
 	N - Enregistrer la config
 	N - Fenêtre de dialogue
 
