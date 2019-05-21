@@ -141,8 +141,8 @@ def Save(): #Fonction d'enregistrement du fichier de conf
 			conf[CONFCat[I0]][TEXTConfig[I0][I1]] = ZoneTexte[I2]
 			I2 += 1
 
-	with open('config.cfg', 'w') as configfile:
-		configfile.write(configfile)
+	with open('config.cfg', 'w') as CFGF:
+		conf.write(CFGF)
 
 	HashVerify()
 
