@@ -11,20 +11,19 @@ from tkinter import ttk
 Metric = "°C"
 Imperial = "°F"
 
-global A
-
 #Fonction Main
 def Main():
 	try:
-		A = 1
-		while A == 1:
-			Crypto()
-			Meteo()
-			Musique()
-			Twitch()
-			Twitter()
-			#RATP() #WIP?
-	except (ValueError, socket.error, socket.gaierror, socket.herror, socket.timeout):
+		while True:
+			if STOP:
+				break;
+			else:
+				Crypto()
+				Meteo()
+				Musique()
+				Twitch()
+				Twitter()
+	except (ValueError, socket.error, socket.gaierror, socket.herror, socket.timeout): #Situation d'erreur de connexion
 		TextEtImg.Clear()
 		TextEtImg.AddText("ERREUR de connexion, nouvelle tentative de connexion dans: T", 10, 48, size = 20, fontPath="Ubuntu.ttf", Id="TimerErr")
 		for I in range(15):
@@ -33,15 +32,13 @@ def Main():
 			time.sleep(1)
 		TextEtImg.Clear()
 		Main()
-	except KeyboardInterrupt:
+	except KeyboardInterrupt: #BASH ONLY
 		print("Vous avez arrêté le processus, nettoyage de l'écran")
 		os.system("papirus-clear")
 		sys.exit()
-
-def GUI():
-	Save()
-	HashVerify()
-	Main()
+	finally: #GUI ONLY
+		os.system("papirus-clear")
+		sys.exit()
 
 def HashSave():
 	with open("config.cfg","rb") as f:
@@ -79,70 +76,64 @@ def APICheck():
 	DataTwitter = json.loads(ReponseTwitter.text)
 
 	try:
-		if DataCrypto["Response"] == "Error":
-			ERROR = "Erreur dans la config Crypto, veuiller vérifier votre saisie!"
-			ErrorConfig(ERROR)
-	except:
-		Check += 1
+		try: #Test des APIs
+			if DataCrypto["Response"] == "Error":
+				ERROR = "Erreur dans la config Crypto, veuiller vérifier votre saisie!"
+				ErrorConfig(ERROR)
+		except (KeyError):
+			Check += 1
+		try:
+			if DataMeteo["cod"] == range(400, 599):
+				ERROR = "Erreur dans la config Météo, veuiller vérifier votre saisie!"
+				ErrorConfig(ERROR)
+		except (KeyError):
+			Check += 1
+		try:
+			if DataLast["error"] == range(2, 29):
+				ERROR = "Erreur dans la config LastFM, veuiller vérifier votre saisie!"
+				ErrorConfig(ERROR)
+		except (KeyError):
+			Check += 1
+		try:
+			if DataTwitter["errors"][0]["code"] == range(49, 599):
+				ERROR = "Erreur dans la config Twitter, veuiller vérifier votre saisie!"
+				ErrorConfig(ERROR)
+		except (KeyError):
+			Check += 1
 
-	try:
-		if DataMeteo["cod"] == range(400, 599):
-			ERROR = "Erreur dans la config Météo, veuiller vérifier votre saisie!"
-			ErrorConfig(ERROR)
-	except:
-		Check += 1
+	except (ValueError, socket.error, socket.gaierror, socket.herror, socket.timeout): #Situation d'erreur de connexion
+		TextEtImg.Clear()
+		TextEtImg.AddText("ERREUR de connexion, nouvelle tentative de connexion dans: T", 10, 48, size = 20, fontPath="Ubuntu.ttf", Id="TimerErr")
+		for I in range(15):
+			TextEtImg.UpdateText("TimerErr", "ERREUR de connexion, \nnouvelle tentative de connexion dans: " + str(15 - I), fontPath="Ubuntu.ttf")
+			TextEtImg.WriteAll(True)
+			time.sleep(1)
+		TextEtImg.Clear()
+		APICheck()
 
-	try:
-		if DataLast["error"] == range(2, 29):
-			ERROR = "Erreur dans la config LastFM, veuiller vérifier votre saisie!"
-			ErrorConfig(ERROR)
-	except:
-		Check += 1
-
-	try:
-		if DataTwitter["errors"][0]["code"] == range(49, 599):
-			ERROR = "Erreur dans la config Twitter, veuiller vérifier votre saisie!"
-			ErrorConfig(ERROR)
-	except:
-		Check += 1
-
-	finally:
+	finally: #Fin de la vérification des API
 		if Check == 4:
 			HashSave()
 
 def ErrorConfig(ERROR):
 	if conf["GENERAL"]["GUI"] == "1":
 		WARN = showerror("Attention!", ERROR)
-		sys.exit()
 	else:
 		print(ERROR)
 		sys.exit()
 
 def Save(): #Fonction d'enregistrement du fichier de conf
 	ZoneTexte = ["CryptoAPI", "MeteoAPI", "LastFmAPI", "TwitchAPI", "TwitterAPI", "Currency", "Coin1", "Coin2", "City", "Units", "Lang", "UserFM", "TwitchSt1", "TwitchSt2", "UserTW"]
+	CONFCat = ["CRYPTO", "WEATHER", "LASTFM", "TWITCH", "TWITTER"]
+	NBArg = [4, 4, 2, 3, 2]
+	TEXTConfig = [["CryptoAPI", "Currency", "Coin1", "Coin2"],["MeteoAPI", "City", "Units", "Lang"],["LastFmAPI", "UserFM"],["TwitchAPI", "TwitchSt1", "TwitchSt2"],["TwitterAPI", "UserTW"]]
+	ZoneTexte = ["CryptoAPI", "Currency", "Coin1", "Coin2", "MeteoAPI", "City", "Units", "Lang", "LastFmAPI", "UserFM", "TwitchAPI", "TwitchSt1", "TwitchSt2", "TwitterAPI", "UserTW"]
+	I2 = 0
 
 	for I0 in range(5):
-		conf[I0]
-
-	conf["API-KEY"]["CryptoAPI"] = ZTCryptoAPI.get()
-	conf["CRYPTO"]["Currency"] = ZTCCurrency.get()
-	conf["CRYPTO"]["Coin1"] = ZTCCoin1.get()
-	conf["CRYPTO"]["Coin2"] = ZTCCoin2.get()
-
-	conf["API-KEY"]["MeteoAPI"] = ZTMeteoAPI.get()
-	conf["WEATHER"]["City"] = ZTWCity.get()
-	conf["WEATHER"]["Units"] = ZTWUnits.get()
-	conf["WEATHER"]["Lang"] = ZTWLang.get()
-
-	conf["API-KEY"]["LastFmAPI"] = ZTLastFmAPI.get()
-	conf["LASTFM"]["UserFM"] = ZTFUserFM.get()
-
-	conf["API-KEY"]["TwitchAPI"] = ZTLastFmAPI.get()
-	conf["SOCIAL"]["TwitchSt1"] = ZTSTwitchSt1.get()
-	conf["SOCIAL"]["TwitchSt2"] = ZTSTwitchSt2.get()
-
-	conf["API-KEY"]["TwitterAPI"] = ZTLastFmAPI.get()
-	conf["SOCIAL"]["UserTW"] = ZTSUserTW.get()
+		for I1 in range(NBArg[I0]):
+			conf[CONFcat[I0]][TEXTConfig[I0][I1]] = ZoneTexte[I2]
+			I2 += 1
 
 	with open('config.cfg', 'w') as configfile:
 		config.write(configfile)

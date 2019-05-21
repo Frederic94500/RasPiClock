@@ -15,7 +15,7 @@ Y - Intégrer le fichier de config avec le library configparser
 Y - Faire le GUI (Interface)
 	Y - Menu Bar
 	Y - Zones de Textes
-	Y - Boutons (Afficher) Pour la transparence(http://tkinter.fdex.eu/doc/sa.html)
+	-> - Boutons (Afficher)
 	Y - Enregistrer la config
 	Y - Fenêtre de dialogue
 
@@ -23,8 +23,7 @@ Y - Faire le module de test de chaque paramètre
 	Y - Afficher une fenêtre d'erreur et message d'erreur
 	-> - (Intégrer dans l'affichage l'erreur)
 
-Bouton Afficher -> Test: Oui -> Afficher le texte
-						 Non -> Montrer l'erreur dans le paramètre qui pose problème
+Y - Bouton Afficher -> Test: Oui -> Afficher le texte | Non -> Montrer l'erreur dans le paramètre qui pose problème
 		
 [AUTRES]
 N - Twitter auth facile avec curl
@@ -32,4 +31,3 @@ Y - Gérer TOUT les exceptions
 	Y - Vérifier si les bibliothèques sont installées
 	Y - Les problèmes de connexions
 	Y - Erreur dans la config
-N - (RATP?)
