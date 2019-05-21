@@ -17,9 +17,6 @@ def Enter(event):
 	Afficher()
 
 def Afficher():
-	global BoutonAfficher
-	global BoutonArreter
-
 	BoutonAfficher.configure(state=DISABLED)
 	BoutonArreter.configure(state=NORMAL)
 
