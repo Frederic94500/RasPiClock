@@ -1,12 +1,12 @@
 # -*- encoding: utf-8 -*-
 #RasPiClock - Frédéric94500, EliottCheypeplus, ParsaEtz
 
-import time, json, sys, os, socket, configparser, hashlib, webbrowser
+import time, json, sys, os, socket, configparser, hashlib, webbrowser, threading
 import requests as rq
 from tkinter import *
 from tkinter.messagebox import *
 from tkinter import ttk
-#from PIL import Image, ImageTk
+from PIL import Image, ImageTk
 
 Metric = "°C"
 Imperial = "°F"
@@ -37,9 +37,9 @@ def Main():
 		print("Vous avez arrêté le processus, nettoyage de l'écran")
 		os.system("papirus-clear")
 		sys.exit()
-	finally: #GUI ONLY
-		os.system("papirus-clear")
-		sys.exit()
+	#finally: #GUI ONLY
+		#os.system("papirus-clear")
+		#sys.exit()
 
 def HashSave():
 	with open("config.cfg","rb") as f:
@@ -133,11 +133,11 @@ def Save(): #Fonction d'enregistrement du fichier de conf
 
 	for I0 in range(5):
 		for I1 in range(NBArg[I0]):
-			conf[CONFcat[I0]][TEXTConfig[I0][I1]] = ZoneTexte[I2]
+			conf[CONFCat[I0]][TEXTConfig[I0][I1]] = ZoneTexte[I2]
 			I2 += 1
 
 	with open('config.cfg', 'w') as configfile:
-		config.write(configfile)
+		configfile.write(configfile)
 
 	HashVerify()
 
@@ -262,7 +262,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 
 			global STOP
 			STOP = False
-			threadRas = threading.Thread(target=Save)
+			threadRas = threading.Thread(target=Main)
 			threadRas.start()
 		
 		def Arret():
