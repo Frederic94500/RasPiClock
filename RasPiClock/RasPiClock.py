@@ -11,8 +11,11 @@ from PIL import Image, ImageTk
 Metric = "°C"
 Imperial = "°F"
 
+STOP = False
+
 #Fonction Main
 def Main():
+	print("Main")
 	try:
 		while True:
 			global STOP
@@ -42,6 +45,7 @@ def Main():
 		#sys.exit()
 
 def HashSave():
+	print("HashSave")
 	with open("config.cfg","rb") as f:
 		bytes = f.read()
 		hashconf = hashlib.sha256(bytes).hexdigest()
@@ -52,6 +56,7 @@ def HashSave():
 	Main()
 
 def HashVerify():
+	print("HashVerify")
 	with open('config.cfg', "rb") as FC:
 		bytes = FC.read()
 		HashNew = hashlib.sha256(bytes).hexdigest()
@@ -66,6 +71,7 @@ def HashVerify():
 
 #Fonction de test de chaque paramètre (sauf Twitch)
 def APICheck():
+	print("APICheck")
 	Check = 0
 	ReponseCrypto = rq.get("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + conf["CRYPTO"]["Coin1"] + "," + conf["CRYPTO"]["Coin2"] + "&tsyms=" + conf["CRYPTO"]["Currency"] + "&api_key=" + conf["CRYPTO"]["CryptoAPI"])
 	DataCrypto = json.loads(ReponseCrypto.text)
@@ -81,26 +87,29 @@ def APICheck():
 			if DataCrypto["Response"] == "Error":
 				ERROR = "Erreur dans la config Crypto, veuiller vérifier votre saisie!"
 				ErrorConfig(ERROR)
-		except (KeyError):
+		except:
 			Check += 1
 		try:
 			if DataMeteo["cod"] == range(400, 599):
 				ERROR = "Erreur dans la config Météo, veuiller vérifier votre saisie!"
 				ErrorConfig(ERROR)
-		except (KeyError):
+		except:
 			Check += 1
 		try:
 			if DataLast["error"] == range(2, 29):
 				ERROR = "Erreur dans la config LastFM, veuiller vérifier votre saisie!"
 				ErrorConfig(ERROR)
-		except (KeyError):
+		except:
 			Check += 1
 		try:
 			if DataTwitter["errors"][0]["code"] == range(49, 599):
 				ERROR = "Erreur dans la config Twitter, veuiller vérifier votre saisie!"
 				ErrorConfig(ERROR)
-		except (KeyError):
+		except:
 			Check += 1
+		finally: #Fin de la vérification des API
+			if Check == 4:
+				HashSave()
 
 	except (ValueError, socket.error, socket.gaierror, socket.herror, socket.timeout): #Situation d'erreur de connexion
 		TextEtImg.Clear()
@@ -111,10 +120,6 @@ def APICheck():
 			time.sleep(1)
 		TextEtImg.Clear()
 		APICheck()
-
-	finally: #Fin de la vérification des API
-		if Check == 4:
-			HashSave()
 
 def ErrorConfig(ERROR):
 	if conf["GENERAL"]["GUI"] == "1":
