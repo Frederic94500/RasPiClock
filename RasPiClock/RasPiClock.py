@@ -82,34 +82,30 @@ def APICheck():
 	ReponseTwitter = rq.get("https://api.twitter.com/1.1/users/show.json?screen_name=" + conf["TWITTER"]["UserTW"], headers={'Authorization': "Bearer " + conf["TWITTER"]["TwitterAPI"]})
 	DataTwitter = json.loads(ReponseTwitter.text)
 
+	try: #Test des APIs
+		if DataCrypto["Response"] == "Error":
+			ERROR = "Erreur dans la config Crypto, veuiller vérifier votre saisie!"
+			ErrorConfig(ERROR)
+	except KeyError:
+		Check += 1
 	try:
-		try: #Test des APIs
-			if DataCrypto["Response"] == "Error":
-				ERROR = "Erreur dans la config Crypto, veuiller vérifier votre saisie!"
-				ErrorConfig(ERROR)
-		except:
-			Check += 1
-		try:
-			if DataMeteo["cod"] == range(400, 599):
-				ERROR = "Erreur dans la config Météo, veuiller vérifier votre saisie!"
-				ErrorConfig(ERROR)
-		except:
-			Check += 1
-		try:
-			if DataLast["error"] == range(2, 29):
-				ERROR = "Erreur dans la config LastFM, veuiller vérifier votre saisie!"
-				ErrorConfig(ERROR)
-		except:
-			Check += 1
-		try:
-			if DataTwitter["errors"][0]["code"] == range(49, 599):
-				ERROR = "Erreur dans la config Twitter, veuiller vérifier votre saisie!"
-				ErrorConfig(ERROR)
-		except:
-			Check += 1
-		finally: #Fin de la vérification des API
-			if Check == 4:
-				HashSave()
+		if DataMeteo["cod"] == range(400, 599):
+			ERROR = "Erreur dans la config Météo, veuiller vérifier votre saisie!"
+			ErrorConfig(ERROR)
+	except KeyError:
+		Check += 1
+	try:
+		if DataLast["error"] == range(2, 29):
+			ERROR = "Erreur dans la config LastFM, veuiller vérifier votre saisie!"
+			ErrorConfig(ERROR)
+	except KeyError:
+		Check += 1
+	try:
+		if DataTwitter["errors"][0]["code"] == range(49, 599):
+			ERROR = "Erreur dans la config Twitter, veuiller vérifier votre saisie!"
+			ErrorConfig(ERROR)
+	except KeyError:
+		Check += 1
 
 	except (ValueError, socket.error, socket.gaierror, socket.herror, socket.timeout): #Situation d'erreur de connexion
 		TextEtImg.Clear()
@@ -120,6 +116,10 @@ def APICheck():
 			time.sleep(1)
 		TextEtImg.Clear()
 		APICheck()
+
+	finally: #Fin de la vérification des API
+		if Check == 4:
+			HashSave()
 
 def ErrorConfig(ERROR):
 	if conf["GENERAL"]["GUI"] == "1":
