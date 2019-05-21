@@ -16,7 +16,7 @@ def Main():
 	try:
 		while True:
 			global STOP
-			if STOP:
+			if STOP: #BUG
 				break;
 			else:
 				Crypto()
@@ -37,7 +37,7 @@ def Main():
 		print("Vous avez arrêté le processus, nettoyage de l'écran")
 		os.system("papirus-clear")
 		sys.exit()
-	#finally: #GUI ONLY
+	#finally: #GUI ONLY et BUG
 		#os.system("papirus-clear")
 		#sys.exit()
 
@@ -160,7 +160,7 @@ def Crypto(): #Fonction Crypto (CryproCompare)
 	TextEtImg.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, size = 20, fontPath="Ubuntu.ttf")
 
 	TextEtImg.WriteAll(True)
-	time.sleep(15)
+	time.sleep(10)
 	TextEtImg.Clear()
 
 def Meteo(): #Fonction Météo (OpenWeatherMap)
@@ -175,7 +175,7 @@ def Meteo(): #Fonction Météo (OpenWeatherMap)
 	TextEtImg.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, size = 20, fontPath="Ubuntu.ttf")
 
 	TextEtImg.WriteAll(True)
-	time.sleep(15)
+	time.sleep(10)
 	TextEtImg.Clear()
 
 def Musique(): #Fonction Musique (Last.fm)
@@ -198,12 +198,12 @@ def Musique(): #Fonction Musique (Last.fm)
 	finally:
 		TextEtImg.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, size = 20, fontPath="Ubuntu.ttf")
 		TextEtImg.WriteAll(True)
-		time.sleep(15)
+		time.sleep(10)
 		TextEtImg.Clear()
 
 def Twitch(): #Fonction Twitch
-	ReponseTwitchSt1 = rq.get("https://api.twitch.tv/helix/streams?user_login=" + conf["SOCIAL"]["TwitchSt1"], headers={"Client-ID": conf["TWITCH"]["TwitchAPI"]})
-	ReponseTwitchSt2 = rq.get("https://api.twitch.tv/helix/streams?user_login=" + conf["SOCIAL"]["TwitchSt2"], headers={"Client-ID": conf["TWITCH"]["TwitchAPI"]})
+	ReponseTwitchSt1 = rq.get("https://api.twitch.tv/helix/streams?user_login=" + conf["TWITCH"]["TwitchSt1"], headers={"Client-ID": conf["TWITCH"]["TwitchAPI"]})
+	ReponseTwitchSt2 = rq.get("https://api.twitch.tv/helix/streams?user_login=" + conf["TWITCH"]["TwitchSt2"], headers={"Client-ID": conf["TWITCH"]["TwitchAPI"]})
 	DataSt1 = json.loads(ReponseTwitchSt1.text)
 	DataSt2 = json.loads(ReponseTwitchSt2.text)
 
@@ -211,14 +211,14 @@ def Twitch(): #Fonction Twitch
 
 	try:
 		if DataSt1["data"][0]["type"] == "live":
-			TextEtImg.AddText(conf["SOCIAL"]["TwitchSt1"] + ": ON", 10, 100, size = 20, fontPath="Ubuntu.ttf")
+			TextEtImg.AddText(conf["TWITCH"]["TwitchSt1"] + ": ON", 10, 100, size = 20, fontPath="Ubuntu.ttf")
 	except IndexError:
-		TextEtImg.AddText(conf["SOCIAL"]["TwitchSt1"] + ": OFF", 10, 100, size = 20, fontPath="Ubuntu.ttf")
+		TextEtImg.AddText(conf["TWITCH"]["TwitchSt1"] + ": OFF", 10, 100, size = 20, fontPath="Ubuntu.ttf")
 	try:
 		if DataSt2["data"][0]["type"] == "live":
-			TextEtImg.AddText(conf["SOCIAL"]["TwitchSt2"] + ": ON", 10, 130, size = 20, fontPath="Ubuntu.ttf")
+			TextEtImg.AddText(conf["TWITCH"]["TwitchSt2"] + ": ON", 10, 130, size = 20, fontPath="Ubuntu.ttf")
 	except IndexError:
-		TextEtImg.AddText(conf["SOCIAL"]["TwitchSt2"] + ": OFF", 10, 130, size = 20, fontPath="Ubuntu.ttf")
+		TextEtImg.AddText(conf["TWITCH"]["TwitchSt2"] + ": OFF", 10, 130, size = 20, fontPath="Ubuntu.ttf")
 	finally:
 		TextEtImg.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, size = 20, fontPath="Ubuntu.ttf")
 		TextEtImg.WriteAll(True)
@@ -226,7 +226,7 @@ def Twitch(): #Fonction Twitch
 		TextEtImg.Clear()
 
 def Twitter():
-	ReponseTwitter = rq.get("https://api.twitter.com/1.1/users/show.json?screen_name=" + conf["SOCIAL"]["UserTW"], headers={'Authorization': "Bearer " + conf["TWITTER"]["TwitterAPI"]})
+	ReponseTwitter = rq.get("https://api.twitter.com/1.1/users/show.json?screen_name=" + conf["TWITTER"]["UserTW"], headers={'Authorization': "Bearer " + conf["TWITTER"]["TwitterAPI"]})
 	DataTwitter = json.loads(ReponseTwitter.text)
 
 	TextEtImg.AddText("Twitter:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
