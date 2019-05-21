@@ -73,7 +73,7 @@ def APICheck():
 	DataMeteo = json.loads(ReponseMeteo.text)
 	ReponseLastFM = rq.get("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=" + conf["LASTFM"]["UserFM"] + "&limit=1&format=json&api_key=" + conf["LASTFM"]["LastFmAPI"])
 	DataLast = json.loads(ReponseLastFM.text)
-	ReponseTwitter = rq.get("https://api.twitter.com/1.1/users/show.json?screen_name=" + conf["SOCIAL"]["UserTW"], headers={'Authorization': "Bearer " + conf["TWITTER"]["TwitterAPI"]})
+	ReponseTwitter = rq.get("https://api.twitter.com/1.1/users/show.json?screen_name=" + conf["TWITTER"]["UserTW"], headers={'Authorization': "Bearer " + conf["TWITTER"]["TwitterAPI"]})
 	DataTwitter = json.loads(ReponseTwitter.text)
 
 	try:
