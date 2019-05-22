@@ -89,19 +89,19 @@ def APICheck():
 	except KeyError:
 		Check += 1
 	try:
-		if DataMeteo["cod"] == range(400, 599):
+		if 400 <= int(DataMeteo["cod"]) <= 599:
 			ERROR = "Erreur dans la config Météo, veuiller vérifier votre saisie!"
 			ErrorConfig(ERROR)
 	except KeyError:
 		Check += 1
 	try:
-		if DataLast["error"] == range(2, 29):
+		if 2 <= int(DataLast["error"]) <= 29:
 			ERROR = "Erreur dans la config LastFM, veuiller vérifier votre saisie!"
 			ErrorConfig(ERROR)
 	except KeyError:
 		Check += 1
 	try:
-		if DataTwitter["errors"][0]["code"] == range(49, 599):
+		if 49 <= int(DataTwitter["errors"][0]["code"]) <= 599:
 			ERROR = "Erreur dans la config Twitter, veuiller vérifier votre saisie!"
 			ErrorConfig(ERROR)
 	except KeyError:
@@ -138,7 +138,7 @@ def Save(): #Fonction d'enregistrement du fichier de conf
 
 	for I0 in range(5):
 		for I1 in range(NBArg[I0]):
-			conf[CONFCat[I0]][TEXTConfig[I0][I1]] = ZoneTexte[I2]
+			conf[CONFCat[I0]][TEXTConfig[I0][I1]] = ZoneTexte[I2].get
 			I2 += 1
 
 	with open('config.cfg', 'w') as CFGF:
