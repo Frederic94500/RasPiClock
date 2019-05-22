@@ -15,7 +15,6 @@ STOP = False
 
 #Fonction Main
 def Main():
-	print("Main")
 	try:
 		while True:
 			global STOP
@@ -40,12 +39,10 @@ def Main():
 		print("Vous avez arrêté le processus, nettoyage de l'écran")
 		os.system("papirus-clear")
 		sys.exit()
-	#finally: #GUI ONLY et BUG
-		#os.system("papirus-clear")
-		#sys.exit()
+	finally: #GUI ONLY
+		os.system("papirus-clear")
 
 def HashSave():
-	print("HashSave")
 	with open("config.cfg","rb") as f:
 		bytes = f.read()
 		hashconf = hashlib.sha256(bytes).hexdigest()
@@ -56,7 +53,6 @@ def HashSave():
 	Main()
 
 def HashVerify():
-	print("HashVerify")
 	with open('config.cfg', "rb") as FC:
 		bytes = FC.read()
 		HashNew = hashlib.sha256(bytes).hexdigest()
@@ -71,7 +67,6 @@ def HashVerify():
 
 #Fonction de test de chaque paramètre (sauf Twitch)
 def APICheck():
-	print("APICheck")
 	Check = 0
 	ReponseCrypto = rq.get("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + conf["CRYPTO"]["Coin1"] + "," + conf["CRYPTO"]["Coin2"] + "&tsyms=" + conf["CRYPTO"]["Currency"] + "&api_key=" + conf["CRYPTO"]["CryptoAPI"])
 	DataCrypto = json.loads(ReponseCrypto.text)
@@ -82,18 +77,18 @@ def APICheck():
 	ReponseTwitter = rq.get("https://api.twitter.com/1.1/users/show.json?screen_name=" + conf["TWITTER"]["UserTW"], headers={'Authorization': "Bearer " + conf["TWITTER"]["TwitterAPI"]})
 	DataTwitter = json.loads(ReponseTwitter.text)
 
+	if 400 <= int(DataMeteo["cod"]) <= 599:
+			ERROR = "Erreur dans la config Météo, veuiller vérifier votre saisie!"
+			ErrorConfig(ERROR)
+	else:
+		Check += 1
+
 	try: #Test des APIs
 		if DataCrypto["Response"] == "Error":
 			ERROR = "Erreur dans la config Crypto, veuiller vérifier votre saisie!"
 			ErrorConfig(ERROR)
 	except KeyError:
-		Check += 1
-	try:
-		if 400 <= int(DataMeteo["cod"]) <= 599:
-			ERROR = "Erreur dans la config Météo, veuiller vérifier votre saisie!"
-			ErrorConfig(ERROR)
-	except KeyError:
-		Check += 1
+		Check += 1	
 	try:
 		if 2 <= int(DataLast["error"]) <= 29:
 			ERROR = "Erreur dans la config LastFM, veuiller vérifier votre saisie!"
@@ -124,6 +119,8 @@ def APICheck():
 def ErrorConfig(ERROR):
 	if conf["GENERAL"]["GUI"] == "1":
 		WARN = showerror("Attention!", ERROR)
+		BoutonAfficher.configure(state=NORMAL)
+		BoutonArreter.configure(state=DISABLED)
 	else:
 		print(ERROR)
 		sys.exit()
