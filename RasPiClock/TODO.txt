@@ -3,19 +3,19 @@
 [CONFIG ET MODULAIRE]
 Y - Intégrer le fichier de config avec le library configparser
 -> - Le faire modulaire
-	N - éviter l'interpolation (% - Twitter)
-	N - Désactiver la fonction s'il n'y a pas d'APIKEY
+	->? - éviter l'interpolation (% - Twitter)
+	Y - Désactiver la fonction s'il n'y a pas d'APIKEY
 	N - Transformer en MAJUSCULE si l'entrée est en minuscule (Crypto)
 		--> Peut provoquer une erreur
 	N - Ajout une vigule s'il y a plusieurs crypto ou non (Crypto)
 	N - (Déplacer une valeur s'il est placé sur le Coin3 alors que dans Coin2, y a rien)
-	N - Détecter que la personne a mis imperial pour mettre °F ou en métrique (pas défaut: kelvin)
+	Y - Détecter que la personne a mis imperial pour mettre °F ou en métrique (pas défaut: kelvin)
 
 [INTERFACE]
 Y - Faire le GUI (Interface)
 	Y - Menu Bar
 	Y - Zones de Textes
-	-> - Boutons (Afficher)
+	Y - Boutons (Afficher)
 	Y - Enregistrer la config
 	Y - Fenêtre de dialogue
 
@@ -26,7 +26,7 @@ Y - Faire le module de test de chaque paramètre
 Y - Bouton Afficher -> Test: Oui -> Afficher le texte | Non -> Montrer l'erreur dans le paramètre qui pose problème
 		
 [AUTRES]
-N - Twitter auth facile avec curl
+Y - Twitter auth facile avec curl
 Y - Gérer TOUT les exceptions
 	Y - Vérifier si les bibliothèques sont installées
 	Y - Les problèmes de connexions

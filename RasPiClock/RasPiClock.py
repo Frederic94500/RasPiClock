@@ -8,241 +8,11 @@ from tkinter.messagebox import *
 from tkinter import ttk
 from PIL import Image, ImageTk
 
-Metric = "°C"
-Imperial = "°F"
+Units = "°K"
 
 STOP = False
 
-#Fonction Main
-def Main():
-	try:
-		while True:
-			global STOP
-			if STOP: #BUG
-				break;
-			else:
-				Crypto()
-				Meteo()
-				Musique()
-				Twitch()
-				Twitter()
-	except (ValueError, socket.error, socket.gaierror, socket.herror, socket.timeout): #Situation d'erreur de connexion
-		TextEtImg.Clear()
-		TextEtImg.AddText("ERREUR de connexion, nouvelle tentative de connexion dans: T", 10, 48, size = 20, fontPath="Ubuntu.ttf", Id="TimerErr")
-		for I in range(15):
-			TextEtImg.UpdateText("TimerErr", "ERREUR de connexion, \nnouvelle tentative de connexion dans: " + str(15 - I), fontPath="Ubuntu.ttf")
-			TextEtImg.WriteAll(True)
-			time.sleep(1)
-		TextEtImg.Clear()
-		Main()
-	except KeyboardInterrupt: #BASH ONLY
-		print("Vous avez arrêté le processus, nettoyage de l'écran")
-		os.system("papirus-clear")
-		sys.exit()
-	finally: #GUI ONLY
-		os.system("papirus-clear")
-
-def HashSave():
-	with open("config.cfg","rb") as f:
-		bytes = f.read()
-		hashconf = hashlib.sha256(bytes).hexdigest()
-
-	hash = open("hash.txt", "w")
-	hash.write(hashconf)
-	hash.close
-	Main()
-
-def HashVerify():
-	with open('config.cfg', "rb") as FC:
-		bytes = FC.read()
-		HashNew = hashlib.sha256(bytes).hexdigest()
-	
-	FH = open('hash.txt', "r")
-	HashOld = FH.read()
-
-	if HashOld != HashNew:
-		APICheck()
-	if HashOld == HashNew:
-		Main()
-
-#Fonction de test de chaque paramètre (sauf Twitch)
-def APICheck():
-	Check = 0
-	ReponseCrypto = rq.get("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + conf["CRYPTO"]["Coin1"] + "," + conf["CRYPTO"]["Coin2"] + "&tsyms=" + conf["CRYPTO"]["Currency"] + "&api_key=" + conf["CRYPTO"]["CryptoAPI"])
-	DataCrypto = json.loads(ReponseCrypto.text)
-	ReponseMeteo = rq.get("https://api.openweathermap.org/data/2.5/weather?q=" + conf["WEATHER"]["City"] + "&units=" + conf["WEATHER"]["Units"] + "&lang=" + conf["WEATHER"]["Lang"] + "&appid=" + conf["WEATHER"]["MeteoAPI"])
-	DataMeteo = json.loads(ReponseMeteo.text)
-	ReponseLastFM = rq.get("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=" + conf["LASTFM"]["UserFM"] + "&limit=1&format=json&api_key=" + conf["LASTFM"]["LastFmAPI"])
-	DataLast = json.loads(ReponseLastFM.text)
-	ReponseTwitter = rq.get("https://api.twitter.com/1.1/users/show.json?screen_name=" + conf["TWITTER"]["UserTW"], headers={'Authorization': "Bearer " + conf["TWITTER"]["TwitterAPI"]})
-	DataTwitter = json.loads(ReponseTwitter.text)
-
-	if 400 <= int(DataMeteo["cod"]) <= 599:
-			ERROR = "Erreur dans la config Météo, veuiller vérifier votre saisie!"
-			ErrorConfig(ERROR)
-	else:
-		Check += 1
-
-	try: #Test des APIs
-		if DataCrypto["Response"] == "Error":
-			ERROR = "Erreur dans la config Crypto, veuiller vérifier votre saisie!"
-			ErrorConfig(ERROR)
-	except KeyError:
-		Check += 1	
-	try:
-		if 2 <= int(DataLast["error"]) <= 29:
-			ERROR = "Erreur dans la config LastFM, veuiller vérifier votre saisie!"
-			ErrorConfig(ERROR)
-	except KeyError:
-		Check += 1
-	try:
-		if 49 <= int(DataTwitter["errors"][0]["code"]) <= 599:
-			ERROR = "Erreur dans la config Twitter, veuiller vérifier votre saisie!"
-			ErrorConfig(ERROR)
-	except KeyError:
-		Check += 1
-
-	except (ValueError, socket.error, socket.gaierror, socket.herror, socket.timeout): #Situation d'erreur de connexion
-		TextEtImg.Clear()
-		TextEtImg.AddText("ERREUR de connexion, nouvelle tentative de connexion dans: T", 10, 48, size = 20, fontPath="Ubuntu.ttf", Id="TimerErr")
-		for I in range(15):
-			TextEtImg.UpdateText("TimerErr", "ERREUR de connexion, \nnouvelle tentative de connexion dans: " + str(15 - I), fontPath="Ubuntu.ttf")
-			TextEtImg.WriteAll(True)
-			time.sleep(1)
-		TextEtImg.Clear()
-		APICheck()
-
-	finally: #Fin de la vérification des API
-		if Check == 4:
-			HashSave()
-
-def ErrorConfig(ERROR):
-	if conf["GENERAL"]["GUI"] == "1":
-		WARN = showerror("Attention!", ERROR)
-		BoutonAfficher.configure(state=NORMAL)
-		BoutonArreter.configure(state=DISABLED)
-	else:
-		print(ERROR)
-		sys.exit()
-
-def Save(): #Fonction d'enregistrement du fichier de conf
-	ZoneTexte = ["CryptoAPI", "MeteoAPI", "LastFmAPI", "TwitchAPI", "TwitterAPI", "Currency", "Coin1", "Coin2", "City", "Units", "Lang", "UserFM", "TwitchSt1", "TwitchSt2", "UserTW"]
-	CONFCat = ["CRYPTO", "WEATHER", "LASTFM", "TWITCH", "TWITTER"]
-	NBArg = [4, 4, 2, 3, 2]
-	TEXTConfig = [["CryptoAPI", "Currency", "Coin1", "Coin2"],["MeteoAPI", "City", "Units", "Lang"],["LastFmAPI", "UserFM"],["TwitchAPI", "TwitchSt1", "TwitchSt2"],["TwitterAPI", "UserTW"]]
-	ZoneTexte = ["CryptoAPI", "Currency", "Coin1", "Coin2", "MeteoAPI", "City", "Units", "Lang", "LastFmAPI", "UserFM", "TwitchAPI", "TwitchSt1", "TwitchSt2", "TwitterAPI", "UserTW"]
-	I2 = 0
-
-	for I0 in range(5):
-		for I1 in range(NBArg[I0]):
-			conf[CONFCat[I0]][TEXTConfig[I0][I1]] = ZoneTexte[I2].get
-			I2 += 1
-
-	with open('config.cfg', 'w') as CFGF:
-		conf.write(CFGF)
-
-	HashVerify()
-
-def Crypto(): #Fonction Crypto (CryproCompare)
-	TextEtImg.AddText("Crypto:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
-
-	ReponseCrypto = rq.get("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + conf["CRYPTO"]["Coin1"] + "," + conf["CRYPTO"]["Coin2"] + "&tsyms=" + conf["CRYPTO"]["Currency"] + "&api_key=" + conf["CRYPTO"]["CryptoAPI"])
-	DataCrypto = json.loads(ReponseCrypto.text)
-
-	PCTC1 = list(str(DataCrypto["RAW"][conf["CRYPTO"]["Coin1"]][conf["CRYPTO"]["Currency"]]["CHANGEPCT24HOUR"]))
-	del PCTC1[-14:-1]
-	PCTC2 = list(str(DataCrypto["RAW"][conf["CRYPTO"]["Coin2"]][conf["CRYPTO"]["Currency"]]["CHANGEPCT24HOUR"]))
-	del PCTC2[-14:-1]
-
-	TextEtImg.AddText(conf["CRYPTO"]["Coin1"] + " " + conf["CRYPTO"]["Currency"] + " " + str(DataCrypto["RAW"][conf["CRYPTO"]["Coin1"]][conf["CRYPTO"]["Currency"]]["PRICE"]), 10, 44, size = 25, fontPath="Ubuntu.ttf")
-	TextEtImg.AddText(conf["CRYPTO"]["Coin2"] + " " + conf["CRYPTO"]["Currency"] + " " + str(DataCrypto["RAW"][conf["CRYPTO"]["Coin2"]][conf["CRYPTO"]["Currency"]]["PRICE"]), 10, 114, size = 25, fontPath="Ubuntu.ttf")
-	TextEtImg.AddText("".join(PCTC1) + "%", 10, 74, size = 15, fontPath="Ubuntu.ttf")
-	TextEtImg.AddText("".join(PCTC2) + "%", 10, 144, size = 15, fontPath="Ubuntu.ttf")
-
-	TextEtImg.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, size = 20, fontPath="Ubuntu.ttf")
-
-	TextEtImg.WriteAll(True)
-	time.sleep(10)
-	TextEtImg.Clear()
-
-def Meteo(): #Fonction Météo (OpenWeatherMap)
-	ReponseMeteo = rq.get("https://api.openweathermap.org/data/2.5/weather?q=" + conf["WEATHER"]["City"] + "&units=" + conf["WEATHER"]["Units"] + "&lang=" + conf["WEATHER"]["Lang"] + "&appid=" + conf["WEATHER"]["MeteoAPI"])
-	DataMeteo = json.loads(ReponseMeteo.text)
-
-	TextEtImg.AddText("Météo:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
-	TextEtImg.AddText("Température: " + str(DataMeteo["main"]["temp"]) + "°C", 10, 40, size = 25, fontPath="Ubuntu.ttf")
-	TextEtImg.AddText("Temp. Min: " + str(DataMeteo["main"]["temp_min"]) + "°C" + " Temp. Max: " + str(DataMeteo["main"]["temp_max"]) + "°C", 10, 65, size = 12, fontPath="Ubuntu.ttf")
-	TextEtImg.AddText("Temps: " + DataMeteo["weather"][0]["description"], 10, 85, size = 25, fontPath="Ubuntu.ttf") 
-
-	TextEtImg.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, size = 20, fontPath="Ubuntu.ttf")
-
-	TextEtImg.WriteAll(True)
-	time.sleep(10)
-	TextEtImg.Clear()
-
-def Musique(): #Fonction Musique (Last.fm)
-	ReponseLastFM = rq.get("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=" + conf["LASTFM"]["UserFM"] + "&limit=1&format=json&api_key=" + conf["LASTFM"]["LastFmAPI"])
-	DataLast = json.loads(ReponseLastFM.text)
-
-	TextEtImg.AddText("Last.fm:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
-	try:
-		if DataLast["recenttracks"]["track"][0]["@attr"]["nowplaying"] == "true":
-			TextEtImg.AddText("Actuellement:", 10, 40, size = 25, fontPath="Ubuntu.ttf")
-			TextEtImg.AddText(DataLast["recenttracks"]["track"][0]["artist"]["#text"] + " - " + DataLast["recenttracks"]["track"][0]["name"], 10, 65, size = 15, fontPath="Ubuntu.ttf")
-			TextEtImg.AddText(DataLast["recenttracks"]["track"][0]["album"]["#text"], 10, 95, size = 10, fontPath="Ubuntu.ttf")
-
-			TextEtImg.AddText("Précédent:", 10, 115, size = 25, fontPath="Ubuntu.ttf")
-			TextEtImg.AddText(DataLast["recenttracks"]["track"][1]["artist"]["#text"] + " - " + DataLast["recenttracks"]["track"][1]["name"], 10, 140, size = 15, fontPath="Ubuntu.ttf")
-	except:
-		TextEtImg.AddText("Précédent:", 10, 40, size = 25, fontPath="Ubuntu.ttf")
-		TextEtImg.AddText(DataLast["recenttracks"]["track"][0]["artist"]["#text"] + " - " + DataLast["recenttracks"]["track"][0]["name"], 10, 65, size = 15, fontPath="Ubuntu.ttf")
-		TextEtImg.AddText(DataLast["recenttracks"]["track"][0]["album"]["#text"], 10, 95, size = 10, fontPath="Ubuntu.ttf")
-	finally:
-		TextEtImg.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, size = 20, fontPath="Ubuntu.ttf")
-		TextEtImg.WriteAll(True)
-		time.sleep(10)
-		TextEtImg.Clear()
-
-def Twitch(): #Fonction Twitch
-	ReponseTwitchSt1 = rq.get("https://api.twitch.tv/helix/streams?user_login=" + conf["TWITCH"]["TwitchSt1"], headers={"Client-ID": conf["TWITCH"]["TwitchAPI"]})
-	ReponseTwitchSt2 = rq.get("https://api.twitch.tv/helix/streams?user_login=" + conf["TWITCH"]["TwitchSt2"], headers={"Client-ID": conf["TWITCH"]["TwitchAPI"]})
-	DataSt1 = json.loads(ReponseTwitchSt1.text)
-	DataSt2 = json.loads(ReponseTwitchSt2.text)
-
-	TextEtImg.AddText("Twitch:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
-
-	try:
-		if DataSt1["data"][0]["type"] == "live":
-			TextEtImg.AddText(conf["TWITCH"]["TwitchSt1"] + ": ON", 10, 100, size = 20, fontPath="Ubuntu.ttf")
-	except IndexError:
-		TextEtImg.AddText(conf["TWITCH"]["TwitchSt1"] + ": OFF", 10, 100, size = 20, fontPath="Ubuntu.ttf")
-	try:
-		if DataSt2["data"][0]["type"] == "live":
-			TextEtImg.AddText(conf["TWITCH"]["TwitchSt2"] + ": ON", 10, 130, size = 20, fontPath="Ubuntu.ttf")
-	except IndexError:
-		TextEtImg.AddText(conf["TWITCH"]["TwitchSt2"] + ": OFF", 10, 130, size = 20, fontPath="Ubuntu.ttf")
-	finally:
-		TextEtImg.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, size = 20, fontPath="Ubuntu.ttf")
-		TextEtImg.WriteAll(True)
-		time.sleep(10)
-		TextEtImg.Clear()
-
-def Twitter():
-	ReponseTwitter = rq.get("https://api.twitter.com/1.1/users/show.json?screen_name=" + conf["TWITTER"]["UserTW"], headers={'Authorization': "Bearer " + conf["TWITTER"]["TwitterAPI"]})
-	DataTwitter = json.loads(ReponseTwitter.text)
-
-	TextEtImg.AddText("Twitter:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
-
-	TextEtImg.AddText("Compte de: " + DataTwitter["name"] + " | " + str(DataTwitter["followers_count"]) + " abonnés", 10, 40, size = 15, fontPath="Ubuntu.ttf")
-
-	TextEtImg.AddText("Dernier tweet\n" + DataTwitter["status"]["text"], 10, 65, size = 15, fontPath="Ubuntu.ttf")
-
-	TextEtImg.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, size = 20, fontPath="Ubuntu.ttf")
-	TextEtImg.WriteAll(True)
-	time.sleep(10)
-	TextEtImg.Clear()
-
-	
+BearerAUTH = ""
 
 conf = configparser.ConfigParser()
 conf.read("config.cfg")
@@ -252,13 +22,277 @@ if os.path.exists('/etc/default/epd-fuse'):
 	Ecran = Papirus()
 	TextEtImg = PapirusComposite(False)
 	TextEtImg.Clear()
+
+	def Main(): #Fonction Coeur
+		try:
+			while True:
+				global STOP
+				if STOP: #GUI ONLY
+					os.system("papirus-clear")
+					break;
+				else:
+					if conf["CRYPTO"]["CryptoAPI"] != "":
+						Crypto()
+					if conf["WEATHER"]["MeteoAPI"] != "":
+						Meteo()
+					if conf["LASTFM"]["LastFmAPI"] != "":
+						Musique()
+					if conf["TWITCH"]["TwitchAPI"] != "":
+						Twitch()
+					if conf["TWITTER"]["TwitterAPI"] != "":
+						Twitter()
+		except (ValueError, socket.error, socket.gaierror, socket.herror, socket.timeout): #Situation d'erreur de connexion
+			TextEtImg.Clear()
+			TextEtImg.AddText("ERREUR de connexion, nouvelle tentative de connexion dans: T", 10, 48, size = 20, fontPath="Ubuntu.ttf", Id="TimerErr")
+			for I in range(15):
+				TextEtImg.UpdateText("TimerErr", "ERREUR de connexion, \nnouvelle tentative de connexion dans: " + str(15 - I), fontPath="Ubuntu.ttf")
+				TextEtImg.WriteAll(True)
+				time.sleep(1)
+			TextEtImg.Clear()
+			Main()
+		except KeyboardInterrupt: #BASH ONLY
+			print("Vous avez arrêté le processus, nettoyage de l'écran")
+			os.system("papirus-clear")
+			sys.exit()
+
+	def HashSave():
+		with open("config.cfg","rb") as f:
+			bytes = f.read()
+			hashconf = hashlib.sha256(bytes).hexdigest()
+
+		hash = open("hash.txt", "w")
+		hash.write(hashconf)
+		hash.close
+		Adaptation()
+
+	def HashVerify():
+		with open('config.cfg', "rb") as FC:
+			bytes = FC.read()
+			HashNew = hashlib.sha256(bytes).hexdigest()
 	
-	if conf["GENERAL"]["GUI"] == "1":
-		#Fonction "Quand on appuie sur "enter""
-		def Enter(event):
+		FH = open('hash.txt', "r")
+		HashOld = FH.read()
+
+		if HashOld != HashNew:
+			APICheck()
+		if HashOld == HashNew:
+			Adaptation()
+
+	def APICheck(): #Fonction de test de chaque paramètre (sauf Twitch)
+		global BearerAUTH
+		Check = 0
+		#Test des APIs
+		try:
+			if conf["WEATHER"]["MeteoAPI"] != "":
+				ReponseMeteo = rq.get("https://api.openweathermap.org/data/2.5/weather?q=" + conf["WEATHER"]["City"] + "&units=" + conf["WEATHER"]["Units"] + "&lang=" + conf["WEATHER"]["Lang"] + "&appid=" + conf["WEATHER"]["MeteoAPI"])
+				DataMeteo = json.loads(ReponseMeteo.text)
+				if 400 <= int(DataMeteo["cod"]) <= 599: 
+						ERROR = "Erreur dans la config Météo, veuiller vérifier votre saisie!"
+						ErrorConfig(ERROR)
+				else:
+					Check += 1
+			else:
+				Check += 1
+
+			if conf["CRYPTO"]["CryptoAPI"] != "":
+				ReponseCrypto = rq.get("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + conf["CRYPTO"]["Coin1"] + "," + conf["CRYPTO"]["Coin2"] + "&tsyms=" + conf["CRYPTO"]["Currency"] + "&api_key=" + conf["CRYPTO"]["CryptoAPI"])
+				DataCrypto = json.loads(ReponseCrypto.text)
+				try:
+					if DataCrypto["Response"] == "Error":
+						ERROR = "Erreur dans la config Crypto, veuiller vérifier votre saisie!"
+						ErrorConfig(ERROR)
+				except KeyError:
+					Check += 1
+			else:
+				Check += 1
+
+			if conf["LASTFM"]["LastFmAPI"] != "":
+				ReponseLastFM = rq.get("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=" + conf["LASTFM"]["UserFM"] + "&limit=1&format=json&api_key=" + conf["LASTFM"]["LastFmAPI"])
+				DataLast = json.loads(ReponseLastFM.text)
+				try:
+					if 2 <= int(DataLast["error"]) <= 29:
+						ERROR = "Erreur dans la config LastFM, veuiller vérifier votre saisie!"
+						ErrorConfig(ERROR)
+				except KeyError:
+					Check += 1
+			else:
+				Check += 1
+
+			if conf["TWITTER"]["TwitterAPI"] != "":
+				BearerRAW = os.popen("curl -u '"+ conf["TWITTER"]["TwitterAPI"] + ":" + conf["TWITTER"]["TwitterAPISecret"] + "' --data 'grant_type=client_credentials' 'https://api.twitter.com/oauth2/token'").read()
+				BearerJSON = json.loads(BearerRAW)
+				BearerAUTH = BearerJSON["access_token"]
+
+				ReponseTwitter = rq.get("https://api.twitter.com/1.1/users/show.json?screen_name=" + conf["TWITTER"]["UserTW"], headers={'Authorization': "Bearer " + BearerAUTH})
+				DataTwitter = json.loads(ReponseTwitter.text)
+				try:
+					if 49 <= int(DataTwitter["errors"][0]["code"]) <= 599:
+						ERROR = "Erreur dans la config Twitter, veuiller vérifier votre saisie!"
+						ErrorConfig(ERROR)
+				except KeyError:
+					Check += 1
+			else:
+				Check += 1
+
+		except (ValueError, socket.error, socket.gaierror, socket.herror, socket.timeout): #Situation d'erreur de connexion
+			TextEtImg.Clear()
+			TextEtImg.AddText("ERREUR de connexion, nouvelle tentative de connexion dans: T", 10, 48, size = 20, fontPath="Ubuntu.ttf", Id="TimerErr")
+			for I in range(15):
+				TextEtImg.UpdateText("TimerErr", "ERREUR de connexion, \nnouvelle tentative de connexion dans: " + str(15 - I), fontPath="Ubuntu.ttf")
+				TextEtImg.WriteAll(True)
+				time.sleep(1)
+			TextEtImg.Clear()
+			APICheck()
+
+		finally: #Fin de la vérification des API
+			if Check == 4:
+				HashSave()
+
+	def ErrorConfig(ERROR):
+		if conf["GENERAL"]["GUI"] == "1":
+			WARN = showerror("Attention!", ERROR)
+			BoutonAfficher.configure(state=NORMAL)
+			BoutonArreter.configure(state=DISABLED)
+		else:
+			print(ERROR)
+			sys.exit()
+
+	def Adaptation():
+		global Units, BearerAUTH
+
+		if conf["WEATHER"]["Units"] == "imperial":
+			Units = "°F"
+		if conf["WEATHER"]["Units"] == "metric":
+			Units = "°C"
+		else:
+			Units = "°K"
+
+		Main()
+
+	def Crypto(): #Fonction Crypto (CryproCompare)
+		TextEtImg.AddText("Crypto:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
+
+		ReponseCrypto = rq.get("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + conf["CRYPTO"]["Coin1"] + "," + conf["CRYPTO"]["Coin2"] + "&tsyms=" + conf["CRYPTO"]["Currency"] + "&api_key=" + conf["CRYPTO"]["CryptoAPI"])
+		DataCrypto = json.loads(ReponseCrypto.text)
+
+		PCTC1 = list(str(DataCrypto["RAW"][conf["CRYPTO"]["Coin1"]][conf["CRYPTO"]["Currency"]]["CHANGEPCT24HOUR"]))
+		del PCTC1[-14:-1]
+		PCTC2 = list(str(DataCrypto["RAW"][conf["CRYPTO"]["Coin2"]][conf["CRYPTO"]["Currency"]]["CHANGEPCT24HOUR"]))
+		del PCTC2[-14:-1]
+
+		TextEtImg.AddText(conf["CRYPTO"]["Coin1"] + ": " + conf["CRYPTO"]["Currency"] + " " + str(DataCrypto["RAW"][conf["CRYPTO"]["Coin1"]][conf["CRYPTO"]["Currency"]]["PRICE"]), 10, 44, size = 25, fontPath="Ubuntu.ttf")
+		TextEtImg.AddText(conf["CRYPTO"]["Coin2"] + ": " + conf["CRYPTO"]["Currency"] + " " + str(DataCrypto["RAW"][conf["CRYPTO"]["Coin2"]][conf["CRYPTO"]["Currency"]]["PRICE"]), 10, 114, size = 25, fontPath="Ubuntu.ttf")
+		TextEtImg.AddText("".join(PCTC1) + "%", 10, 74, size = 15, fontPath="Ubuntu.ttf")
+		TextEtImg.AddText("".join(PCTC2) + "%", 10, 144, size = 15, fontPath="Ubuntu.ttf")
+
+		TextEtImg.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, size = 20, fontPath="Ubuntu.ttf")
+
+		TextEtImg.WriteAll(True)
+		time.sleep(10)
+		TextEtImg.Clear()
+
+	def Meteo(): #Fonction Météo (OpenWeatherMap)
+		global Units
+		ReponseMeteo = rq.get("https://api.openweathermap.org/data/2.5/weather?q=" + conf["WEATHER"]["City"] + "&units=" + conf["WEATHER"]["Units"] + "&lang=" + conf["WEATHER"]["Lang"] + "&appid=" + conf["WEATHER"]["MeteoAPI"])
+		DataMeteo = json.loads(ReponseMeteo.text)
+
+		TextEtImg.AddText("Météo:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
+		TextEtImg.AddText("Température: " + str(DataMeteo["main"]["temp"]) + "°C", 10, 40, size = 25, fontPath="Ubuntu.ttf")
+		TextEtImg.AddText("Temp. Min: " + str(DataMeteo["main"]["temp_min"]) + "°C" + " Temp. Max: " + str(DataMeteo["main"]["temp_max"]) + Units, 10, 65, size = 12, fontPath="Ubuntu.ttf")
+		TextEtImg.AddText("Temps: " + DataMeteo["weather"][0]["description"].capitalize(), 10, 85, size = 25, fontPath="Ubuntu.ttf") 
+
+		TextEtImg.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, size = 20, fontPath="Ubuntu.ttf")
+
+		TextEtImg.WriteAll(True)
+		time.sleep(10)
+		TextEtImg.Clear()
+
+	def Musique(): #Fonction Musique (Last.fm)
+		ReponseLastFM = rq.get("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=" + conf["LASTFM"]["UserFM"] + "&limit=1&format=json&api_key=" + conf["LASTFM"]["LastFmAPI"])
+		DataLast = json.loads(ReponseLastFM.text)
+
+		TextEtImg.AddText("Last.fm:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
+		try:
+			if DataLast["recenttracks"]["track"][0]["@attr"]["nowplaying"] == "true":
+				TextEtImg.AddText("Actuellement:", 10, 40, size = 25, fontPath="Ubuntu.ttf")
+				TextEtImg.AddText(DataLast["recenttracks"]["track"][0]["artist"]["#text"] + " - " + DataLast["recenttracks"]["track"][0]["name"], 10, 65, size = 15, fontPath="Ubuntu.ttf")
+				TextEtImg.AddText(DataLast["recenttracks"]["track"][0]["album"]["#text"], 10, 95, size = 10, fontPath="Ubuntu.ttf")
+
+				TextEtImg.AddText("Précédent:", 10, 115, size = 25, fontPath="Ubuntu.ttf")
+				TextEtImg.AddText(DataLast["recenttracks"]["track"][1]["artist"]["#text"] + " - " + DataLast["recenttracks"]["track"][1]["name"], 10, 140, size = 15, fontPath="Ubuntu.ttf")
+		except:
+			TextEtImg.AddText("Précédent:", 10, 40, size = 25, fontPath="Ubuntu.ttf")
+			TextEtImg.AddText(DataLast["recenttracks"]["track"][0]["artist"]["#text"] + " - " + DataLast["recenttracks"]["track"][0]["name"], 10, 65, size = 15, fontPath="Ubuntu.ttf")
+			TextEtImg.AddText(DataLast["recenttracks"]["track"][0]["album"]["#text"], 10, 95, size = 10, fontPath="Ubuntu.ttf")
+		finally:
+			TextEtImg.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, size = 20, fontPath="Ubuntu.ttf")
+			TextEtImg.WriteAll(True)
+			time.sleep(10)
+			TextEtImg.Clear()
+
+	def Twitch(): #Fonction Twitch
+		ReponseTwitchSt1 = rq.get("https://api.twitch.tv/helix/streams?user_login=" + conf["TWITCH"]["TwitchSt1"], headers={"Client-ID": conf["TWITCH"]["TwitchAPI"]})
+		ReponseTwitchSt2 = rq.get("https://api.twitch.tv/helix/streams?user_login=" + conf["TWITCH"]["TwitchSt2"], headers={"Client-ID": conf["TWITCH"]["TwitchAPI"]})
+		DataSt1 = json.loads(ReponseTwitchSt1.text)
+		DataSt2 = json.loads(ReponseTwitchSt2.text)
+
+		TextEtImg.AddText("Twitch:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
+
+		try:
+			if DataSt1["data"][0]["type"] == "live":
+				TextEtImg.AddText(conf["TWITCH"]["TwitchSt1"].capitalize() + ": ON", 10, 30, size = 20, fontPath="Ubuntu.ttf")
+		except IndexError:
+			TextEtImg.AddText(conf["TWITCH"]["TwitchSt1"].capitalize() + ": OFF", 10, 30, size = 20, fontPath="Ubuntu.ttf")
+		try:
+			if DataSt2["data"][0]["type"] == "live":
+				TextEtImg.AddText(conf["TWITCH"]["TwitchSt2"].capitalize() + ": ON", 10, 60, size = 20, fontPath="Ubuntu.ttf")
+		except IndexError:
+			TextEtImg.AddText(conf["TWITCH"]["TwitchSt2"].capitalize() + ": OFF", 10, 60, size = 20, fontPath="Ubuntu.ttf")
+		finally:
+			TextEtImg.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, size = 20, fontPath="Ubuntu.ttf")
+			TextEtImg.WriteAll(True)
+			time.sleep(10)
+			TextEtImg.Clear()
+
+	def Twitter(): #Fonction Twitter
+		global BearerAUTH
+		ReponseTwitter = rq.get("https://api.twitter.com/1.1/users/show.json?screen_name=" + conf["TWITTER"]["UserTW"], headers={'Authorization': "Bearer " + BearerAUTH})
+		DataTwitter = json.loads(ReponseTwitter.text)
+
+		TextEtImg.AddText("Twitter:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
+
+		TextEtImg.AddText("Compte de: " + DataTwitter["name"] + " | " + str(DataTwitter["followers_count"]) + " abonnés", 10, 40, size = 15, fontPath="Ubuntu.ttf")
+
+		TextEtImg.AddText("Dernier tweet\n" + DataTwitter["status"]["text"], 10, 65, size = 15, fontPath="Ubuntu.ttf")
+
+		TextEtImg.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, size = 20, fontPath="Ubuntu.ttf")
+		TextEtImg.WriteAll(True)
+		time.sleep(10)
+		TextEtImg.Clear()
+
+
+	if conf["GENERAL"]["GUI"] == "1": #GUI ONLY
+		def Save(): #Fonction d'enregistrement du fichier de conf
+			CONFCat = ["CRYPTO", "WEATHER", "LASTFM", "TWITCH", "TWITTER"]
+			NBArg = [4, 4, 2, 3, 3]
+			TEXTConfig = [["CryptoAPI", "Currency", "Coin1", "Coin2"],["MeteoAPI", "City", "Units", "Lang"],["LastFmAPI", "UserFM"],["TwitchAPI", "TwitchSt1", "TwitchSt2"],["TwitterAPI", "TwitterAPISecret", "UserTW"]]
+			ZoneTexte = ["CryptoAPI", "Currency", "Coin1", "Coin2", "MeteoAPI", "City", "Units", "Lang", "LastFmAPI", "UserFM", "TwitchAPI", "TwitchSt1", "TwitchSt2", "TwitterAPI", "TwitterAPISecret", "UserTW"]
+			I2 = 0
+
+			for I0 in range(5):
+				for I1 in range(NBArg[I0]):
+					conf[CONFCat[I0]][TEXTConfig[I0][I1]] = ZoneTexte[I2].get
+					I2 += 1
+
+			with open('config.cfg', 'w') as CFGF:
+				conf.write(CFGF)
+
+			HashVerify()
+
+		def Enter(event): #Fonction "Quand on appuie sur "enter""
 			Afficher()
 
-		def Afficher():
+		def Afficher(): #Fonction de démarrage
 			BoutonAfficher.configure(state=DISABLED)
 			BoutonArreter.configure(state=NORMAL)
 
@@ -267,7 +301,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 			threadRas = threading.Thread(target=Main)
 			threadRas.start()
 		
-		def Arret():
+		def Arret(): #Fonction d'arrêt
 			BoutonAfficher.configure(state=NORMAL)
 			BoutonArreter.configure(state=DISABLED)
 
@@ -287,9 +321,8 @@ if os.path.exists('/etc/default/epd-fuse'):
 
 		def WebLicence(event):
 			webbrowser.open_new_tab('https://github.com/Frederic94500/RasPiClock-ISN/blob/master/LICENSE')
-
-		#Fonction à propos (créateur + licence)(ouvre une nouvelle fenêtre)
-		def APropos():
+		
+		def APropos(): #Fonction à propos (créateur + licence)(ouvre une nouvelle fenêtre)
 			About = Toplevel()
 			About.title("A propos et licence")
 
@@ -314,12 +347,15 @@ if os.path.exists('/etc/default/epd-fuse'):
 			img.image = photo
 			img.pack()
 
-			#About.iconbitmap('icon.ico')
+			ico = ImageTk.PhotoImage(file='icon.ico')
+			Fenetre.tk.call('wm', 'iconphoto', About._w, ico)
 
 		#Création Fenètre
 		Fenetre = Tk()
 		Fenetre.title('GUI')
-		#Fenetre.iconbitmap('icon.ico')
+
+		ico = ImageTk.PhotoImage(file='icon.ico')
+		Fenetre.tk.call('wm', 'iconphoto', Fenetre._w, ico)
 
 		#Création barre de menu
 		menubar = Menu(Fenetre)
@@ -337,16 +373,16 @@ if os.path.exists('/etc/default/epd-fuse'):
 		Fenetre.config(menu=menubar)
 
 		#Quand on appuie sur "enter"
-		#Fenetre.bind('<Enter>', Enter)
+		Fenetre.bind('<Enter>', Enter)
 
 		#Création onglets
 		TABList = ["tabCrypto", "tabMeteo", "tabMusic", "tabTwitch", "tabTwitter"]
 		TABText = ["Crypto", "Météo", "Musique", "Twitch", "Twitter"]
-		NBArg = [4, 4, 2, 3, 2]
-		TEXTEntry = [["Clé API", "Monnaie fiduciaire", "Cryptomonnaie 1", "Cryptomonnaie 2"],["Clé API", "Ville", "Unité", "Langue"],["Clé API", "Utilisateur"],["Clé API", "Streamer 1", "Streamer 2"],["Clé API", "Utilisateur"]]
-		TEXTConfig = [["CryptoAPI", "Currency", "Coin1", "Coin2"],["MeteoAPI", "City", "Units", "Lang"],["LastFmAPI", "UserFM"],["TwitchAPI", "TwitchSt1", "TwitchSt2"],["TwitterAPI", "UserTW"]]
+		NBArg = [4, 4, 2, 3, 3]
+		TEXTEntry = [["Clé API", "Monnaie fiduciaire", "Cryptomonnaie 1", "Cryptomonnaie 2"],["Clé API", "Ville", "Unité", "Langue"],["Clé API", "Utilisateur"],["Clé API", "Streamer 1", "Streamer 2"],["Clé API", "Clé API Secret", "Utilisateur"]]
+		TEXTConfig = [["CryptoAPI", "Currency", "Coin1", "Coin2"],["MeteoAPI", "City", "Units", "Lang"],["LastFmAPI", "UserFM"],["TwitchAPI", "TwitchSt1", "TwitchSt2"],["TwitterAPI", "TwitterAPISecret", "UserTW"]]
 		CONFCat = ["CRYPTO", "WEATHER", "LASTFM", "TWITCH", "TWITTER"]
-		ZoneTexte = ["CryptoAPI", "Currency", "Coin1", "Coin2", "MeteoAPI", "City", "Units", "Lang", "LastFmAPI", "UserFM", "TwitchAPI", "TwitchSt1", "TwitchSt2", "TwitterAPI", "UserTW"]
+		ZoneTexte = ["CryptoAPI", "Currency", "Coin1", "Coin2", "MeteoAPI", "City", "Units", "Lang", "LastFmAPI", "UserFM", "TwitchAPI", "TwitchSt1", "TwitchSt2", "TwitterAPI", "TwitterAPISecret", "UserTW"]
 
 		TAB = ttk.Notebook(Fenetre)
 
@@ -385,7 +421,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 	else: #Par défaut
 		HashVerify()
 
-else:
+else: #Si papirus n'est pas installé
 	if conf["GENERAL"]["GUI"] == "1":
 		WARN = showerror("Attention!", "Vous n'avez pas installé la biblothèque Papirus, veuillez l'installer via https://github.com/PiSupply/PaPiRus.")
 		sys.exit()
