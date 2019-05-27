@@ -298,7 +298,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 
 			global STOP
 			STOP = False
-			threadRas = threading.Thread(target=Main)
+			threadRas = threading.Thread(target=Save)
 			threadRas.start()
 		
 		def Arret(): #Fonction d'arrêt
@@ -307,6 +307,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 
 			global STOP
 			STOP = True
+			threadRas.join()
 	
 		#Fonctions Sites web
 		def WebProj():
