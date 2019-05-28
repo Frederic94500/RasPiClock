@@ -158,7 +158,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 			sys.exit()
 
 	def Adaptation():
-		global Units, BearerAUTH
+		global Units
 
 		if conf["WEATHER"]["Units"] == "imperial":
 			Units = "°F"
@@ -272,6 +272,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 
 
 	if conf["GENERAL"]["GUI"] == "1": #GUI ONLY
+		global ZoneTexte
 		def Save(): #Fonction d'enregistrement du fichier de conf
 			CONFCat = ["CRYPTO", "WEATHER", "LASTFM", "TWITCH", "TWITTER"]
 			NBArg = [4, 4, 2, 3, 3]
@@ -281,16 +282,13 @@ if os.path.exists('/etc/default/epd-fuse'):
 
 			for I0 in range(5):
 				for I1 in range(NBArg[I0]):
-					conf[CONFCat[I0]][TEXTConfig[I0][I1]] = ZoneTexte[I2].get
+					conf[CONFCat[I0]][TEXTConfig[I0][I1]] = ZoneTexte[I2].get()
 					I2 += 1
 
 			with open('config.cfg', 'w') as CFGF:
 				conf.write(CFGF)
 
 			HashVerify()
-
-		def Enter(event): #Fonction "Quand on appuie sur "enter""
-			Afficher()
 
 		def Afficher(): #Fonction de démarrage
 			BoutonAfficher.configure(state=DISABLED)
@@ -372,9 +370,6 @@ if os.path.exists('/etc/default/epd-fuse'):
 		helpmenu.add_command(label = "A propos et licence", command = APropos)
 
 		Fenetre.config(menu=menubar)
-
-		#Quand on appuie sur "enter"
-		Fenetre.bind('<Enter>', Enter)
 
 		#Création onglets
 		TABList = ["tabCrypto", "tabMeteo", "tabMusic", "tabTwitch", "tabTwitter"]
