@@ -55,20 +55,20 @@ if os.path.exists('/etc/default/epd-fuse'):
 			os.system("papirus-clear")
 			sys.exit()
 
-	def HashSave():
-		with open("config.cfg","rb") as f:
-			bytes = f.read()
-			hashconf = hashlib.sha256(bytes).hexdigest()
+	def HashSave(): #BUG?
+		f = open("config.cfg","rb")
+		bytes = f.read()
+		hashconf = str(hashlib.sha256(bytes).hexdigest())
 
 		hash = open("hash.txt", "w")
 		hash.write(hashconf)
 		hash.close
 		Adaptation()
 
-	def HashVerify():
-		with open('config.cfg', "rb") as FC:
-			bytes = FC.read()
-			HashNew = hashlib.sha256(bytes).hexdigest()
+	def HashVerify(): #BUG?
+		FC = open('config.cfg', "rb")
+		bytes = FC.read()
+		HashNew = hashlib.sha256(bytes).hexdigest()
 	
 		FH = open('hash.txt', "r")
 		HashOld = FH.read()
@@ -256,6 +256,9 @@ if os.path.exists('/etc/default/epd-fuse'):
 
 	def Twitter(): #Fonction Twitter
 		global BearerAUTH
+		BearerRAW = os.popen("curl -u '"+ conf["TWITTER"]["TwitterAPI"] + ":" + conf["TWITTER"]["TwitterAPISecret"] + "' --data 'grant_type=client_credentials' 'https://api.twitter.com/oauth2/token'").read()
+		BearerJSON = json.loads(BearerRAW)
+		BearerAUTH = BearerJSON["access_token"]
 		ReponseTwitter = rq.get("https://api.twitter.com/1.1/users/show.json?screen_name=" + conf["TWITTER"]["UserTW"], headers={'Authorization': "Bearer " + BearerAUTH})
 		DataTwitter = json.loads(ReponseTwitter.text)
 
@@ -273,11 +276,15 @@ if os.path.exists('/etc/default/epd-fuse'):
 
 	if conf["GENERAL"]["GUI"] == "1": #GUI ONLY
 		global ZoneTexte
+		TABList = ["tabCrypto", "tabMeteo", "tabMusic", "tabTwitch", "tabTwitter"]
+		TABText = ["Crypto", "Météo", "Musique", "Twitch", "Twitter"]
+		NBArg = [4, 4, 2, 3, 3]
+		TEXTEntry = [["Clé API", "Monnaie fiduciaire", "Cryptomonnaie 1", "Cryptomonnaie 2"],["Clé API", "Ville", "Unité", "Langue"],["Clé API", "Utilisateur"],["Clé API", "Streamer 1", "Streamer 2"],["Clé API", "Clé API Secret", "Utilisateur"]]
+		TEXTConfig = [["CryptoAPI", "Currency", "Coin1", "Coin2"],["MeteoAPI", "City", "Units", "Lang"],["LastFmAPI", "UserFM"],["TwitchAPI", "TwitchSt1", "TwitchSt2"],["TwitterAPI", "TwitterAPISecret", "UserTW"]]
+		CONFCat = ["CRYPTO", "WEATHER", "LASTFM", "TWITCH", "TWITTER"]
+		ZoneTexte = ["CryptoAPI", "Currency", "Coin1", "Coin2", "MeteoAPI", "City", "Units", "Lang", "LastFmAPI", "UserFM", "TwitchAPI", "TwitchSt1", "TwitchSt2", "TwitterAPI", "TwitterAPISecret", "UserTW"]
+		I2 = 0
 		def Save(): #Fonction d'enregistrement du fichier de conf
-			CONFCat = ["CRYPTO", "WEATHER", "LASTFM", "TWITCH", "TWITTER"]
-			NBArg = [4, 4, 2, 3, 3]
-			TEXTConfig = [["CryptoAPI", "Currency", "Coin1", "Coin2"],["MeteoAPI", "City", "Units", "Lang"],["LastFmAPI", "UserFM"],["TwitchAPI", "TwitchSt1", "TwitchSt2"],["TwitterAPI", "TwitterAPISecret", "UserTW"]]
-			ZoneTexte = ["CryptoAPI", "Currency", "Coin1", "Coin2", "MeteoAPI", "City", "Units", "Lang", "LastFmAPI", "UserFM", "TwitchAPI", "TwitchSt1", "TwitchSt2", "TwitterAPI", "TwitterAPISecret", "UserTW"]
 			I2 = 0
 
 			for I0 in range(5):
@@ -305,7 +312,6 @@ if os.path.exists('/etc/default/epd-fuse'):
 
 			global STOP
 			STOP = True
-			threadRas.join()
 	
 		#Fonctions Sites web
 		def WebProj():
@@ -372,14 +378,6 @@ if os.path.exists('/etc/default/epd-fuse'):
 		Fenetre.config(menu=menubar)
 
 		#Création onglets
-		TABList = ["tabCrypto", "tabMeteo", "tabMusic", "tabTwitch", "tabTwitter"]
-		TABText = ["Crypto", "Météo", "Musique", "Twitch", "Twitter"]
-		NBArg = [4, 4, 2, 3, 3]
-		TEXTEntry = [["Clé API", "Monnaie fiduciaire", "Cryptomonnaie 1", "Cryptomonnaie 2"],["Clé API", "Ville", "Unité", "Langue"],["Clé API", "Utilisateur"],["Clé API", "Streamer 1", "Streamer 2"],["Clé API", "Clé API Secret", "Utilisateur"]]
-		TEXTConfig = [["CryptoAPI", "Currency", "Coin1", "Coin2"],["MeteoAPI", "City", "Units", "Lang"],["LastFmAPI", "UserFM"],["TwitchAPI", "TwitchSt1", "TwitchSt2"],["TwitterAPI", "TwitterAPISecret", "UserTW"]]
-		CONFCat = ["CRYPTO", "WEATHER", "LASTFM", "TWITCH", "TWITTER"]
-		ZoneTexte = ["CryptoAPI", "Currency", "Coin1", "Coin2", "MeteoAPI", "City", "Units", "Lang", "LastFmAPI", "UserFM", "TwitchAPI", "TwitchSt1", "TwitchSt2", "TwitterAPI", "TwitterAPISecret", "UserTW"]
-
 		TAB = ttk.Notebook(Fenetre)
 
 		for I in range(5):
@@ -389,14 +387,14 @@ if os.path.exists('/etc/default/epd-fuse'):
 		TAB.pack(expand=1, fill='both')
 
 		#Création Grid
-		I2 = 0
 		for I0 in range(5): #Nombre de tab
 			for I1 in range(NBArg[I0]): #Nombre d'argument
 				Label(TABList[I0], text=TEXTEntry[I0][I1]).grid(row=I1, padx=5, pady=5)
 
 				ARGUMENT = StringVar()
 				ARGUMENT.set(conf[CONFCat[I0]][TEXTConfig[I0][I1]])
-				ZoneTexte[I2] = Entry(TABList[I0], textvariable=ARGUMENT).grid(row=I1, column=1, padx=5, pady=5, sticky=E)
+				ZoneTexte[I2] = Entry(TABList[I0], textvariable=ARGUMENT)
+				ZoneTexte[I2].grid(row=I1, column=1, padx=5, pady=5, sticky=E)
 				I2 += 1
 
 		#Création bouton fenetre
