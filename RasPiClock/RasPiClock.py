@@ -248,21 +248,21 @@ if os.path.exists('/etc/default/epd-fuse'):
 			if DataSt1["data"][0]["type"] == "live":
 				ReponseTwitchGameID = rq.get("https://api.twitch.tv/helix/games?id=" + DataSt1["data"][0]["game_id"], headers={"Client-ID": conf["TWITCH"]["TwitchAPI"]})
 				GameID = json.loads(ReponseTwitchGameID.text)
-				TextPAPIRUS.AddText(conf["TWITCH"]["TwitchSt1"].capitalize() + ": ON", 10, 40, size = 25, fontPath="Ubuntu.ttf")
-				TextPAPIRUS.AddText("Jeu: " + GameID["data"][0]["name"], 10, 65, size = 20, fontPath="Ubuntu.ttf")
-				TextPAPIRUS.AddText("Titre: " + DataSt1["data"][0]["title"], 10, 85, size = 15, fontPath="Ubuntu.ttf")
+				TextPAPIRUS.AddText(conf["TWITCH"]["TwitchSt1"].capitalize() + ": ON", 10, 40, size = 20, fontPath="Ubuntu.ttf")
+				TextPAPIRUS.AddText("Jeu: " + GameID["data"][0]["name"], 10, 60, size = 15, fontPath="Ubuntu.ttf")
+				TextPAPIRUS.AddText("Titre: " + DataSt1["data"][0]["title"], 10, 75, size = 10, fontPath="Ubuntu.ttf")
 		except IndexError:
-			TextPAPIRUS.AddText(conf["TWITCH"]["TwitchSt1"].capitalize() + ": OFF", 10, 40, size = 25, fontPath="Ubuntu.ttf")
+			TextPAPIRUS.AddText(conf["TWITCH"]["TwitchSt1"].capitalize() + ": OFF", 10, 40, size = 20, fontPath="Ubuntu.ttf")
 		
 		try:
 			if DataSt2["data"][0]["type"] == "live":
 				ReponseTwitchGameID = rq.get("https://api.twitch.tv/helix/games?id=" + DataSt2["data"][0]["game_id"], headers={"Client-ID": conf["TWITCH"]["TwitchAPI"]})
 				GameID = json.loads(ReponseTwitchGameID.text)
-				TextPAPIRUS.AddText(conf["TWITCH"]["TwitchSt2"].capitalize() + ": ON", 10, 132, size = 25, fontPath="Ubuntu.ttf")
-				TextPAPIRUS.AddText("Jeu: " + GameID["data"][0]["name"], 10, 152, size = 20, fontPath="Ubuntu.ttf")
-				TextPAPIRUS.AddText("Titre: " + DataSt2["data"][0]["title"], 10, 172, size = 15, fontPath="Ubuntu.ttf")
+				TextPAPIRUS.AddText(conf["TWITCH"]["TwitchSt2"].capitalize() + ": ON", 10, 88, size = 20, fontPath="Ubuntu.ttf")
+				TextPAPIRUS.AddText("Jeu: " + GameID["data"][0]["name"], 10, 108, size = 15, fontPath="Ubuntu.ttf")
+				TextPAPIRUS.AddText("Titre: " + DataSt2["data"][0]["title"], 10, 123, size = 10, fontPath="Ubuntu.ttf")
 		except IndexError:
-			TextPAPIRUS.AddText(conf["TWITCH"]["TwitchSt2"].capitalize() + ": OFF", 10, 132, size = 25, fontPath="Ubuntu.ttf")
+			TextPAPIRUS.AddText(conf["TWITCH"]["TwitchSt2"].capitalize() + ": OFF", 10, 132, size = 20, fontPath="Ubuntu.ttf")
 		finally:
 			TextPAPIRUS.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, size = 20, fontPath="Ubuntu.ttf")
 			TextPAPIRUS.WriteAll(True)
