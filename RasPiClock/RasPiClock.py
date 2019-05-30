@@ -156,6 +156,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 	def ErrorConfig(ERROR):
 		if conf["GENERAL"]["GUI"] == "1":
 			WARN = showerror("Attention!", ERROR)
+			Texte.set("Erreur dans l'éxécution!")
 			BoutonAfficher.configure(state=NORMAL)
 			BoutonArreter.configure(state=DISABLED)
 		else:
@@ -245,14 +246,23 @@ if os.path.exists('/etc/default/epd-fuse'):
 
 		try:
 			if DataSt1["data"][0]["type"] == "live":
-				TextPAPIRUS.AddText(conf["TWITCH"]["TwitchSt1"].capitalize() + ": ON", 10, 30, size = 20, fontPath="Ubuntu.ttf")
+				ReponseTwitchGameID = rq.get("https://api.twitch.tv/helix/games?id=" + DataSt1["data"][0]["game_id"], headers={"Client-ID": conf["TWITCH"]["TwitchAPI"]})
+				GameID = json.loads(ReponseTwitchGameID.text)
+				TextPAPIRUS.AddText(conf["TWITCH"]["TwitchSt1"].capitalize() + ": ON", 10, 40, size = 25, fontPath="Ubuntu.ttf")
+				TextPAPIRUS.AddText("Jeu: " + GameID["data"][0]["name"], 10, 65, size = 20, fontPath="Ubuntu.ttf")
+				TextPAPIRUS.AddText("Titre: " + DataSt1["data"][0]["title"], 10, 85, size = 15, fontPath="Ubuntu.ttf")
 		except IndexError:
-			TextPAPIRUS.AddText(conf["TWITCH"]["TwitchSt1"].capitalize() + ": OFF", 10, 30, size = 20, fontPath="Ubuntu.ttf")
+			TextPAPIRUS.AddText(conf["TWITCH"]["TwitchSt1"].capitalize() + ": OFF", 10, 40, size = 25, fontPath="Ubuntu.ttf")
+		
 		try:
 			if DataSt2["data"][0]["type"] == "live":
-				TextPAPIRUS.AddText(conf["TWITCH"]["TwitchSt2"].capitalize() + ": ON", 10, 60, size = 20, fontPath="Ubuntu.ttf")
+				ReponseTwitchGameID = rq.get("https://api.twitch.tv/helix/games?id=" + DataSt2["data"][0]["game_id"], headers={"Client-ID": conf["TWITCH"]["TwitchAPI"]})
+				GameID = json.loads(ReponseTwitchGameID.text)
+				TextPAPIRUS.AddText(conf["TWITCH"]["TwitchSt2"].capitalize() + ": ON", 10, 132, size = 25, fontPath="Ubuntu.ttf")
+				TextPAPIRUS.AddText("Jeu: " + GameID["data"][0]["name"], 10, 152, size = 20, fontPath="Ubuntu.ttf")
+				TextPAPIRUS.AddText("Titre: " + DataSt2["data"][0]["title"], 10, 172, size = 15, fontPath="Ubuntu.ttf")
 		except IndexError:
-			TextPAPIRUS.AddText(conf["TWITCH"]["TwitchSt2"].capitalize() + ": OFF", 10, 60, size = 20, fontPath="Ubuntu.ttf")
+			TextPAPIRUS.AddText(conf["TWITCH"]["TwitchSt2"].capitalize() + ": OFF", 10, 132, size = 25, fontPath="Ubuntu.ttf")
 		finally:
 			TextPAPIRUS.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, size = 20, fontPath="Ubuntu.ttf")
 			TextPAPIRUS.WriteAll(True)
@@ -266,9 +276,11 @@ if os.path.exists('/etc/default/epd-fuse'):
 
 		TextPAPIRUS.AddText("Twitter:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
 
-		TextPAPIRUS.AddText("Compte de: " + DataTwitter["name"] + " | " + str(DataTwitter["followers_count"]) + " abonnés", 10, 40, size = 15, fontPath="Ubuntu.ttf")
+		TextPAPIRUS.AddText("Compte de: " + DataTwitter["name"], 10, 40, size = 25, fontPath="Ubuntu.ttf")
+		TextPAPIRUS.AddText(str(DataTwitter["followers_count"]) + " abonnés", 10, 65, size = 20, fontPath="Ubuntu.ttf")
 
-		TextPAPIRUS.AddText("Dernier tweet:\n" + DataTwitter["status"]["text"], 10, 70, size = 15, fontPath="Ubuntu.ttf")
+		TextPAPIRUS.AddText("Dernier tweet:", 10, 85, size = 20, fontPath="Ubuntu.ttf")
+		TextPAPIRUS.AddText(DataTwitter["status"]["text"], 10, 105, size = 15, fontPath="Ubuntu.ttf")
 
 		TextPAPIRUS.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, size = 20, fontPath="Ubuntu.ttf")
 		TextPAPIRUS.WriteAll(True)
@@ -302,6 +314,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 		def Afficher(): #Fonction de démarrage
 			BoutonAfficher.configure(state=DISABLED)
 			BoutonArreter.configure(state=NORMAL)
+			Texte.set("En cours d'éxécution")
 
 			global STOP
 			STOP = False
@@ -311,6 +324,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 		def Arret(): #Fonction d'arrêt
 			BoutonAfficher.configure(state=NORMAL)
 			BoutonArreter.configure(state=DISABLED)
+			Texte.set("Veuillez saisir vos informations")
 
 			global STOP
 			STOP = True
@@ -406,10 +420,10 @@ if os.path.exists('/etc/default/epd-fuse'):
 		BoutonArreter = Button(Fenetre, text='Arrêter', command = Arret, state=DISABLED)
 		BoutonArreter.pack(side = RIGHT, padx=5, pady=5)
 
-		#Création Texte et Texte Annonce
+		#Création Texte Annonce
 		Texte = StringVar()
 		TextAnnonce = Label(Fenetre, textvariable = Texte).pack(side = LEFT)
-		Texte.set("Veuillez saisir vos informations.")
+		Texte.set("Veuillez saisir vos informations")
 
 		#Initialisation du GUI
 		Fenetre.mainloop()
