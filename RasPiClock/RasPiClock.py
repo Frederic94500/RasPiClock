@@ -50,7 +50,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 			TextPAPIRUS.Clear()
 			TextPAPIRUS.AddText("ERREUR de connexion, nouvelle tentative de connexion dans: T", 10, 48, size = 20, fontPath="Ubuntu.ttf", Id="TimerErr")
 			for I in range(15):
-				TextPAPIRUS.UpdateText("TimerErr", "ERREUR de connexion, \nnouvelle tentative de connexion dans: " + str(15 - I), fontPath="Ubuntu.ttf")
+				TextPAPIRUS.UpdateText("TimerErr", "Erreur de connexion, \nnouvelle tentative de connexion dans: " + str(15 - I), fontPath="Ubuntu.ttf")
 				TextPAPIRUS.WriteAll(True)
 				time.sleep(1)
 			TextPAPIRUS.Clear()
@@ -141,9 +141,9 @@ if os.path.exists('/etc/default/epd-fuse'):
 
 		except (ValueError, socket.error, socket.gaierror, socket.herror, socket.timeout): #Situation d'erreur de connexion
 			TextPAPIRUS.Clear()
-			TextPAPIRUS.AddText("ERREUR de connexion, nouvelle tentative de connexion dans: T", 10, 48, size = 20, fontPath="Ubuntu.ttf", Id="TimerErr")
+			TextPAPIRUS.AddText("Erreur de connexion, nouvelle tentative de connexion dans: T", 10, 48, size = 20, fontPath="Ubuntu.ttf", Id="TimerErr")
 			for I in range(15):
-				TextPAPIRUS.UpdateText("TimerErr", "ERREUR de connexion, \nnouvelle tentative de connexion dans: " + str(15 - I), fontPath="Ubuntu.ttf")
+				TextPAPIRUS.UpdateText("TimerErr", "Erreur de connexion, \nnouvelle tentative de connexion dans: " + str(15 - I), fontPath="Ubuntu.ttf")
 				TextPAPIRUS.WriteAll(True)
 				time.sleep(1)
 			TextPAPIRUS.Clear()
@@ -154,14 +154,15 @@ if os.path.exists('/etc/default/epd-fuse'):
 				HashSave()
 
 	def ErrorConfig(ERROR):
-		if conf["GENERAL"]["GUI"] == "1":
-			WARN = showerror("Attention!", ERROR)
+		try:
+			if sys.argv[1] == "-bash" or sys.argv[1] == "-b": #BASH ONLY
+					print(ERROR)
+					sys.exit()
+		except IndexError: #GUI ONLY
+			WARN = showerror("Erreur!", ERROR)
 			Texte.set("Erreur dans l'éxécution!")
 			BoutonAfficher.configure(state=NORMAL)
 			BoutonArreter.configure(state=DISABLED)
-		else:
-			print(ERROR)
-			sys.exit()
 
 	def Adaptation():
 		global Units
@@ -287,8 +288,12 @@ if os.path.exists('/etc/default/epd-fuse'):
 		time.sleep(10)
 		TextPAPIRUS.Clear()
 
-
-	if conf["GENERAL"]["GUI"] == "1": #GUI ONLY
+	try:
+		if sys.argv[1] == "-bash" or sys.argv[1] == "-b": #BASH ONLY
+			HashVerify()
+		else: #Erreur d'argument
+			print("Erreur, veuillez écrire -b ou -bash ou rien pour éxécuter le programme!")
+	except IndexError: #Par défaut
 		global ZoneTexte
 		TABList = ["tabCrypto", "tabMeteo", "tabMusic", "tabTwitch", "tabTwitter"]
 		TABText = ["Crypto", "Météo", "Musique", "Twitch", "Twitter"]
@@ -428,12 +433,13 @@ if os.path.exists('/etc/default/epd-fuse'):
 		#Initialisation du GUI
 		Fenetre.mainloop()
 
-	else: #Par défaut
-		HashVerify()
-
 else: #Si papirus n'est pas installé
-	if conf["GENERAL"]["GUI"] == "1":
+	try:
+		if sys.argv[1] == "-bash" or sys.argv[1] == "-b": #BASH ONLY
+			print("Attention!, vous n'avez pas installé la biblothèque Papirus, veuillez l'installer via https://github.com/PiSupply/PaPiRus")
+			sys.exit()
+		else: #Erreur d'argument
+			print("Erreur, veuillez écrire -b ou -bash ou rien et installer Papirus (https://github.com/PiSupply/PaPiRus) pour éxécuter le programme!")
+	except IndexError: #GUI ONLY
 		WARN = showerror("Attention!", "Vous n'avez pas installé la biblothèque Papirus, veuillez l'installer via https://github.com/PiSupply/PaPiRus.")
-	else:
-		print("Attention!, vous n'avez pas installé la biblothèque Papirus, veuillez l'installer via https://github.com/PiSupply/PaPiRus")
-		sys.exit()
+	
