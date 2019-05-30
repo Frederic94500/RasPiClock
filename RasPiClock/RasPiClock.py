@@ -67,11 +67,11 @@ if os.path.exists('/etc/default/epd-fuse'):
 		ConfFile = open("config.cfg","rb")
 		bytes = ConfFile.read()
 		hashconf = hashlib.sha256(bytes).hexdigest()
-		conffile.close()
+		ConfFile.close()
 
-		hash = open("hash.txt", "w")
-		hash.write(hashconf)
-		hash.close()
+		HashFile = open("hash.txt", "w")
+		HashFile.write(hashconf)
+		HashFile.close()
 		Adaptation()
 
 	def HashVerify():
