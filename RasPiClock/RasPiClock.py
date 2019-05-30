@@ -258,9 +258,9 @@ if os.path.exists('/etc/default/epd-fuse'):
 			if DataSt2["data"][0]["type"] == "live":
 				ReponseTwitchGameID = rq.get("https://api.twitch.tv/helix/games?id=" + DataSt2["data"][0]["game_id"], headers={"Client-ID": conf["TWITCH"]["TwitchAPI"]})
 				GameID = json.loads(ReponseTwitchGameID.text)
-				TextPAPIRUS.AddText(conf["TWITCH"]["TwitchSt2"].capitalize() + ": ON", 10, 88, size = 20, fontPath="Ubuntu.ttf")
-				TextPAPIRUS.AddText("Jeu: " + GameID["data"][0]["name"], 10, 108, size = 15, fontPath="Ubuntu.ttf")
-				TextPAPIRUS.AddText("Titre: " + DataSt2["data"][0]["title"], 10, 123, size = 10, fontPath="Ubuntu.ttf")
+				TextPAPIRUS.AddText(conf["TWITCH"]["TwitchSt2"].capitalize() + ": ON", 10, 95, size = 20, fontPath="Ubuntu.ttf")
+				TextPAPIRUS.AddText("Jeu: " + GameID["data"][0]["name"], 10, 115, size = 15, fontPath="Ubuntu.ttf")
+				TextPAPIRUS.AddText("Titre: " + DataSt2["data"][0]["title"], 10, 130, size = 10, fontPath="Ubuntu.ttf")
 		except IndexError:
 			TextPAPIRUS.AddText(conf["TWITCH"]["TwitchSt2"].capitalize() + ": OFF", 10, 132, size = 20, fontPath="Ubuntu.ttf")
 		finally:
@@ -276,7 +276,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 
 		TextPAPIRUS.AddText("Twitter:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
 
-		TextPAPIRUS.AddText("Compte de: " + DataTwitter["name"], 10, 40, size = 25, fontPath="Ubuntu.ttf")
+		TextPAPIRUS.AddText("Compte: " + DataTwitter["name"], 10, 40, size = 20, fontPath="Ubuntu.ttf")
 		TextPAPIRUS.AddText(str(DataTwitter["followers_count"]) + " abonnés", 10, 65, size = 20, fontPath="Ubuntu.ttf")
 
 		TextPAPIRUS.AddText("Dernier tweet:", 10, 85, size = 20, fontPath="Ubuntu.ttf")
