@@ -3,7 +3,7 @@
 [CONFIG ET MODULAIRE]
 Y - Intégrer le fichier de config avec le library configparser
 -> - Le faire modulaire
-	->? - éviter l'interpolation (% - Twitter)
+	Y - éviter l'interpolation (% - Twitter)
 	Y - Désactiver la fonction s'il n'y a pas d'APIKEY
 	N - Transformer en MAJUSCULE si l'entrée est en minuscule (Crypto)
 		--> Peut provoquer une erreur
