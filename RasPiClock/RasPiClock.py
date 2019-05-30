@@ -33,6 +33,9 @@ if os.path.exists('/etc/default/epd-fuse'):
 			while True:
 				global STOP
 				if STOP: #GUI ONLY
+					BoutonAfficher.configure(state=NORMAL)
+					BoutonArreter.configure(state=DISABLED)
+					Texte.set("Veuillez saisir vos informations")
 					os.system("papirus-clear")
 					break;
 				else:
@@ -60,23 +63,26 @@ if os.path.exists('/etc/default/epd-fuse'):
 			os.system("papirus-clear")
 			sys.exit()
 
-	def HashSave(): #BUG?
-		f = open("config.cfg","rb")
-		bytes = f.read()
-		hashconf = str(hashlib.sha256(bytes).hexdigest())
+	def HashSave():
+		ConfFile = open("config.cfg","rb")
+		bytes = ConfFile.read()
+		hashconf = hashlib.sha256(bytes).hexdigest()
+		conffile.close()
 
 		hash = open("hash.txt", "w")
 		hash.write(hashconf)
-		hash.close
+		hash.close()
 		Adaptation()
 
-	def HashVerify(): #BUG?
-		FC = open('config.cfg', "rb")
-		bytes = FC.read()
+	def HashVerify():
+		ConfFile = open('config.cfg', "rb")
+		bytes = ConfFile.read()
 		HashNew = hashlib.sha256(bytes).hexdigest()
+		ConfFile.close()
 	
-		FH = open('hash.txt', "r")
-		HashOld = FH.read()
+		HashFile = open('hash.txt', "r")
+		HashOld = HashFile.read()
+		HashFile.close()
 
 		if HashOld != HashNew:
 			APICheck()
@@ -327,9 +333,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 			threadRas.start()
 		
 		def Arret(): #Fonction d'arrêt
-			BoutonAfficher.configure(state=NORMAL)
 			BoutonArreter.configure(state=DISABLED)
-			Texte.set("Veuillez saisir vos informations")
 
 			global STOP
 			STOP = True
@@ -378,7 +382,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 
 		#Création Fenètre
 		Fenetre = Tk()
-		Fenetre.title('GUI')
+		Fenetre.title('RasPiClock GUI')
 
 		ico = ImageTk.PhotoImage(file='icon.ico')
 		Fenetre.tk.call('wm', 'iconphoto', Fenetre._w, ico)
