@@ -131,22 +131,21 @@ if os.path.exists('/etc/default/epd-fuse'):
 
 			if conf["TWITTER"]["TwitterAPI"] != "":
 				try:
+					BearerRAW = os.popen("curl -u '"+ conf["TWITTER"]["TwitterAPI"] + ":" + conf["TWITTER"]["TwitterAPISecret"] + "' --data 'grant_type=client_credentials' 'https://api.twitter.com/oauth2/token'").read()
+					BearerJSON = json.loads(BearerRAW)
+					BearerAUTH = BearerJSON["access_token"]
+				except KeyError:
+					ERROR = "Erreur dans la config Twitter, il faut 2 clés API! Veuillez vérifier votre saisie!"
+					ErrorConfig(ERROR)
+				finally:
 					try:
-						BearerRAW = os.popen("curl -u '"+ conf["TWITTER"]["TwitterAPI"] + ":" + conf["TWITTER"]["TwitterAPISecret"] + "' --data 'grant_type=client_credentials' 'https://api.twitter.com/oauth2/token'").read()
-						BearerJSON = json.loads(BearerRAW)
-						BearerAUTH = BearerJSON["access_token"]
+						ReponseTwitter = rq.get("https://api.twitter.com/1.1/users/show.json?screen_name=" + conf["TWITTER"]["UserTW"], headers={'Authorization': "Bearer " + BearerAUTH})
+						DataTwitter = json.loads(ReponseTwitter.text)
+						if 49 <= int(DataTwitter["errors"][0]["code"]) <= 599:
+							ERROR = "Erreur dans la config Twitter, veuillez vérifier votre saisie!"
+							ErrorConfig(ERROR)
 					except KeyError:
-						ERROR = "Erreur dans la config Twitter, il faut 2 clés API! Veuillez vérifier votre saisie!"
-						ErrorConfig(ERROR)
-					finally:
-						try:
-							ReponseTwitter = rq.get("https://api.twitter.com/1.1/users/show.json?screen_name=" + conf["TWITTER"]["UserTW"], headers={'Authorization': "Bearer " + BearerAUTH})
-							DataTwitter = json.loads(ReponseTwitter.text)
-							if 49 <= int(DataTwitter["errors"][0]["code"]) <= 599:
-								ERROR = "Erreur dans la config Twitter, veuillez vérifier votre saisie!"
-								ErrorConfig(ERROR)
-						except KeyError:
-							Check += 1
+						Check += 1
 			else:
 				Check += 1
 
