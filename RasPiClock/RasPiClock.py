@@ -132,7 +132,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 			else:
 				Check += 1
 
-			if conf["TWITTER"]["TwitterAPI"] != "":
+			if conf["TWITTER"]["TwitterAPI"] != "" and conf["TWITTER"]["twitterapisecret"] != "":
 				try:
 					BearerRAW = os.popen("curl -u '"+ conf["TWITTER"]["TwitterAPI"] + ":" + conf["TWITTER"]["TwitterAPISecret"] + "' --data 'grant_type=client_credentials' 'https://api.twitter.com/oauth2/token'").read()
 					BearerJSON = json.loads(BearerRAW)
