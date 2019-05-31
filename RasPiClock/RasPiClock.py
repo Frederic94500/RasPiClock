@@ -9,9 +9,7 @@ from tkinter import ttk
 from PIL import Image, ImageTk
 
 Units = "°K"
-
 STOP = False
-
 BearerAUTH = ""
 
 conf = configparser.ConfigParser()
@@ -93,6 +91,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 	def APICheck(): #Fonction de test de chaque paramètre (sauf Twitch)
 		global BearerAUTH
 		Check = 0
+
 		#Test des APIs
 		try:
 			if conf["WEATHER"]["MeteoAPI"] != "":
@@ -140,13 +139,14 @@ if os.path.exists('/etc/default/epd-fuse'):
 						ERROR = "Erreur dans la config Twitter, il faut 2 clés API! Veuillez vérifier votre saisie!"
 						ErrorConfig(ERROR)
 					finally:
-						ReponseTwitter = rq.get("https://api.twitter.com/1.1/users/show.json?screen_name=" + conf["TWITTER"]["UserTW"], headers={'Authorization': "Bearer " + BearerAUTH})
-						DataTwitter = json.loads(ReponseTwitter.text)
-						if 49 <= int(DataTwitter["errors"][0]["code"]) <= 599:
-							ERROR = "Erreur dans la config Twitter, veuillez vérifier votre saisie!"
-							ErrorConfig(ERROR)
-				except KeyError:
-					Check += 1
+						try:
+							ReponseTwitter = rq.get("https://api.twitter.com/1.1/users/show.json?screen_name=" + conf["TWITTER"]["UserTW"], headers={'Authorization': "Bearer " + BearerAUTH})
+							DataTwitter = json.loads(ReponseTwitter.text)
+							if 49 <= int(DataTwitter["errors"][0]["code"]) <= 599:
+								ERROR = "Erreur dans la config Twitter, veuillez vérifier votre saisie!"
+								ErrorConfig(ERROR)
+						except KeyError:
+							Check += 1
 			else:
 				Check += 1
 
