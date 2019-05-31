@@ -25,7 +25,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 
 	def Main(): #Fonction Coeur
 		try:
-			if conf["TWITTER"]["TwitterAPI"] != "":
+			if conf["TWITTER"]["TwitterAPI"] != "" and conf["TWITTER"]["twitterapisecret"] != "":
 				global BearerAUTH
 				BearerRAW = os.popen("curl -u '"+ conf["TWITTER"]["TwitterAPI"] + ":" + conf["TWITTER"]["TwitterAPISecret"] + "' --data 'grant_type=client_credentials' 'https://api.twitter.com/oauth2/token'").read()
 				BearerJSON = json.loads(BearerRAW)
@@ -47,7 +47,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 						Musique()
 					if conf["TWITCH"]["TwitchAPI"] != "":
 						Twitch()
-					if conf["TWITTER"]["TwitterAPI"] != "":
+					if conf["TWITTER"]["TwitterAPI"] != "" and conf["TWITTER"]["twitterapisecret"] != "":
 						Twitter()
 		except (ValueError, socket.error, socket.gaierror, socket.herror, socket.timeout): #Situation d'erreur de connexion
 			TextPAPIRUS.Clear()
@@ -72,6 +72,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 		HashFile = open("hash.txt", "w")
 		HashFile.write(hashconf)
 		HashFile.close()
+
 		Adaptation()
 
 	def HashVerify():
@@ -98,7 +99,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 				ReponseMeteo = rq.get("https://api.openweathermap.org/data/2.5/weather?q=" + conf["WEATHER"]["City"] + "&units=" + conf["WEATHER"]["Units"] + "&lang=" + conf["WEATHER"]["Lang"] + "&appid=" + conf["WEATHER"]["MeteoAPI"])
 				DataMeteo = json.loads(ReponseMeteo.text)
 				if 400 <= int(DataMeteo["cod"]) <= 599: 
-						ERROR = "Erreur dans la config Météo, veuiller vérifier votre saisie!"
+						ERROR = "Erreur dans la config Météo, veuillez vérifier votre saisie!"
 						ErrorConfig(ERROR)
 				else:
 					Check += 1
@@ -110,7 +111,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 				DataCrypto = json.loads(ReponseCrypto.text)
 				try:
 					if DataCrypto["Response"] == "Error":
-						ERROR = "Erreur dans la config Crypto, veuiller vérifier votre saisie!"
+						ERROR = "Erreur dans la config Crypto, veuillez vérifier votre saisie!"
 						ErrorConfig(ERROR)
 				except KeyError:
 					Check += 1
@@ -122,7 +123,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 				DataLast = json.loads(ReponseLastFM.text)
 				try:
 					if 2 <= int(DataLast["error"]) <= 29:
-						ERROR = "Erreur dans la config LastFM, veuiller vérifier votre saisie!"
+						ERROR = "Erreur dans la config LastFM, veuillez vérifier votre saisie!"
 						ErrorConfig(ERROR)
 				except KeyError:
 					Check += 1
@@ -130,16 +131,20 @@ if os.path.exists('/etc/default/epd-fuse'):
 				Check += 1
 
 			if conf["TWITTER"]["TwitterAPI"] != "":
-				BearerRAW = os.popen("curl -u '"+ conf["TWITTER"]["TwitterAPI"] + ":" + conf["TWITTER"]["TwitterAPISecret"] + "' --data 'grant_type=client_credentials' 'https://api.twitter.com/oauth2/token'").read()
-				BearerJSON = json.loads(BearerRAW)
-				BearerAUTH = BearerJSON["access_token"]
-
-				ReponseTwitter = rq.get("https://api.twitter.com/1.1/users/show.json?screen_name=" + conf["TWITTER"]["UserTW"], headers={'Authorization': "Bearer " + BearerAUTH})
-				DataTwitter = json.loads(ReponseTwitter.text)
 				try:
-					if 49 <= int(DataTwitter["errors"][0]["code"]) <= 599:
-						ERROR = "Erreur dans la config Twitter, veuiller vérifier votre saisie!"
+					try:
+						BearerRAW = os.popen("curl -u '"+ conf["TWITTER"]["TwitterAPI"] + ":" + conf["TWITTER"]["TwitterAPISecret"] + "' --data 'grant_type=client_credentials' 'https://api.twitter.com/oauth2/token'").read()
+						BearerJSON = json.loads(BearerRAW)
+						BearerAUTH = BearerJSON["access_token"]
+					except KeyError:
+						ERROR = "Erreur dans la config Twitter, il faut 2 clés API! Veuillez vérifier votre saisie!"
 						ErrorConfig(ERROR)
+					finally:
+						ReponseTwitter = rq.get("https://api.twitter.com/1.1/users/show.json?screen_name=" + conf["TWITTER"]["UserTW"], headers={'Authorization': "Bearer " + BearerAUTH})
+						DataTwitter = json.loads(ReponseTwitter.text)
+						if 49 <= int(DataTwitter["errors"][0]["code"]) <= 599:
+							ERROR = "Erreur dans la config Twitter, veuillez vérifier votre saisie!"
+							ErrorConfig(ERROR)
 				except KeyError:
 					Check += 1
 			else:
@@ -334,6 +339,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 		
 		def Arret(): #Fonction d'arrêt
 			BoutonArreter.configure(state=DISABLED)
+			Texte.set("En cours d'arrêt")
 
 			global STOP
 			STOP = True
