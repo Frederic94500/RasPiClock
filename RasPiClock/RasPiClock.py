@@ -100,6 +100,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 				if 400 <= int(DataMeteo["cod"]) <= 599: 
 						ERROR = "Erreur dans la config Météo, veuillez vérifier votre saisie!"
 						ErrorConfig(ERROR)
+						return
 				else:
 					Check += 1
 			else:
@@ -112,6 +113,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 					if DataCrypto["Response"] == "Error":
 						ERROR = "Erreur dans la config Crypto, veuillez vérifier votre saisie!"
 						ErrorConfig(ERROR)
+						return
 				except KeyError:
 					Check += 1
 			else:
@@ -124,6 +126,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 					if 2 <= int(DataLast["error"]) <= 29:
 						ERROR = "Erreur dans la config LastFM, veuillez vérifier votre saisie!"
 						ErrorConfig(ERROR)
+						return
 				except KeyError:
 					Check += 1
 			else:
@@ -137,6 +140,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 				except KeyError:
 					ERROR = "Erreur dans la config Twitter, il faut 2 clés API! Veuillez vérifier votre saisie!"
 					ErrorConfig(ERROR)
+					return
 				finally:
 					try:
 						ReponseTwitter = rq.get("https://api.twitter.com/1.1/users/show.json?screen_name=" + conf["TWITTER"]["UserTW"], headers={'Authorization': "Bearer " + BearerAUTH})
@@ -144,6 +148,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 						if 49 <= int(DataTwitter["errors"][0]["code"]) <= 599:
 							ERROR = "Erreur dans la config Twitter, veuillez vérifier votre saisie!"
 							ErrorConfig(ERROR)
+							return
 					except KeyError:
 						Check += 1
 			else:
