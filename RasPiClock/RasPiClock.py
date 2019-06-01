@@ -16,8 +16,7 @@ conf = configparser.ConfigParser()
 conf.read("config.cfg")
 
 if os.path.exists('/etc/default/epd-fuse'):
-	from papirus import Papirus, PapirusTextPos
-	Ecran = Papirus()
+	from papirus import PapirusTextPos
 	TextPAPIRUS = PapirusTextPos(False)
 	TextPAPIRUS.Clear()
 
@@ -89,7 +88,6 @@ if os.path.exists('/etc/default/epd-fuse'):
 			Adaptation()
 
 	def APICheck(): #Fonction de test de chaque paramètre (sauf Twitch)
-		global BearerAUTH
 		Check = 0
 
 		#Test des APIs
