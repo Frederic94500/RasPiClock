@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 #RasPiClock - Frédéric94500, EliottCheypeplus, ParsaEtz
 
+#Initialisation des library
 import time, json, sys, os, socket, configparser, hashlib, webbrowser, threading
 import requests as rq
 from tkinter import *
@@ -8,36 +9,38 @@ from tkinter.messagebox import *
 from tkinter import ttk
 from PIL import Image, ImageTk
 
-Units = "°K"
-STOP = False
-BearerAUTH = ""
+#Initialisation des variables
+Units = "°K" #Unité par défaut de la météo
+STOP = False #Utilisé pour arrêter la boucle While dans Main
+BearerAUTH = "" #Utilisé par Twitter pour se connecter à l'API
 
+#Initialisation du fichier de configuration
 conf = configparser.ConfigParser()
 conf.read("config.cfg")
 
-if os.path.exists('/etc/default/epd-fuse'):
-	from papirus import Papirus, PapirusTextPos
+if os.path.exists('/etc/default/epd-fuse'): #Vérification du fichier "epd-fuse" s'il existe, si oui
+	from papirus import Papirus, PapirusTextPos #Init. le library papirus
 	Ecran = Papirus()
-	TextPAPIRUS = PapirusTextPos(False)
-	TextPAPIRUS.Clear()
+	TextPAPIRUS = PapirusTextPos(False) #Init. du variable papirus
+	TextPAPIRUS.Clear() #Nettoyage de l'écran
 
 	def Main(): #Fonction Coeur
 		try:
-			if conf["TWITTER"]["TwitterAPI"] != "" and conf["TWITTER"]["twitterapisecret"] != "":
+			if conf["TWITTER"]["TwitterAPI"] != "" and conf["TWITTER"]["twitterapisecret"] != "": #Réception de la clé Bearer avec 2 clés API sur Twitter
 				global BearerAUTH
 				BearerRAW = os.popen("curl -u '"+ conf["TWITTER"]["TwitterAPI"] + ":" + conf["TWITTER"]["TwitterAPISecret"] + "' --data 'grant_type=client_credentials' 'https://api.twitter.com/oauth2/token'").read()
 				BearerJSON = json.loads(BearerRAW)
 				BearerAUTH = BearerJSON["access_token"]
-			while True:
-				global STOP
-				if STOP: #GUI ONLY
+			while True: #Boucle infinie
+				global STOP #On prend la variable globale STOP pour voir s'il faut stopper la boucle
+				if STOP: #GUI ONLY, si STOP = True
 					BoutonAfficher.configure(state=NORMAL)
 					BoutonArreter.configure(state=DISABLED)
 					Texte.set("Veuillez saisir vos informations")
 					os.system("papirus-clear")
-					break;
-				else:
-					if conf["CRYPTO"]["CryptoAPI"] != "":
+					break; #Casser la boucle
+				else: #Sinon, on continue
+					if conf["CRYPTO"]["CryptoAPI"] != "": #S'il y a une clé API
 						Crypto()
 					if conf["WEATHER"]["MeteoAPI"] != "":
 						Meteo()
@@ -56,12 +59,12 @@ if os.path.exists('/etc/default/epd-fuse'):
 				time.sleep(1)
 			TextPAPIRUS.Clear()
 			Main()
-		except KeyboardInterrupt: #BASH ONLY
+		except KeyboardInterrupt: #BASH ONLY, quand on fait CTRL + C
 			print("Vous avez arrêté le processus, nettoyage de l'écran")
 			os.system("papirus-clear")
 			sys.exit()
 
-	def HashSave():
+	def HashSave(): #Sauvegarde de l'empreinte numérique du fichier config.cfg dans le fichier hash.txt
 		ConfFile = open("config.cfg","rb")
 		bytes = ConfFile.read()
 		hashconf = hashlib.sha256(bytes).hexdigest()
@@ -73,7 +76,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 
 		Adaptation()
 
-	def HashVerify():
+	def HashVerify(): #Vérification du hash s'il y a eu des changements dans le fichier config.cfg en comparant avec le hash présent dans hash.txt
 		ConfFile = open('config.cfg', "rb")
 		bytes = ConfFile.read()
 		HashNew = hashlib.sha256(bytes).hexdigest()
@@ -83,12 +86,12 @@ if os.path.exists('/etc/default/epd-fuse'):
 		HashOld = HashFile.read()
 		HashFile.close()
 
-		if HashOld != HashNew:
+		if HashOld != HashNew: #Si oui, passage à la vérification des paramètres API
 			APICheck()
-		if HashOld == HashNew:
+		if HashOld == HashNew: #Sinon, passage à la fonction Adaptation
 			Adaptation()
 
-	def APICheck(): #Fonction de test de chaque paramètre (sauf Twitch)
+	def APICheck(): #Fonction de test de chaque paramètre (sauf Twitch car n'a pas de liste d'erreur)
 		global BearerAUTH
 		Check = 0
 
@@ -168,7 +171,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 			if Check == 4:
 				HashSave()
 
-	def ErrorConfig(ERROR):
+	def ErrorConfig(ERROR): #Quand il y a une erreur dans APICheck
 		try:
 			if sys.argv[1] == "-bash" or sys.argv[1] == "-b": #BASH ONLY
 					print(ERROR)
@@ -179,7 +182,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 			BoutonAfficher.configure(state=NORMAL)
 			BoutonArreter.configure(state=DISABLED)
 
-	def Adaptation():
+	def Adaptation(): #Fonction d'adaptation de l'unité utilisé pour la météo
 		global Units
 
 		if conf["WEATHER"]["Units"] == "imperial":
@@ -189,29 +192,33 @@ if os.path.exists('/etc/default/epd-fuse'):
 		else:
 			Units = "°K"
 
-		Main()
+		Main() #Basculement vers Main
 
 	def Crypto(): #Fonction Crypto (CryproCompare)
-		TextPAPIRUS.AddText("Crypto:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
+		TextPAPIRUS.AddText("Crypto:", 10, 10, size = 20, fontPath="Ubuntu.ttf") #Ajout de texte dans l'écran
 
+		#Réception des données par l'API
 		ReponseCrypto = rq.get("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + conf["CRYPTO"]["Coin1"] + "," + conf["CRYPTO"]["Coin2"] + "&tsyms=" + conf["CRYPTO"]["Currency"] + "&api_key=" + conf["CRYPTO"]["CryptoAPI"])
 		DataCrypto = json.loads(ReponseCrypto.text)
 
+		#Réduction du nombre de chiffres après la virgule
 		PCTC1 = list(str(DataCrypto["RAW"][conf["CRYPTO"]["Coin1"]][conf["CRYPTO"]["Currency"]]["CHANGEPCT24HOUR"]))
 		del PCTC1[-14:-1]
 		PCTC2 = list(str(DataCrypto["RAW"][conf["CRYPTO"]["Coin2"]][conf["CRYPTO"]["Currency"]]["CHANGEPCT24HOUR"]))
 		del PCTC2[-14:-1]
 
+		#Ajout des prix dans l'écran
 		TextPAPIRUS.AddText(conf["CRYPTO"]["Coin1"] + ": " + conf["CRYPTO"]["Currency"] + " " + str(DataCrypto["RAW"][conf["CRYPTO"]["Coin1"]][conf["CRYPTO"]["Currency"]]["PRICE"]), 10, 44, size = 25, fontPath="Ubuntu.ttf")
 		TextPAPIRUS.AddText(conf["CRYPTO"]["Coin2"] + ": " + conf["CRYPTO"]["Currency"] + " " + str(DataCrypto["RAW"][conf["CRYPTO"]["Coin2"]][conf["CRYPTO"]["Currency"]]["PRICE"]), 10, 114, size = 25, fontPath="Ubuntu.ttf")
 		TextPAPIRUS.AddText("".join(PCTC1) + "%", 10, 74, size = 15, fontPath="Ubuntu.ttf")
 		TextPAPIRUS.AddText("".join(PCTC2) + "%", 10, 144, size = 15, fontPath="Ubuntu.ttf")
 
+		#Ajout du temps dans l'écran
 		TextPAPIRUS.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, size = 20, fontPath="Ubuntu.ttf")
 
-		TextPAPIRUS.WriteAll(True)
-		time.sleep(10)
-		TextPAPIRUS.Clear()
+		TextPAPIRUS.WriteAll(True) #Inscription des données dans l'écran
+		time.sleep(10) #Temps d'attente avant la prochaine fonction
+		TextPAPIRUS.Clear() #Nettoyage de l'écran pour passer à la prochaine fonction
 
 	def Meteo(): #Fonction Météo (OpenWeatherMap)
 		global Units
@@ -235,14 +242,14 @@ if os.path.exists('/etc/default/epd-fuse'):
 
 		TextPAPIRUS.AddText("Last.fm:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
 		try:
-			if DataLast["recenttracks"]["track"][0]["@attr"]["nowplaying"] == "true":
+			if DataLast["recenttracks"]["track"][0]["@attr"]["nowplaying"] == "true": #Si la personne écoute de la musique actuellement
 				TextPAPIRUS.AddText("Actuellement:", 10, 40, size = 25, fontPath="Ubuntu.ttf")
 				TextPAPIRUS.AddText(DataLast["recenttracks"]["track"][0]["artist"]["#text"] + " - " + DataLast["recenttracks"]["track"][0]["name"], 10, 65, size = 15, fontPath="Ubuntu.ttf")
 				TextPAPIRUS.AddText(DataLast["recenttracks"]["track"][0]["album"]["#text"], 10, 95, size = 10, fontPath="Ubuntu.ttf")
 
 				TextPAPIRUS.AddText("Précédent:", 10, 115, size = 25, fontPath="Ubuntu.ttf")
 				TextPAPIRUS.AddText(DataLast["recenttracks"]["track"][1]["artist"]["#text"] + " - " + DataLast["recenttracks"]["track"][1]["name"], 10, 140, size = 15, fontPath="Ubuntu.ttf")
-		except:
+		except: #Sinon, affiche la dernière musique écoutée
 			TextPAPIRUS.AddText("Précédent:", 10, 40, size = 25, fontPath="Ubuntu.ttf")
 			TextPAPIRUS.AddText(DataLast["recenttracks"]["track"][0]["artist"]["#text"] + " - " + DataLast["recenttracks"]["track"][0]["name"], 10, 65, size = 15, fontPath="Ubuntu.ttf")
 			TextPAPIRUS.AddText(DataLast["recenttracks"]["track"][0]["album"]["#text"], 10, 95, size = 10, fontPath="Ubuntu.ttf")
@@ -303,12 +310,12 @@ if os.path.exists('/etc/default/epd-fuse'):
 		time.sleep(10)
 		TextPAPIRUS.Clear()
 
-	try:
-		if sys.argv[1] == "-bash" or sys.argv[1] == "-b": #BASH ONLY
+	try: #Démarrage de l'application
+		if sys.argv[1] == "-bash" or sys.argv[1] == "-b": #BASH ONLY avec les arguments -b ou -bash
 			HashVerify()
 		else: #Erreur d'argument
 			print("Erreur, veuillez écrire -b ou -bash ou rien pour éxécuter le programme!")
-	except IndexError: #Par défaut
+	except IndexError: #Par défaut - GUI
 		global ZoneTexte
 		TABList = ["tabCrypto", "tabMeteo", "tabMusic", "tabTwitch", "tabTwitter"]
 		TABText = ["Crypto", "Météo", "Musique", "Twitch", "Twitter"]
@@ -362,7 +369,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 		def WebLicence(event):
 			webbrowser.open_new_tab('https://github.com/Frederic94500/RasPiClock-ISN/blob/master/LICENSE')
 		
-		def APropos(): #Fonction à propos (créateur + licence)(ouvre une nouvelle fenêtre)
+		def APropos(): #Fonction à propos (créateurs + licence)(ouvre une nouvelle fenêtre)
 			About = Toplevel()
 			About.title("A propos et licence")
 
