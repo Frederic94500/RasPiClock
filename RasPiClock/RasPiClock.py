@@ -19,8 +19,7 @@ conf = configparser.ConfigParser()
 conf.read("config.cfg")
 
 if os.path.exists('/etc/default/epd-fuse'): #Vérification du fichier "epd-fuse" s'il existe, si oui
-	from papirus import Papirus, PapirusTextPos #Init. le library papirus
-	Ecran = Papirus()
+	from papirus import PapirusTextPos #Init. le library papirus
 	TextPAPIRUS = PapirusTextPos(False) #Init. du variable papirus
 	TextPAPIRUS.Clear() #Nettoyage de l'écran
 
@@ -41,7 +40,7 @@ if os.path.exists('/etc/default/epd-fuse'): #Vérification du fichier "epd-fuse"
 					break; #Casser la boucle
 				else: #Sinon, on continue
 					if conf["CRYPTO"]["CryptoAPI"] != "": #S'il y a une clé API
-						Crypto()
+						Crypto() #Utilisation de la fonction Crypto
 					if conf["WEATHER"]["MeteoAPI"] != "":
 						Meteo()
 					if conf["LASTFM"]["LastFmAPI"] != "":
@@ -92,7 +91,6 @@ if os.path.exists('/etc/default/epd-fuse'): #Vérification du fichier "epd-fuse"
 			Adaptation()
 
 	def APICheck(): #Fonction de test de chaque paramètre (sauf Twitch car n'a pas de liste d'erreur)
-		global BearerAUTH
 		Check = 0
 
 		#Test des APIs
@@ -201,7 +199,7 @@ if os.path.exists('/etc/default/epd-fuse'): #Vérification du fichier "epd-fuse"
 		ReponseCrypto = rq.get("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + conf["CRYPTO"]["Coin1"] + "," + conf["CRYPTO"]["Coin2"] + "&tsyms=" + conf["CRYPTO"]["Currency"] + "&api_key=" + conf["CRYPTO"]["CryptoAPI"])
 		DataCrypto = json.loads(ReponseCrypto.text)
 
-		#Réduction du nombre de chiffres après la virgule
+		#Réduction du nombre de chiffres après la virgule pour le poucentage (PCTCx = PourCenTageCoin)
 		PCTC1 = list(str(DataCrypto["RAW"][conf["CRYPTO"]["Coin1"]][conf["CRYPTO"]["Currency"]]["CHANGEPCT24HOUR"]))
 		del PCTC1[-14:-1]
 		PCTC2 = list(str(DataCrypto["RAW"][conf["CRYPTO"]["Coin2"]][conf["CRYPTO"]["Currency"]]["CHANGEPCT24HOUR"]))
