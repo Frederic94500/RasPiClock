@@ -1,4 +1,4 @@
-def Crypto(): #Fonction Crypto (CryproCompare)
+def Crypto(conf, TextPAPIRUS): #Fonction Crypto (CryproCompare)
 	TextPAPIRUS.AddText("Crypto:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
 
 	ReponseCrypto = rq.get("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + conf["CRYPTO"]["Coin1"] + "," + conf["CRYPTO"]["Coin2"] + "&tsyms=" + conf["CRYPTO"]["Currency"] + "&api_key=" + conf["CRYPTO"]["CryptoAPI"])
@@ -20,7 +20,7 @@ def Crypto(): #Fonction Crypto (CryproCompare)
 	time.sleep(10)
 	TextPAPIRUS.Clear()
 
-def Meteo(): #Fonction Météo (OpenWeatherMap)
+def Meteo(conf, TextPAPIRUS): #Fonction Météo (OpenWeatherMap)
 	global Units
 	ReponseMeteo = rq.get("https://api.openweathermap.org/data/2.5/weather?q=" + conf["WEATHER"]["City"] + "&units=" + conf["WEATHER"]["Units"] + "&lang=" + conf["WEATHER"]["Lang"] + "&appid=" + conf["WEATHER"]["MeteoAPI"])
 	DataMeteo = json.loads(ReponseMeteo.text)
@@ -36,7 +36,7 @@ def Meteo(): #Fonction Météo (OpenWeatherMap)
 	time.sleep(10)
 	TextPAPIRUS.Clear()
 
-def Musique(): #Fonction Musique (Last.fm)
+def Musique(conf, TextPAPIRUS): #Fonction Musique (Last.fm)
 	ReponseLastFM = rq.get("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=" + conf["LASTFM"]["UserFM"] + "&limit=1&format=json&api_key=" + conf["LASTFM"]["LastFmAPI"])
 	DataLast = json.loads(ReponseLastFM.text)
 
@@ -59,7 +59,7 @@ def Musique(): #Fonction Musique (Last.fm)
 		time.sleep(10)
 		TextPAPIRUS.Clear()
 
-def Twitch(): #Fonction Twitch
+def Twitch(conf, TextPAPIRUS): #Fonction Twitch
 	ReponseTwitchSt1 = rq.get("https://api.twitch.tv/helix/streams?user_login=" + conf["TWITCH"]["TwitchSt1"], headers={"Client-ID": conf["TWITCH"]["TwitchAPI"]})
 	ReponseTwitchSt2 = rq.get("https://api.twitch.tv/helix/streams?user_login=" + conf["TWITCH"]["TwitchSt2"], headers={"Client-ID": conf["TWITCH"]["TwitchAPI"]})
 	DataSt1 = json.loads(ReponseTwitchSt1.text)
@@ -92,7 +92,7 @@ def Twitch(): #Fonction Twitch
 		time.sleep(10)
 		TextPAPIRUS.Clear()
 
-def Twitter(): #Fonction Twitter
+def Twitter(conf, TextPAPIRUS): #Fonction Twitter
 	global BearerAUTH
 	ReponseTwitter = rq.get("https://api.twitter.com/1.1/users/show.json?screen_name=" + conf["TWITTER"]["UserTW"], headers={'Authorization': "Bearer " + BearerAUTH})
 	DataTwitter = json.loads(ReponseTwitter.text)
