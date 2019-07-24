@@ -41,13 +41,13 @@ if os.path.exists('/etc/default/epd-fuse'):
 					if conf["CRYPTO"]["CryptoAPI"] != "":
 						PS.Crypto(conf, TextPAPIRUS)
 					if conf["WEATHER"]["MeteoAPI"] != "":
-						PS.Meteo(conf, TextPAPIRUS)
+						PS.Meteo(conf, TextPAPIRUS, Units)
 					if conf["LASTFM"]["LastFmAPI"] != "":
 						PS.Musique(conf, TextPAPIRUS)
 					if conf["TWITCH"]["TwitchAPI"] != "":
 						PS.Twitch(conf, TextPAPIRUS)
 					if conf["TWITTER"]["TwitterAPI"] != "" and conf["TWITTER"]["twitterapisecret"] != "":
-						PS.Twitter(conf, TextPAPIRUS)
+						PS.Twitter(conf, TextPAPIRUS, BearerAUTH)
 		except (ValueError, socket.error, socket.gaierror, socket.herror, socket.timeout): #Situation d'erreur de connexion
 			TextPAPIRUS.Clear()
 			TextPAPIRUS.AddText("ERREUR de connexion, nouvelle tentative de connexion dans: T", 10, 48, size = 20, fontPath="Ubuntu.ttf", Id="TimerErr")

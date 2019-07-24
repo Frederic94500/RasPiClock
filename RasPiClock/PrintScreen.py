@@ -1,3 +1,6 @@
+import time, json, sys, os, socket, configparser, hashlib, webbrowser, threading
+import requests as rq
+
 def Crypto(conf, TextPAPIRUS): #Fonction Crypto (CryproCompare)
 	TextPAPIRUS.AddText("Crypto:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
 
@@ -20,8 +23,7 @@ def Crypto(conf, TextPAPIRUS): #Fonction Crypto (CryproCompare)
 	time.sleep(10)
 	TextPAPIRUS.Clear()
 
-def Meteo(conf, TextPAPIRUS): #Fonction Météo (OpenWeatherMap)
-	global Units
+def Meteo(conf, TextPAPIRUS, Units): #Fonction Météo (OpenWeatherMap)
 	ReponseMeteo = rq.get("https://api.openweathermap.org/data/2.5/weather?q=" + conf["WEATHER"]["City"] + "&units=" + conf["WEATHER"]["Units"] + "&lang=" + conf["WEATHER"]["Lang"] + "&appid=" + conf["WEATHER"]["MeteoAPI"])
 	DataMeteo = json.loads(ReponseMeteo.text)
 
@@ -92,8 +94,7 @@ def Twitch(conf, TextPAPIRUS): #Fonction Twitch
 		time.sleep(10)
 		TextPAPIRUS.Clear()
 
-def Twitter(conf, TextPAPIRUS): #Fonction Twitter
-	global BearerAUTH
+def Twitter(conf, TextPAPIRUS, BearerAUTH): #Fonction Twitter
 	ReponseTwitter = rq.get("https://api.twitter.com/1.1/users/show.json?screen_name=" + conf["TWITTER"]["UserTW"], headers={'Authorization': "Bearer " + BearerAUTH})
 	DataTwitter = json.loads(ReponseTwitter.text)
 
