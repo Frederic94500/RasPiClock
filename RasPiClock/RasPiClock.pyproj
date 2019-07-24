@@ -21,6 +21,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="PrintScreen.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="RasPiClock.py" />
     <Compile Include="test.py" />
   </ItemGroup>

@@ -31,3 +31,6 @@ Y - Gérer TOUT les exceptions
 	Y - Vérifier si les bibliothèques sont installées
 	Y - Les problèmes de connexions
 	Y - Erreur dans la config
+N - RATP
+N - Sleep
+N - Whales
