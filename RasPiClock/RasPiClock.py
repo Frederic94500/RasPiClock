@@ -1,14 +1,14 @@
 # -*- encoding: utf-8 -*-
 #RasPiClock - Frédéric94500, EliottCheypeplus, ParsaEtz
 
-import time, json, sys, os, socket, configparser, hashlib, webbrowser, threading
-import requests as rq
+import time, json, sys, os, requests, socket, configparser, hashlib, webbrowser, threading
 from tkinter import *
 from tkinter.messagebox import *
 from tkinter import ttk
 from PIL import Image, ImageTk
 
 import PrintScreen as PS
+import Services as SV
 
 Units = "°K"
 STOP = False
@@ -95,7 +95,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 		#Test des APIs
 		try:
 			if conf["WEATHER"]["MeteoAPI"] != "":
-				ReponseMeteo = rq.get("https://api.openweathermap.org/data/2.5/weather?q=" + conf["WEATHER"]["City"] + "&units=" + conf["WEATHER"]["Units"] + "&lang=" + conf["WEATHER"]["Lang"] + "&appid=" + conf["WEATHER"]["MeteoAPI"])
+				ReponseMeteo = requests.get("https://api.openweathermap.org/data/2.5/weather?q=" + conf["WEATHER"]["City"] + "&units=" + conf["WEATHER"]["Units"] + "&lang=" + conf["WEATHER"]["Lang"] + "&appid=" + conf["WEATHER"]["MeteoAPI"])
 				DataMeteo = json.loads(ReponseMeteo.text)
 				if 400 <= int(DataMeteo["cod"]) <= 599: 
 						ERROR = "Erreur dans la config Météo, veuillez vérifier votre saisie!"
@@ -107,7 +107,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 				Check += 1
 
 			if conf["CRYPTO"]["CryptoAPI"] != "":
-				ReponseCrypto = rq.get("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + conf["CRYPTO"]["Coin1"] + "," + conf["CRYPTO"]["Coin2"] + "&tsyms=" + conf["CRYPTO"]["Currency"] + "&api_key=" + conf["CRYPTO"]["CryptoAPI"])
+				ReponseCrypto = requests.get("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + conf["CRYPTO"]["Coin1"] + "," + conf["CRYPTO"]["Coin2"] + "&tsyms=" + conf["CRYPTO"]["Currency"] + "&api_key=" + conf["CRYPTO"]["CryptoAPI"])
 				DataCrypto = json.loads(ReponseCrypto.text)
 				try:
 					if DataCrypto["Response"] == "Error":
@@ -120,7 +120,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 				Check += 1
 
 			if conf["LASTFM"]["LastFmAPI"] != "":
-				ReponseLastFM = rq.get("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=" + conf["LASTFM"]["UserFM"] + "&limit=1&format=json&api_key=" + conf["LASTFM"]["LastFmAPI"])
+				ReponseLastFM = requests.get("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=" + conf["LASTFM"]["UserFM"] + "&limit=1&format=json&api_key=" + conf["LASTFM"]["LastFmAPI"])
 				DataLast = json.loads(ReponseLastFM.text)
 				try:
 					if 2 <= int(DataLast["error"]) <= 29:
@@ -143,7 +143,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 					return
 				finally:
 					try:
-						ReponseTwitter = rq.get("https://api.twitter.com/1.1/users/show.json?screen_name=" + conf["TWITTER"]["UserTW"], headers={'Authorization': "Bearer " + BearerAUTH})
+						ReponseTwitter = requests.get("https://api.twitter.com/1.1/users/show.json?screen_name=" + conf["TWITTER"]["UserTW"], headers={'Authorization': "Bearer " + BearerAUTH})
 						DataTwitter = json.loads(ReponseTwitter.text)
 						if 49 <= int(DataTwitter["errors"][0]["code"]) <= 599:
 							ERROR = "Erreur dans la config Twitter, veuillez vérifier votre saisie!"

@@ -25,6 +25,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="RasPiClock.py" />
+    <Compile Include="Services.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="test.py" />
   </ItemGroup>
   <ItemGroup>
