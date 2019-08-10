@@ -99,7 +99,10 @@ def Twitter(conf, TextPAPIRUS, BearerAUTH): #Fonction Twitter
 	TextPAPIRUS.AddText("Dernier tweet:", 10, 85, size = 20, fontPath="Ubuntu.ttf")
 	TextPAPIRUS.AddText(SV.DataTwitter["status"]["text"], 10, 105, size = 15, fontPath="Ubuntu.ttf")
 
-	
+	TextPAPIRUS.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, size = 20, fontPath="Ubuntu.ttf")
+	TextPAPIRUS.WriteAll(True)
+	time.sleep(10)
+	TextPAPIRUS.Clear()
 
 def RATP(conf, TextPAPIRUS):
 	SV.SVRATP(conf)

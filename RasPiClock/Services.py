@@ -31,8 +31,8 @@ def SVTwitter(conf, BearerAUTH):
 def SVRATP(conf):
 	global OutputA
 	global OutputB
-	ReponseRATPA = requests.get("https://api-ratp.pierre-grimaud.fr/v4/schedules/" + conf[RATP][typetrans] + "/" + conf[RATP][line] + "/" + conf[RATP][station] + "/A")
-	ReponseRATPB = requests.get("https://api-ratp.pierre-grimaud.fr/v4/schedules/" + conf[RATP][typetrans] + "/" + conf[RATP][line] + "/" + conf[RATP][station] + "/R")
+	ReponseRATPA = requests.get("https://api-ratp.pierre-grimaud.fr/v4/schedules/" + conf["RATP"]["typetransA"] + "/" + conf["RATP"]["lineA"] + "/" + conf["RATP"]["stationA"] + "/A")
+	ReponseRATPB = requests.get("https://api-ratp.pierre-grimaud.fr/v4/schedules/" + conf["RATP"]["typetransB"] + "/" + conf["RATP"]["lineB"] + "/" + conf["RATP"]["stationB"] + "/R")
 	OutputA = json.loads(ReponseRATPA.text)
 	OutputB = json.loads(ReponseRATPB.text)
 

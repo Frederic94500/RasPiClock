@@ -162,8 +162,8 @@ if os.path.exists('/etc/default/epd-fuse'):
 				except:
 					if conf["RATP"]["typetransB"] != "" and conf["RATP"]["lineB"] != "" and conf["RATP"]["stationB"] != "":
 						try:
-							if SV.OutputA["result"]["code"] == 404:
-								ERROR = "Erreur dans la config RATP A, veuillez vérifier votre saisie!"
+							if SV.OutputB["result"]["code"] == 404:
+								ERROR = "Erreur dans la config RATP B, veuillez vérifier votre saisie!"
 								ErrorConfig(ERROR)
 								return
 						except:
