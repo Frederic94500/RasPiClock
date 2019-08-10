@@ -48,6 +48,8 @@ if os.path.exists('/etc/default/epd-fuse'):
 						PS.Twitch(conf, TextPAPIRUS)
 					if conf["TWITTER"]["TwitterAPI"] != "" and conf["TWITTER"]["twitterapisecret"] != "":
 						PS.Twitter(conf, TextPAPIRUS, BearerAUTH)
+					if conf["RATP"]["typetransA"] != "" and conf["RATP"]["lineA"] != "" and conf["RATP"]["stationA"] != "":
+						PS.RATP(conf, TextPAPIRUS)
 		except (ValueError, socket.error, socket.gaierror, socket.herror, socket.timeout): #Situation d'erreur de connexion
 			TextPAPIRUS.Clear()
 			TextPAPIRUS.AddText("ERREUR de connexion, nouvelle tentative de connexion dans: T", 10, 48, size = 20, fontPath="Ubuntu.ttf", Id="TimerErr")
@@ -146,6 +148,27 @@ if os.path.exists('/etc/default/epd-fuse'):
 							ErrorConfig(ERROR)
 							return
 					except KeyError:
+						Check += 1
+			else:
+				Check += 1
+
+			if conf["RATP"]["typetransA"] != "" and conf["RATP"]["lineA"] != "" and conf["RATP"]["stationA"] != "":
+				try:
+					SV.SVRATP(conf)
+					if SV.OutputA["result"]["code"] == 404:
+						ERROR = "Erreur dans la config RATP A, veuillez vérifier votre saisie!"
+						ErrorConfig(ERROR)
+						return
+				except:
+					if conf["RATP"]["typetransB"] != "" and conf["RATP"]["lineB"] != "" and conf["RATP"]["stationB"] != "":
+						try:
+							if SV.OutputA["result"]["code"] == 404:
+								ERROR = "Erreur dans la config RATP A, veuillez vérifier votre saisie!"
+								ErrorConfig(ERROR)
+								return
+						except:
+							Check += 1
+					else:
 						Check += 1
 			else:
 				Check += 1
