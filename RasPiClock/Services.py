@@ -32,7 +32,7 @@ def SVRATP(conf):
 	global OutputA
 	global OutputB
 	ReponseRATPA = requests.get("https://api-ratp.pierre-grimaud.fr/v4/schedules/" + conf[RATP][typetrans] + "/" + conf[RATP][line] + "/" + conf[RATP][station] + "/A")
-	ReponseRATPB = requests.get("https://api-ratp.pierre-grimaud.fr/v4/schedules/" + conf[RATP][typetrans] + "/" + conf[RATP][line] + "/" + conf[RATP][station] + "/B")
+	ReponseRATPB = requests.get("https://api-ratp.pierre-grimaud.fr/v4/schedules/" + conf[RATP][typetrans] + "/" + conf[RATP][line] + "/" + conf[RATP][station] + "/R")
 	OutputA = json.loads(ReponseRATPA.text)
 	OutputB = json.loads(ReponseRATPB.text)
 

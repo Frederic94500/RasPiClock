@@ -184,7 +184,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 			APICheck()
 
 		finally: #Fin de la vérification des API
-			if Check == 4:
+			if Check == 5:
 				HashSave()
 
 	def ErrorConfig(ERROR):

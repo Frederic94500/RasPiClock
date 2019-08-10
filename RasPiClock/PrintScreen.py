@@ -106,14 +106,14 @@ def RATP(conf, TextPAPIRUS):
 
 	TextPAPIRUS.AddText("RATP:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
 
-	TextPAPIRUS.AddText("Station: " + conf[RATP][stationA] + " - " + conf[RATP][lineA], 10, 40, size = 15, fontPath="Ubuntu.ttf")
-	TextPAPIRUS.AddText("Prochain: " + SV.OutputA[result][schedules][0][""], 10, 40, size = 15, fontPath="Ubuntu.ttf")
-	TextPAPIRUS.AddText("Direction: " + SV.OutputA[result][schedules][0][""], 10, 40, size = 15, fontPath="Ubuntu.ttf")
+	TextPAPIRUS.AddText("Station: " + conf["RATP"]["stationA"] + " - " + conf["RATP"]["lineA"], 10, 40, size = 15, fontPath="Ubuntu.ttf")
+	TextPAPIRUS.AddText("Prochain: " + SV.OutputA["result"]["schedules"][0]["message"], 10, 40, size = 15, fontPath="Ubuntu.ttf")
+	TextPAPIRUS.AddText("Direction: " + SV.OutputA["result"]["schedules"][0]["destination"], 10, 40, size = 15, fontPath="Ubuntu.ttf")
 
-	if conf[RATP][typetransB] != "" and conf[RATP][lineB] != "" and conf[RATP][stationB] != "":
-		TextPAPIRUS.AddText("Station: " + conf[RATP][stationB] + " - " + conf[RATP][lineB], 10, 40, size = 15, fontPath="Ubuntu.ttf")
-		TextPAPIRUS.AddText("Prochain: " + SV.OutputB[result][schedules][0][""], 10, 40, size = 15, fontPath="Ubuntu.ttf")
-		TextPAPIRUS.AddText("Direction: " + SV.OutputB[result][schedules][0][""], 10, 40, size = 15, fontPath="Ubuntu.ttf")
+	if conf["RATP"]["typetransB"] != "" and conf["RATP"]["lineB"] != "" and conf["RATP"]["stationB"] != "":
+		TextPAPIRUS.AddText("Station: " + conf["RATP"]["stationB"] + " - " + conf["RATP"]["lineB"], 10, 40, size = 15, fontPath="Ubuntu.ttf")
+		TextPAPIRUS.AddText("Prochain: " + SV.OutputB["result"]["schedules"][0]["message"], 10, 40, size = 15, fontPath="Ubuntu.ttf")
+		TextPAPIRUS.AddText("Direction: " + SV.OutputB["result"]["schedules"][0]["destination"], 10, 40, size = 15, fontPath="Ubuntu.ttf")
 
 	TextPAPIRUS.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, size = 20, fontPath="Ubuntu.ttf")
 	TextPAPIRUS.WriteAll(True)
