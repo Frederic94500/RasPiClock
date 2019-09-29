@@ -45,12 +45,12 @@ if os.path.exists('/etc/default/epd-fuse'):
 						if i == 60 or i == 0:
 							TextPAPIRUS.Clear()
 							TextPAPIRUS.AddText("Je dors", 10, 10, size = 20, fontPath="Ubuntu.ttf")
-							TextPAPIRUS.AddText("Retour à " + conf[SLEEP][HEnd] + "H", 40, 10, size = 20, fontPath="Ubuntu.ttf")
+							TextPAPIRUS.AddText("Retour à " + conf["SLEEP"]["HEnd"] + "H", 10, 40, size = 20, fontPath="Ubuntu.ttf")
 							TextPAPIRUS.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, Id="Time", size = 20, fontPath="Ubuntu.ttf")
 							TextPAPIRUS.WriteAll(True)
 							i = 0
 						time.sleep(120)
-						TextPAPIRUS.UpdateText(time.strftime("%H:%M", time.localtime()), 200, 10, Id="Time", size = 20, fontPath="Ubuntu.ttf")
+						TextPAPIRUS.UpdateText("Time", time.strftime("%H:%M", time.localtime()), fontPath="Ubuntu.ttf")
 						TextPAPIRUS.WriteAll(True)
 						i += 1
 					TextPAPIRUS.Clear()
