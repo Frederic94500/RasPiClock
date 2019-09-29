@@ -1,3 +1,5 @@
+# -*- encoding: utf-8 -*-
+
 import time, json, configparser, requests
 import Services as SV
 
@@ -114,9 +116,9 @@ def RATP(conf, TextPAPIRUS):
 	TextPAPIRUS.AddText("Direction: " + SV.OutputA["result"]["schedules"][0]["destination"], 10, 70, size = 15, fontPath="Ubuntu.ttf")
 
 	if conf["RATP"]["typetransB"] != "" and conf["RATP"]["lineB"] != "" and conf["RATP"]["stationB"] != "":
-		TextPAPIRUS.AddText("Station: " + conf["RATP"]["stationB"] + " - " + conf["RATP"]["lineB"], 10, 100, size = 15, fontPath="Ubuntu.ttf")
-		TextPAPIRUS.AddText("Prochain: " + SV.OutputB["result"]["schedules"][0]["message"], 10, 115, size = 15, fontPath="Ubuntu.ttf")
-		TextPAPIRUS.AddText("Direction: " + SV.OutputB["result"]["schedules"][0]["destination"], 10, 130, size = 15, fontPath="Ubuntu.ttf")
+		TextPAPIRUS.AddText("Station: " + conf["RATP"]["stationB"] + " - " + conf["RATP"]["lineB"], 10, 115, size = 15, fontPath="Ubuntu.ttf")
+		TextPAPIRUS.AddText("Prochain: " + SV.OutputB["result"]["schedules"][0]["message"], 10, 130, size = 15, fontPath="Ubuntu.ttf")
+		TextPAPIRUS.AddText("Direction: " + SV.OutputB["result"]["schedules"][0]["destination"], 10, 145, size = 15, fontPath="Ubuntu.ttf")
 
 	TextPAPIRUS.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, size = 20, fontPath="Ubuntu.ttf")
 	TextPAPIRUS.WriteAll(True)

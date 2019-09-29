@@ -7,7 +7,7 @@ Y - Le faire modulaire
 	Y - Désactiver la fonction s'il n'y a pas d'APIKEY
 	X - Transformer en MAJUSCULE si l'entrée est en minuscule (Crypto) -> A signaler dans bulles ou README
 		--> Peut provoquer une erreur
-	X - Ajout une vigule s'il y a plusieurs crypto ou non (Crypto)
+	X - (Ajout une vigule s'il y a plusieurs crypto ou non (Crypto))
 	X - (Déplacer une valeur s'il est placé sur le Coin3 alors que dans Coin2, y a rien)
 	Y - Détecter que la personne a mis imperial pour mettre °F ou en métrique (pas défaut: kelvin)
 
@@ -31,6 +31,6 @@ Y - Gérer TOUT les exceptions
 	Y - Vérifier si les bibliothèques sont installées
 	Y - Les problèmes de connexions
 	Y - Erreur dans la config
-N - RATP
-N - Sleep
+-> - RATP (BASH only)
+-> - Sleep (BASH only)
 N - Whales

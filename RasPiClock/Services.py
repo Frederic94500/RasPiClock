@@ -1,3 +1,5 @@
+# -*- encoding: utf-8 -*-
+
 import json, configparser, requests
 
 def SVCrypto(conf):

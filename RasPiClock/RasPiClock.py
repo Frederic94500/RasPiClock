@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-#RasPiClock - Frédéric94500, EliottCheypeplus, ParsaEtz
+#RasPiClock - Frédéric94500
 
 import time, json, sys, os, requests, socket, configparser, hashlib, webbrowser, threading
 from tkinter import *
@@ -12,6 +12,7 @@ import Services as SV
 
 Units = "°K"
 STOP = False
+SLEEP = False
 BearerAUTH = ""
 
 conf = configparser.ConfigParser()
@@ -31,7 +32,30 @@ if os.path.exists('/etc/default/epd-fuse'):
 				BearerAUTH = BearerJSON["access_token"]
 			while True:
 				global STOP
-				if STOP: #GUI ONLY
+				#global SLEEP
+				#if SLEEP: #GUI ONLY
+					#je dors
+					#while SLEEP:
+						#if STOP:
+							#break;
+						#time.sleep(10)'''
+				if (time.strftime("%H", time.localtime()) >= conf["SLEEP"]["HStart"] or time.strftime("%H", time.localtime()) < conf["SLEEP"]["HEnd"]) and conf["SLEEP"]["HStart"] != "" and conf["SLEEP"]["HEnd"] != "":
+					i = 0
+					while time.strftime("%H", time.localtime()) >= conf["SLEEP"]["HStart"] or time.strftime("%H", time.localtime()) < conf["SLEEP"]["HEnd"]:
+						if i == 60 or i == 0:
+							TextPAPIRUS.Clear()
+							TextPAPIRUS.AddText("Je dors", 10, 10, size = 20, fontPath="Ubuntu.ttf")
+							TextPAPIRUS.AddText("Retour à " + conf[SLEEP][HEnd] + "H", 40, 10, size = 20, fontPath="Ubuntu.ttf")
+							TextPAPIRUS.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, Id="Time", size = 20, fontPath="Ubuntu.ttf")
+							TextPAPIRUS.WriteAll(True)
+							i = 0
+						time.sleep(120)
+						TextPAPIRUS.UpdateText(time.strftime("%H:%M", time.localtime()), 200, 10, Id="Time", size = 20, fontPath="Ubuntu.ttf")
+						TextPAPIRUS.WriteAll(True)
+						i += 1
+					TextPAPIRUS.Clear()
+					break;
+				elif STOP: #GUI ONLY
 					BoutonAfficher.configure(state=NORMAL)
 					BoutonArreter.configure(state=DISABLED)
 					Texte.set("Veuillez saisir vos informations")
