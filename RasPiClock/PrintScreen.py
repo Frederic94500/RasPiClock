@@ -125,5 +125,26 @@ def RATP(conf, TextPAPIRUS):
 	time.sleep(10)
 	TextPAPIRUS.Clear()
 
-#def All(conf, TextPAPIRUS, BearerAUTH):
+def AllInit(conf, TextPAPIRUS, BearerAUTH):
+	TextPAPIRUS.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, size = 20, fontPath="Ubuntu.ttf")
+	
+	SV.SVCrypto(conf)
+	TextTextPAPIRUS.AddText("Crypto:", 10, 10, size = 15, fontPath="Ubuntu.ttf")
+
+	PCTC1 = list(str(SV.DataCrypto["RAW"][conf["CRYPTO"]["Coin1"]][conf["CRYPTO"]["Currency"]]["CHANGEPCT24HOUR"]))
+	del PCTC1[-14:-1]
+	PCTC2 = list(str(SV.DataCrypto["RAW"][conf["CRYPTO"]["Coin2"]][conf["CRYPTO"]["Currency"]]["CHANGEPCT24HOUR"]))
+	del PCTC2[-14:-1]
+
+	TextPAPIRUS.AddText(conf["CRYPTO"]["Coin1"] + ": " + conf["CRYPTO"]["Currency"] + " " + str(SV.DataCrypto["RAW"][conf["CRYPTO"]["Coin1"]][conf["CRYPTO"]["Currency"]]["PRICE"]), 10, 25, size = 15, fontPath="Ubuntu.ttf", Id="Coin1P")
+	TextPAPIRUS.AddText(conf["CRYPTO"]["Coin2"] + ": " + conf["CRYPTO"]["Currency"] + " " + str(SV.DataCrypto["RAW"][conf["CRYPTO"]["Coin2"]][conf["CRYPTO"]["Currency"]]["PRICE"]), 100, 25, size = 15, fontPath="Ubuntu.ttf", Id="Coin2P")
+	TextPAPIRUS.AddText("".join(PCTC1) + "%", 10, 40, size = 10, fontPath="Ubuntu.ttf", Id="Coin1PCT")
+	TextPAPIRUS.AddText("".join(PCTC2) + "%", 100, 40, size = 10, fontPath="Ubuntu.ttf", Id="Coin2PCT")
+
+
+	SV.SVMeteo(conf)
+	TextPAPIRUS.AddText("Météo:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
+	TextPAPIRUS.AddText("Température: " + str(SV.DataMeteo["main"]["temp"]) + "°C", 10, 40, size = 25, fontPath="Ubuntu.ttf", Id="Deg")
+	TextPAPIRUS.AddText("Temps: " + SV.DataMeteo["weather"][0]["description"].capitalize(), 10, 85, size = 25, fontPath="Ubuntu.ttf", Id="Temps") 
+
 

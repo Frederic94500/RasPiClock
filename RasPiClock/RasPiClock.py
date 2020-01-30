@@ -39,7 +39,7 @@ if os.path.exists('/etc/default/epd-fuse'):
 						#if STOP:
 							#break;
 						#time.sleep(10)'''
-				if (time.strftime("%H", time.localtime()) >= conf["SLEEP"]["HStart"] or time.strftime("%H", time.localtime()) < conf["SLEEP"]["HEnd"]) and conf["SLEEP"]["HStart"] != "" and conf["SLEEP"]["HEnd"] != "":
+				"""if (time.strftime("%H", time.localtime()) >= conf["SLEEP"]["HStart"] or time.strftime("%H", time.localtime()) < conf["SLEEP"]["HEnd"]) and conf["SLEEP"]["HStart"] != "" and conf["SLEEP"]["HEnd"] != "":
 					i = 0
 					while time.strftime("%H", time.localtime()) >= conf["SLEEP"]["HStart"] or time.strftime("%H", time.localtime()) < conf["SLEEP"]["HEnd"]:
 						if i == 60 or i == 0:
@@ -54,8 +54,8 @@ if os.path.exists('/etc/default/epd-fuse'):
 						TextPAPIRUS.WriteAll(True)
 						i += 1
 					TextPAPIRUS.Clear()
-					break;
-				elif STOP: #GUI ONLY
+					break;"""
+				if STOP: #GUI ONLY
 					BoutonAfficher.configure(state=NORMAL)
 					BoutonArreter.configure(state=DISABLED)
 					Texte.set("Veuillez saisir vos informations")
