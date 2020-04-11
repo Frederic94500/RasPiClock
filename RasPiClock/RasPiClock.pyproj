@@ -28,13 +28,10 @@
     <Compile Include="Services.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="test.py" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="config.cfg" />
-    <Content Include="gpl.png" />
     <Content Include="hash.txt" />
-    <Content Include="icon.ico" />
     <Content Include="TODO.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />

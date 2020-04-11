@@ -17,13 +17,15 @@ def SVMusique(conf):
 	ReponseLastFM = requests.get("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=" + conf["LASTFM"]["UserFM"] + "&limit=1&format=json&api_key=" + conf["LASTFM"]["LastFmAPI"])
 	DataLast = json.loads(ReponseLastFM.text)
 
-def SVTwitch(conf):
-	global DataSt1
-	global DataSt2
-	ReponseTwitchSt1 = requests.get("https://api.twitch.tv/helix/streams?user_login=" + conf["TWITCH"]["TwitchSt1"], headers={"Client-ID": conf["TWITCH"]["TwitchAPI"]})
-	ReponseTwitchSt2 = requests.get("https://api.twitch.tv/helix/streams?user_login=" + conf["TWITCH"]["TwitchSt2"], headers={"Client-ID": conf["TWITCH"]["TwitchAPI"]})
-	DataSt1 = json.loads(ReponseTwitchSt1.text)
-	DataSt2 = json.loads(ReponseTwitchSt2.text)
+def SVTwitch(conf, TwitchSt):
+	ReponseTwitchSt = requests.get("https://api.twitch.tv/helix/streams?user_login=" + conf["TWITCH"][TwitchSt], headers={"Client-ID": conf["TWITCH"]["TwitchAPI"]})
+	DataSt = json.loads(ReponseTwitchSt.text)
+	return DataSt
+
+def SVTwitchGame(conf, DataSt):
+	ReponseTwitchGameID = requests.get("https://api.twitch.tv/helix/games?id=" + DataSt["data"][0]["game_id"], headers={"Client-ID": conf["TWITCH"]["TwitchAPI"]})
+	GameID = json.loads(ReponseTwitchGameID.text)
+	return GameID
 
 def SVTwitter(conf, BearerAUTH):
 	global DataTwitter

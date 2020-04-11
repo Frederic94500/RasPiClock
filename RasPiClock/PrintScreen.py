@@ -65,30 +65,21 @@ def Twitch(conf, TextPAPIRUS): #Fonction Twitch
 
 	TextPAPIRUS.AddText("Twitch:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
 
-	try:
-		if SV.DataSt1["data"][0]["type"] == "live":
-			ReponseTwitchGameID = requests.get("https://api.twitch.tv/helix/games?id=" + SV.DataSt1["data"][0]["game_id"], headers={"Client-ID": conf["TWITCH"]["TwitchAPI"]})
-			GameID = json.loads(ReponseTwitchGameID.text)
-			TextPAPIRUS.AddText(conf["TWITCH"]["TwitchSt1"].capitalize() + ": ON", 10, 40, size = 20, fontPath="Ubuntu.ttf")
-			TextPAPIRUS.AddText("Jeu: " + GameID["data"][0]["name"], 10, 60, size = 15, fontPath="Ubuntu.ttf")
-			TextPAPIRUS.AddText("Titre: " + SV.DataSt1["data"][0]["title"], 10, 75, size = 10, fontPath="Ubuntu.ttf")
-	except IndexError:
-		TextPAPIRUS.AddText(conf["TWITCH"]["TwitchSt1"].capitalize() + ": OFF", 10, 40, size = 20, fontPath="Ubuntu.ttf")
-		
-	try:
-		if SV.DataSt2["data"][0]["type"] == "live":
-			ReponseTwitchGameID = requests.get("https://api.twitch.tv/helix/games?id=" + SV.DataSt2["data"][0]["game_id"], headers={"Client-ID": conf["TWITCH"]["TwitchAPI"]})
-			GameID = json.loads(ReponseTwitchGameID.text)
-			TextPAPIRUS.AddText(conf["TWITCH"]["TwitchSt2"].capitalize() + ": ON", 10, 95, size = 20, fontPath="Ubuntu.ttf")
-			TextPAPIRUS.AddText("Jeu: " + GameID["data"][0]["name"], 10, 115, size = 15, fontPath="Ubuntu.ttf")
-			TextPAPIRUS.AddText("Titre: " + SV.DataSt2["data"][0]["title"], 10, 130, size = 10, fontPath="Ubuntu.ttf")
-	except IndexError:
-		TextPAPIRUS.AddText(conf["TWITCH"]["TwitchSt2"].capitalize() + ": OFF", 10, 132, size = 20, fontPath="Ubuntu.ttf")
-	finally:
-		TextPAPIRUS.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, size = 20, fontPath="Ubuntu.ttf")
-		TextPAPIRUS.WriteAll(True)
-		time.sleep(10)
-		TextPAPIRUS.Clear()
+	for i in range(2):
+		try:
+			DataSt = SV.SVTwitch(conf, "TwitchSt" + str(i + 1))
+			if DataSt["data"][0]["type"] == "live":
+				GameName = SV.SVTwitchGame(conf, DataSt)
+				TextPAPIRUS.AddText(conf["TWITCH"]["TwitchSt" + str(i + 1)].capitalize() + ": ON", 10, 40, size = 20, fontPath="Ubuntu.ttf")
+				TextPAPIRUS.AddText("Jeu: " + GameName["data"][0]["name"], 10, 60, size = 15, fontPath="Ubuntu.ttf")
+				TextPAPIRUS.AddText("Titre: " + DataSt["data"][0]["title"], 10, 75, size = 10, fontPath="Ubuntu.ttf")
+		except IndexError:
+			TextPAPIRUS.AddText(conf["TWITCH"]["TwitchSt" + str(i + 1)].capitalize() + ": OFF", 10, 40, size = 20, fontPath="Ubuntu.ttf")
+	
+	TextPAPIRUS.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, size = 20, fontPath="Ubuntu.ttf")
+	TextPAPIRUS.WriteAll(True)
+	time.sleep(10)
+	TextPAPIRUS.Clear()
 
 def Twitter(conf, TextPAPIRUS, BearerAUTH): #Fonction Twitter
 	SV.SVTwitter(conf, BearerAUTH)

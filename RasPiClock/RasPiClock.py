@@ -7,7 +7,6 @@ import PrintScreen as PS
 import Services as SV
 
 Units = "°K"
-STOP = False
 SLEEP = False
 BearerAUTH = ""
 
