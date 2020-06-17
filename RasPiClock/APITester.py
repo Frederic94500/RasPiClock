@@ -1,5 +1,8 @@
-import socket, time
+import socket, time, configparser
 import Services as SV
+
+conf = configparser.ConfigParser()
+conf.read("config.cfg")
 
 def APICheck(conf, TextPAPIRUS): #Fonction de test de chaque paramètre (sauf Twitch)
 	#Test des APIs
