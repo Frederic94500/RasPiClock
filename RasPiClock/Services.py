@@ -1,42 +1,38 @@
 # -*- encoding: utf-8 -*-
 
-import json, configparser, requests
+import configparser, requests, base64
 
-def SVCrypto(conf):
-	global DataCrypto
-	ReponseCrypto = requests.get("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + conf["CRYPTO"]["Coin1"] + "," + conf["CRYPTO"]["Coin2"] + "&tsyms=" + conf["CRYPTO"]["Currency"] + "&api_key=" + conf["CRYPTO"]["CryptoAPI"])
-	DataCrypto = json.loads(ReponseCrypto.text)
+def SVCrypto(conf, coin):
+	ReponseCrypto = requests.get("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=" + conf["CRYPTO"][coin] + "&tsyms=" + conf["CRYPTO"]["Currency"] + "&api_key=" + conf["CRYPTO"]["CryptoAPI"])
+	return ReponseCrypto
 
 def SVMeteo(conf):
-	global DataMeteo
 	ReponseMeteo = requests.get("https://api.openweathermap.org/data/2.5/weather?q=" + conf["WEATHER"]["City"] + "&units=" + conf["WEATHER"]["Units"] + "&lang=" + conf["WEATHER"]["Lang"] + "&appid=" + conf["WEATHER"]["MeteoAPI"])
-	DataMeteo = json.loads(ReponseMeteo.text)
+	return ReponseMeteo
 
 def SVMusique(conf):
-	global DataLast
 	ReponseLastFM = requests.get("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=" + conf["LASTFM"]["UserFM"] + "&limit=1&format=json&api_key=" + conf["LASTFM"]["LastFmAPI"])
-	DataLast = json.loads(ReponseLastFM.text)
+	return ReponseLastFM
 
-def SVTwitch(conf, TwitchSt):
-	ReponseTwitchSt = requests.get("https://api.twitch.tv/helix/streams?user_login=" + conf["TWITCH"][TwitchSt], headers={"Client-ID": conf["TWITCH"]["TwitchAPI"]})
-	DataSt = json.loads(ReponseTwitchSt.text)
-	return DataSt
+def SVTwitchGetID(conf, TwitchSt):
+	ReponseID = requests.get("https://api.twitch.tv/kraken/users?login=" + conf["TWITCH"][TwitchSt], headers={"Accept": "application/vnd.twitchtv.v5+json" ,"Client-ID": conf["TWITCH"]["twitchapiclientid"]})
+	return ReponseID
+def SVTwitchGetStatus(conf, ReponseID):
+	ReponseTwitchSt = requests.get("https://api.twitch.tv/kraken/streams/" + ReponseID.json()["users"][0]["_id"], headers={"Accept": "application/vnd.twitchtv.v5+json" ,"Client-ID": conf["TWITCH"]["twitchapiclientid"]})
+	return ReponseTwitchSt
 
-def SVTwitchGame(conf, DataSt):
-	ReponseTwitchGameID = requests.get("https://api.twitch.tv/helix/games?id=" + DataSt["data"][0]["game_id"], headers={"Client-ID": conf["TWITCH"]["TwitchAPI"]})
-	GameID = json.loads(ReponseTwitchGameID.text)
-	return GameID
-
+def SVTwitterGetToken(conf):
+	key_secret = '{}:{}'.format(conf["TWITTER"]["twitterapi"], conf["TWITTER"]["twitterapisecret"]).encode('ascii')
+	b64_encoded_key = base64.b64encode(key_secret)
+	b64_encoded_key = b64_encoded_key.decode('ascii')
+	BearerRAW = requests.post('https://api.twitter.com/oauth2/token', headers={'Authorization': 'Basic {}'.format(b64_encoded_key), 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'}, data={'grant_type': 'client_credentials'})
+	return BearerRAW
 def SVTwitter(conf, BearerAUTH):
-	global DataTwitter
 	ReponseTwitter = requests.get("https://api.twitter.com/1.1/users/show.json?screen_name=" + conf["TWITTER"]["UserTW"], headers={'Authorization': "Bearer " + BearerAUTH})
-	DataTwitter = json.loads(ReponseTwitter.text)
+	return ReponseTwitter
 
-def SVRATP(conf):
-	global OutputA
-	global OutputB
-	ReponseRATPA = requests.get("https://api-ratp.pierre-grimaud.fr/v4/schedules/" + conf["RATP"]["typetransA"] + "/" + conf["RATP"]["lineA"] + "/" + conf["RATP"]["stationA"] + "/A")
-	ReponseRATPB = requests.get("https://api-ratp.pierre-grimaud.fr/v4/schedules/" + conf["RATP"]["typetransB"] + "/" + conf["RATP"]["lineB"] + "/" + conf["RATP"]["stationB"] + "/R")
-	OutputA = json.loads(ReponseRATPA.text)
-	OutputB = json.loads(ReponseRATPB.text)
+def SVRATP(conf, typetrans, line, station, sens):
+	ReponseRATP = requests.get("https://api-ratp.pierre-grimaud.fr/v4/schedules/" + conf["RATP"][typetrans] + "/" + conf["RATP"][line] + "/" + conf["RATP"][station] + "/" + conf["RATP"][sens])
+	return ReponseRATP
+
 

@@ -11,6 +11,7 @@
     <OutputPath>.</OutputPath>
     <Name>RasPiClock</Name>
     <RootNamespace>RasPiClock</RootNamespace>
+    <TestFramework>Pytest</TestFramework>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,11 +22,20 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="APITester.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Computer-Usage-RPCServer.pyw">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="PrintScreen.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="RasPiClock.py" />
     <Compile Include="Services.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="tester.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
