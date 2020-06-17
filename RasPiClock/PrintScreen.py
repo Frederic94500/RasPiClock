@@ -66,8 +66,6 @@ def Musique(conf, TextPAPIRUS): #Fonction Musique (Last.fm)
 		TextPAPIRUS.Clear()
 
 def Twitch(conf, TextPAPIRUS): #Fonction Twitch
-	SV.SVTwitch(conf)
-
 	TextPAPIRUS.AddText("Twitch:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
 
 	i = 1
