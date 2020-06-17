@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 #RasPiClock - Frédéric94500
 
-import time, json, sys, os, requests, socket, configparser, hashlib, threading
+import time, json, sys, os, requests, socket, configparser, hashlib
 
 import PrintScreen as PS
 import Services as SV

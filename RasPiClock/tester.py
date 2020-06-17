@@ -136,7 +136,7 @@ def TestMeteo():
 		ReponseMeteo = SV.SVMeteo(conf)
 		if ReponseMeteo.status_code == 200: return True
 		else:
-			ErrorConfig("Erreur dans la config Météo, veuillez vérifier votre saisie!")
+			print("Erreur dans la config Météo, veuillez vérifier votre saisie!")
 			return False
 	else: return True
 
@@ -146,7 +146,7 @@ def TestCrypto():
 		ReponseCrypto = SV.SVCrypto(conf, "coin" + str(i))
 		try:
 			if ReponseCrypto.json()["Response"] == "Error":
-				ErrorConfig("Erreur dans la config Crypto, veuillez vérifier votre saisie!")
+				print("Erreur dans la config Crypto, veuillez vérifier votre saisie!")
 				return False
 		except: return True
 	else: return True
@@ -156,7 +156,7 @@ def TestMusique():
 		ReponseLastFM = SV.SVMusique(conf)
 		if ReponseLastFM.status_code == 200: return True
 		else: 
-			ErrorConfig("Erreur dans la config LastFM, veuillez vérifier votre saisie!")
+			print("Erreur dans la config LastFM, veuillez vérifier votre saisie!")
 			return False
 	else: return True
 
@@ -169,10 +169,10 @@ def TestTwitter():
 			if ReponseTwitter.status_code == 200:
 				return True
 			else:
-				ErrorConfig("Erreur dans la config Twitter, veuillez vérifier votre saisie!")
+				print("Erreur dans la config Twitter, veuillez vérifier votre saisie!")
 				return False
 		else:
-			ErrorConfig("Erreur lors de la création du token Twitter, veuillez vérifier votre saisie!")
+			print("Erreur lors de la création du token Twitter, veuillez vérifier votre saisie!")
 			return False
 	else: return True
 
@@ -187,11 +187,11 @@ def TestRATP():
 				if ReponseRATP.status_code == 200:
 						return True
 				else:
-					ErrorConfig("Erreur dans la config RATP 2, veuillez vérifier votre saisie!")
+					print("Erreur dans la config RATP 2, veuillez vérifier votre saisie!")
 					return False
 			else: return True
 		else:
-			ErrorConfig("Erreur dans la config RATP 1, veuillez vérifier votre saisie!")
+			print("Erreur dans la config RATP 1, veuillez vérifier votre saisie!")
 			return False
 	else: return True
 
@@ -206,16 +206,13 @@ def TestTwitch():
 				if ReponseID.status_code == 200:
 					return True
 				else:
-					ErrorConfig("Erreur dans la config Twitch, veuillez vérifier votre saisie!")
+					print("Erreur dans la config Twitch, veuillez vérifier votre saisie!")
 					return False
 			else: return True
 		else: 
-			ErrorConfig("Erreur dans la config Twitch, veuillez vérifier votre saisie!")
+			print("Erreur dans la config Twitch, veuillez vérifier votre saisie!")
 			return False
 	else: return True
-
-def ErrorConfig(ERROR):
-		print(ERROR)
 
 def Adaptation():
 	global Units
