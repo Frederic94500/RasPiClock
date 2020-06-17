@@ -3,6 +3,9 @@
 import time, configparser
 import Services as SV
 
+conf = configparser.ConfigParser()
+conf.read("config.cfg")
+
 def Crypto(conf, TextPAPIRUS): #Fonction Crypto (CryproCompare)
 	TextPAPIRUS.AddText("Crypto:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
 
