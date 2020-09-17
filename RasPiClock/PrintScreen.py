@@ -29,13 +29,17 @@ def Crypto(conf, TextPAPIRUS): #Fonction Crypto (CryproCompare)
 	time.sleep(10)
 	TextPAPIRUS.Clear()
 
-def Meteo(conf, TextPAPIRUS, Units): #Fonction Météo (OpenWeatherMap)
+def Meteo(conf, TextPAPIRUS, Units): #Fonction Météo (OpenWeatherMap) + Home Assistant pour température intérieur
 	ReponseMeteo = SV.SVMeteo(conf)
 
 	TextPAPIRUS.AddText("Météo:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
-	TextPAPIRUS.AddText("Température: " + str(ReponseMeteo.json()["main"]["temp"]) + "°C", 10, 40, size = 25, fontPath="Ubuntu.ttf")
-	TextPAPIRUS.AddText("Temp. Min: " + str(ReponseMeteo.json()["main"]["temp_min"]) + "°C" + " Temp. Max: " + str(ReponseMeteo.json()["main"]["temp_max"]) + Units, 10, 65, size = 12, fontPath="Ubuntu.ttf")
+	TextPAPIRUS.AddText("Température: " + str(ReponseMeteo.json()["main"]["temp"]) + Units, 10, 40, size = 25, fontPath="Ubuntu.ttf")
+	TextPAPIRUS.AddText("Temp. Min: " + str(ReponseMeteo.json()["main"]["temp_min"]) + Units + " Temp. Max: " + str(ReponseMeteo.json()["main"]["temp_max"]) + Units, 10, 65, size = 12, fontPath="Ubuntu.ttf")
 	TextPAPIRUS.AddText("Temps: " + ReponseMeteo.json()["weather"][0]["description"].capitalize(), 10, 85, size = 25, fontPath="Ubuntu.ttf") 
+
+	if conf["HA"]["token"] != "":
+		ReponseHA = SV.SVHA(conf)
+		TextPAPIRUS.AddText("Temp. intérieur" + ReponseHA.json()["state"] + Units, 10, 110, size = 20, fontPath="Ubuntu.ttf")
 
 	TextPAPIRUS.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, size = 20, fontPath="Ubuntu.ttf")
 	TextPAPIRUS.WriteAll(True)
@@ -132,13 +136,15 @@ def RATP(conf, TextPAPIRUS):
 def AllInit(conf, TextPAPIRUS, BearerAUTH):
 	TextPAPIRUS.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, size = 20, fontPath="Ubuntu.ttf")
 	
-	SV.SVCrypto(conf)
+	i = 1
+
+	ReponseCrypto = SV.SVCrypto(conf, "coin" + str(i))
 	TextTextPAPIRUS.AddText("Crypto:", 10, 10, size = 15, fontPath="Ubuntu.ttf")
 
-	PCTC1 = list(str(SV.DataCrypto["RAW"][conf["CRYPTO"]["Coin1"]][conf["CRYPTO"]["Currency"]]["CHANGEPCT24HOUR"]))
-	del PCTC1[-14:-1]
-	PCTC2 = list(str(SV.DataCrypto["RAW"][conf["CRYPTO"]["Coin2"]][conf["CRYPTO"]["Currency"]]["CHANGEPCT24HOUR"]))
-	del PCTC2[-14:-1]
+	PCT = list(str(SV.DataCrypto["RAW"][conf["CRYPTO"]["Coin1"]][conf["CRYPTO"]["Currency"]]["CHANGEPCT24HOUR"]))
+	del PCT[-14:-1]
+	PCT = list(str(SV.DataCrypto["RAW"][conf["CRYPTO"]["Coin2"]][conf["CRYPTO"]["Currency"]]["CHANGEPCT24HOUR"]))
+	del PCT[-14:-1]
 
 	TextPAPIRUS.AddText(conf["CRYPTO"]["Coin1"] + ": " + conf["CRYPTO"]["Currency"] + " " + str(SV.DataCrypto["RAW"][conf["CRYPTO"]["Coin1"]][conf["CRYPTO"]["Currency"]]["PRICE"]), 10, 25, size = 15, fontPath="Ubuntu.ttf", Id="Coin1P")
 	TextPAPIRUS.AddText(conf["CRYPTO"]["Coin2"] + ": " + conf["CRYPTO"]["Currency"] + " " + str(SV.DataCrypto["RAW"][conf["CRYPTO"]["Coin2"]][conf["CRYPTO"]["Currency"]]["PRICE"]), 100, 25, size = 15, fontPath="Ubuntu.ttf", Id="Coin2P")
@@ -150,5 +156,10 @@ def AllInit(conf, TextPAPIRUS, BearerAUTH):
 	TextPAPIRUS.AddText("Météo:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
 	TextPAPIRUS.AddText("Température: " + str(SV.DataMeteo["main"]["temp"]) + "°C", 10, 40, size = 25, fontPath="Ubuntu.ttf", Id="Deg")
 	TextPAPIRUS.AddText("Temps: " + SV.DataMeteo["weather"][0]["description"].capitalize(), 10, 85, size = 25, fontPath="Ubuntu.ttf", Id="Temps") 
+
+	SV.SVMusique(conf)
+
+	ReponseID = SV.SVTwitchGetID(conf, "TwitchSt" + str(i))
+	ReponseTwitchSt = SV.SVTwitchGetStatus(conf, ReponseID)
 
 

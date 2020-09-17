@@ -9,7 +9,7 @@ conf.read("config.cfg")
 def APICheck(conf, TextPAPIRUS): #Fonction de test de chaque paramètre (sauf Twitch)
 	#Test des APIs
 	try:
-		if TestMeteo() and TestCrypto() and TestMusique() and TestTwitter() and TestRATP() and TestTwitch(): return True #Fin de la vérification des API
+		if TestMeteo(conf) and TestCrypto(conf) and TestMusique(conf) and TestTwitter(conf) and TestRATP(conf) and TestTwitch(conf) and TestHA(conf): return True #Fin de la vérification des API
 		else: return False
 
 	except (ValueError, socket.error, socket.gaierror, socket.herror, socket.timeout): #Situation d'erreur de connexion
@@ -22,7 +22,7 @@ def APICheck(conf, TextPAPIRUS): #Fonction de test de chaque paramètre (sauf Tw
 		TextPAPIRUS.Clear()
 		APICheck()
 
-def TestCrypto():
+def TestCrypto(conf):
 	if conf["CRYPTO"]["CryptoAPI"] != "":
 		i = 1
 		ReponseCrypto = SV.SVCrypto(conf, "coin" + str(i))
@@ -33,7 +33,7 @@ def TestCrypto():
 		except: return True
 	else: return True
 
-def TestMeteo():
+def TestMeteo(conf):
 	if conf["WEATHER"]["MeteoAPI"] != "":
 		ReponseMeteo = SV.SVMeteo(conf)
 		if ReponseMeteo.status_code == 200: return True
@@ -42,7 +42,7 @@ def TestMeteo():
 			return False
 	else: return True
 
-def TestMusique():
+def TestMusique(conf):
 	if conf["LASTFM"]["LastFmAPI"] != "":
 		ReponseLastFM = SV.SVMusique(conf)
 		if ReponseLastFM.status_code == 200: return True
@@ -51,7 +51,7 @@ def TestMusique():
 			return False
 	else: return True
 
-def TestTwitter():
+def TestTwitter(conf):
 	if conf["TWITTER"]["TwitterAPI"] != "" and conf["TWITTER"]["twitterapisecret"] != "":
 		BearerRAW = SV.SVTwitterGetToken(conf)
 		if BearerRAW.status_code == 200: 
@@ -67,7 +67,7 @@ def TestTwitter():
 			return False
 	else: return True
 
-def TestRATP():
+def TestRATP(conf):
 	if conf["RATP"]["typetrans1"] != "" and conf["RATP"]["line1"] != "" and conf["RATP"]["station1"] != "" and conf["RATP"]["sens1"] != "":
 		i = 1
 		ReponseRATP = SV.SVRATP(conf, "typetrans" + str(i), "line" + str(i), "station" + str(i), "sens" + str(i))
@@ -86,7 +86,7 @@ def TestRATP():
 			return False
 	else: return True
 
-def TestTwitch():
+def TestTwitch(conf):
 	if conf["TWITCH"]["twitchapiclientid"] != "":
 		i = 1
 		ReponseID = SV.SVTwitchGetID(conf, "TwitchSt" + str(i))
@@ -105,4 +105,13 @@ def TestTwitch():
 			return False
 	else: return True
 
-
+def TestHA(conf): 
+	if conf["HA"]["token"] != "":
+		ReponseHA = SV.SVHA(conf)
+		if ReponseHA.status_code == 200:
+			return True
+		else:
+			print("Erreur dans la config HA, veuillez vérifier votre saisie!")
+			return False
+	else:
+		return True

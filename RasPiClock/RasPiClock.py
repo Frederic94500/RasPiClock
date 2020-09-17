@@ -8,7 +8,6 @@ import Services as SV
 import APITester as APIT
 
 Units = "°K"
-SLEEP = False
 BearerAUTH = ""
 
 conf = configparser.ConfigParser()

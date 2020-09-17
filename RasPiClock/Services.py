@@ -9,6 +9,9 @@ def SVCrypto(conf, coin):
 def SVMeteo(conf):
 	ReponseMeteo = requests.get("https://api.openweathermap.org/data/2.5/weather?q=" + conf["WEATHER"]["City"] + "&units=" + conf["WEATHER"]["Units"] + "&lang=" + conf["WEATHER"]["Lang"] + "&appid=" + conf["WEATHER"]["MeteoAPI"])
 	return ReponseMeteo
+def SVHA(conf):
+	ReponseHA = requests.get("http://" + conf["HA"]["ip"] + ":" + conf["HA"]["port"] + "/api/states/" + conf["HA"]["entityid"] , headers={"content-type": "application/json", "Authorization": "Bearer " + conf["HA"]["token"]})
+	return ReponseHA
 
 def SVMusique(conf):
 	ReponseLastFM = requests.get("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=" + conf["LASTFM"]["UserFM"] + "&limit=1&format=json&api_key=" + conf["LASTFM"]["LastFmAPI"])
