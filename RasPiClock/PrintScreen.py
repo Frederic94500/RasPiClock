@@ -1,30 +1,30 @@
 # -*- encoding: utf-8 -*-
 
-import time, configparser
-import Services as SV
+import time
+import Request as RQ
 
-conf = configparser.ConfigParser()
-conf.read("config.cfg")
+def crypto(conf, textPAPIRUS): #Fonction Crypto (Binance)
+	textPAPIRUS.AddText("Crypto:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
 
-def Crypto(conf, TextPAPIRUS): #Fonction Crypto (CryproCompare)
-	TextPAPIRUS.AddText("Crypto:", 10, 10, size = 20, fontPath="Ubuntu.ttf")
+	x = 10
+	y = 45
 
-	i = 1
-	ReponseCrypto = SV.SVCrypto(conf, "coin" + str(i))
-	PCT = list(str(ReponseCrypto.json()["RAW"][conf["CRYPTO"]["coin" + str(i)]][conf["CRYPTO"]["Currency"]]["CHANGEPCT24HOUR"]))
-	del PCT[-14:-1]
-	TextPAPIRUS.AddText(conf["CRYPTO"]["coin" + str(i)] + ": " + conf["CRYPTO"]["Currency"] + " " + str(ReponseCrypto.json()["RAW"][conf["CRYPTO"]["coin" + str(i)]][conf["CRYPTO"]["Currency"]]["PRICE"]), 10, 44, size = 25, fontPath="Ubuntu.ttf")
-	TextPAPIRUS.AddText("".join(PCT) + "%", 10, 74, size = 15, fontPath="Ubuntu.ttf")
+	for i in range(2):
+		reponseCrypto = RQ.crypto(conf, "pair" + str(i+1))
+		textPAPIRUS.AddText(reponseCrypto.json()["symbol"] + ": " + f'{float(reponseCrypto.json()["lastPrice"]):.2f}', x, y, size = 25, fontPath="Ubuntu.ttf", Id="pair" + str(i+1))
+		textPAPIRUS.AddText(reponseCrypto.json()["priceChangePercent"] + "%", x, y+25+5, size = 15, fontPath="Ubuntu.ttf", Id="pairpct" + str(i+1))
+		y = y+25+5+15+25
 
-	i += 1
-	ReponseCrypto = SV.SVCrypto(conf, "coin" + str(i))
-	PCT = list(str(ReponseCrypto.json()["RAW"][conf["CRYPTO"]["coin" + str(i)]][conf["CRYPTO"]["Currency"]]["CHANGEPCT24HOUR"]))
-	del PCT[-14:-1]
-	TextPAPIRUS.AddText(conf["CRYPTO"]["coin" + str(i)] + ": " + conf["CRYPTO"]["Currency"] + " " + str(ReponseCrypto.json()["RAW"][conf["CRYPTO"]["coin" + str(i)]][conf["CRYPTO"]["Currency"]]["PRICE"]), 10, 114, size = 25, fontPath="Ubuntu.ttf")
-	TextPAPIRUS.AddText("".join(PCT) + "%", 10, 144, size = 15, fontPath="Ubuntu.ttf")
+	textPAPIRUS.AddText(time.strftime("%H:%M:%S", time.localtime()), 190, 10, size = 20, fontPath="Ubuntu.ttf", Id="time")
 
-	TextPAPIRUS.AddText(time.strftime("%H:%M", time.localtime()), 200, 10, size = 20, fontPath="Ubuntu.ttf")
+	textPAPIRUS.WriteAll(True)
 
-	TextPAPIRUS.WriteAll(True)
-	time.sleep(10)
-	TextPAPIRUS.Clear()
+def crypto(conf, textPAPIRUS): #Fonction Crypto (Binance)
+	for i in range(2):
+		reponseCrypto = RQ.crypto(conf, "pair" + str(i+1))
+		textPAPIRUS.UpdateText("pair" + str(i+1), reponseCrypto.json()["symbol"] + ": " + f'{float(reponseCrypto.json()["lastPrice"]):.2f}')
+		textPAPIRUS.UpdateText("pairpct" + str(i+1), reponseCrypto.json()["priceChangePercent"] + "%")
+
+	textPAPIRUS.UpdateText("time", time.strftime("%H:%M:%S", time.localtime()))
+
+	textPAPIRUS.WriteAll(True)
