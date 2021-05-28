@@ -15,16 +15,16 @@ def crypto(conf, textPAPIRUS): #Fonction Crypto (Binance)
 		textPAPIRUS.AddText(reponseCrypto.json()["priceChangePercent"] + "%", x, y+25+5, size = 15, fontPath="Ubuntu.ttf", Id="pairpct" + str(i+1))
 		y = y+25+5+15+25
 
-	textPAPIRUS.AddText(time.strftime("%H:%M:%S", time.localtime()), 190, 10, size = 20, fontPath="Ubuntu.ttf", Id="time")
+	textPAPIRUS.AddText(time.strftime("%H:%M:%S", time.localtime()), 180, 10, size = 20, fontPath="Ubuntu.ttf", Id="time")
 
 	textPAPIRUS.WriteAll(True)
 
 def cryptoUpdate(conf, textPAPIRUS): #Fonction Crypto (Binance)
 	for i in range(2):
 		reponseCrypto = RQ.crypto(conf, "pair" + str(i+1))
-		textPAPIRUS.UpdateText("pair" + str(i+1), reponseCrypto.json()["symbol"] + ": " + f'{float(reponseCrypto.json()["lastPrice"]):.2f}')
-		textPAPIRUS.UpdateText("pairpct" + str(i+1), reponseCrypto.json()["priceChangePercent"] + "%")
+		textPAPIRUS.UpdateText("pair" + str(i+1), reponseCrypto.json()["symbol"] + ": " + f'{float(reponseCrypto.json()["lastPrice"]):.2f}', fontPath="Ubuntu.ttf")
+		textPAPIRUS.UpdateText("pairpct" + str(i+1), reponseCrypto.json()["priceChangePercent"] + "%", fontPath="Ubuntu.ttf")
 
-	textPAPIRUS.UpdateText("time", time.strftime("%H:%M:%S", time.localtime()))
+	textPAPIRUS.UpdateText("time", time.strftime("%H:%M:%S", time.localtime()), fontPath="Ubuntu.ttf")
 
 	textPAPIRUS.WriteAll(True)
