@@ -19,7 +19,7 @@ def crypto(conf, textPAPIRUS): #Fonction Crypto (Binance)
 
 	textPAPIRUS.WriteAll(True)
 
-def crypto(conf, textPAPIRUS): #Fonction Crypto (Binance)
+def cryptoUpdate(conf, textPAPIRUS): #Fonction Crypto (Binance)
 	for i in range(2):
 		reponseCrypto = RQ.crypto(conf, "pair" + str(i+1))
 		textPAPIRUS.UpdateText("pair" + str(i+1), reponseCrypto.json()["symbol"] + ": " + f'{float(reponseCrypto.json()["lastPrice"]):.2f}')

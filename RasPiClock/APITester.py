@@ -23,9 +23,8 @@ def apiCheck(conf, textPAPIRUS):
 def crypto(conf):
 	for i in range(2):
 		reponseCrypto = RQ.crypto(conf, "pair" + str(i+1))
-		try:
-			if reponseCrypto.status_code != 200:
-				print("Erreur dans la config Crypto, veuillez vérifier votre saisie!")
-				return False
-		except:
+		if reponseCrypto.status_code != 200:
+			print("Erreur dans la config Crypto, veuillez vérifier votre saisie!")
+			return False
+		else:
 			return True

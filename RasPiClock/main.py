@@ -10,6 +10,7 @@ def core(conf, textPAPIRUS): #Fonction Coeur
 	try:
 		while True:
 			PS.crypto(conf, textPAPIRUS)
+			time.sleep(10)
 			for i in range(720):
 				PS.cryptoUpdate(conf, textPAPIRUS)
 				time.sleep(10)
