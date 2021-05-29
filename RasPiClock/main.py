@@ -23,7 +23,7 @@ def core(conf, textPAPIRUS): #Fonction Coeur
 			textPAPIRUS.WriteAll(True)
 			time.sleep(1)
 		textPAPIRUS.Clear()
-		core()
+		core(conf, textPAPIRUS)
 	except KeyboardInterrupt:
 		print("Vous avez arrêté le processus, nettoyage de l'écran")
 		os.system("papirus-clear")

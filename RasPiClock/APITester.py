@@ -18,7 +18,7 @@ def api_tester(conf, textPAPIRUS):
 			textPAPIRUS.WriteAll(True)
 			time.sleep(1)
 		textPAPIRUS.Clear()
-		api_tester()
+		api_tester(conf, textPAPIRUS)
 
 def crypto_test(conf):
 	for i in range(2):
