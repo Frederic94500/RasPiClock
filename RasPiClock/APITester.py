@@ -6,9 +6,9 @@ import Request as RQ
 conf = configparser.ConfigParser()
 conf.read("config.cfg")
 
-def apiCheck(conf, textPAPIRUS):
+def api_tester(conf, textPAPIRUS):
 	try:
-		if crypto(conf): return True #Fin de la vérification des API
+		if crypto_test(conf): return True #Fin de la vérification des API
 		else: return False
 	except (ValueError, socket.error, socket.gaierror, socket.herror, socket.timeout): #Situation d'erreur de connexion
 		textPAPIRUS.Clear()
@@ -18,11 +18,11 @@ def apiCheck(conf, textPAPIRUS):
 			textPAPIRUS.WriteAll(True)
 			time.sleep(1)
 		textPAPIRUS.Clear()
-		apiCheck()
+		api_tester()
 
-def crypto(conf):
+def crypto_test(conf):
 	for i in range(2):
-		reponseCrypto = RQ.crypto(conf, "pair" + str(i+1))
+		reponseCrypto = RQ.req_crypto(conf, "pair" + str(i+1))
 		if reponseCrypto.status_code != 200:
 			print("Erreur dans la config Crypto, veuillez vérifier votre saisie!")
 			return False

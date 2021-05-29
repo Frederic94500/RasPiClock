@@ -16,7 +16,7 @@ def main():
 def crypto(conf):
 	print("Crypto:")
 	for i in range(2):
-		reponseCrypto = RQ.crypto(conf, "pair" + str(i + 1))
+		reponseCrypto = RQ.req_crypto(conf, "pair" + str(i + 1))
 
 		if(reponseCrypto.status_code == 200):
 			print(reponseCrypto.json()["symbol"] + ": " + f'{float(reponseCrypto.json()["lastPrice"]):.2f}')

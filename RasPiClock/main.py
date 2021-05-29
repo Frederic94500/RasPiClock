@@ -10,10 +10,10 @@ def core(conf, textPAPIRUS): #Fonction Coeur
 	try:
 		while True:
 			PS.crypto(conf, textPAPIRUS)
-			time.sleep(10)
+			time.sleep(5)
 			for i in range(720):
-				PS.cryptoUpdate(conf, textPAPIRUS)
-				time.sleep(10)
+				PS.crypto_update(conf, textPAPIRUS)
+				time.sleep(5)
 			textPAPIRUS.Clear()
 	except (ValueError, socket.error, socket.gaierror, socket.herror, socket.timeout): #Situation d'erreur de connexion
 		textPAPIRUS.Clear()
