@@ -38,7 +38,7 @@ def main():
 		conf = configparser.ConfigParser()
 		conf.read("config.cfg")
 
-		if APITester.apiCheck(conf, textPAPIRUS):
+		if APITester.api_tester(conf, textPAPIRUS):
 			core(conf, textPAPIRUS)
 		
 	else: #Si papirus n'est pas installé
