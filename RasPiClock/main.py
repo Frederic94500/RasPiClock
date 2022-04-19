@@ -50,6 +50,14 @@ def testing(obj):
     return True
 
 
+def reset(papirus):
+    papirus.UpdateText("title", "", fontPath="Ubuntu.ttf")
+    for i in range(2):
+        papirus.UpdateText("pair" + str(i), "", fontPath="Ubuntu.ttf")
+        papirus.UpdateText("pairpct" + str(i), "", fontPath="Ubuntu.ttf")
+    papirus.UpdateText("time", time.strftime("%H:%M:%S", time.localtime()), fontPath="Ubuntu.ttf")
+
+
 if __name__ == '__main__':
     if os.path.exists('/etc/default/epd-fuse'):
         from papirus import PapirusTextPos
